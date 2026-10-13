@@ -1,0 +1,9 @@
+{
+ "version": 1,
+ "execution": "offline-only",
+ "context": "fixtures/reference/lesson-context.json",
+ "question_set": "fixtures/reference/question-set.json",
+ "output_root": ".local/runs",
+ "samples": 3,
+ "repeats": 2
+}

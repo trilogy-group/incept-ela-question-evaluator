@@ -1,0 +1,746 @@
+{
+ "version": 1,
+ "purpose": "First 14 labelled development observations from the existing pinned reference review; no new judgments or research.",
+ "source_review": "fixtures/source-reviews/reference-review.json",
+ "source_manifest": "fixtures/source-reviews/manifest.json",
+ "source_commit": "3ed708e126aec14b7456679b9236e01c1081df16",
+ "reference_unit_count": 40,
+ "independent_human_gold_labels": 0,
+ "qualification": "unqualified; conditions and unknowns are part of each label",
+ "automatic_replay": "not implemented for these source observations; do not count them as scored gold cases",
+ "cases": [
+  {
+   "id": "reference-r01",
+   "source_finding": "R01",
+   "title": "Purposeful classification contrasts",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "design_strength",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V01",
+     "L02",
+     "L16",
+     "L18"
+    ],
+    "active_check_ids": [
+     "every_word_has_a_box",
+     "slots_match_words",
+     "word_N_fits"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "words-1/pin"
+   ],
+   "claim": "Words distinguishes reality, appearance and desired job: honest/loyal versus actual disloyalty, lieutenant versus ensign.",
+   "conditional_expected_outcome": {
+    "outcome": "supports_observation",
+    "condition": "The inspected task preserves the quoted reality/appearance/desired-job contrasts. This does not approve every word key or the whole item.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Supports recognition/practice design, not eleven independent mastery measurements.",
+   "evidence_refs": [
+    {
+     "finding": "R01",
+     "index": 1
+    },
+    {
+     "finding": "R01",
+     "index": 2
+    }
+   ]
+  },
+  {
+   "id": "reference-r02",
+   "source_finding": "R02",
+   "title": "Evidence plus explanation and rebuttal",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "design_strength",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V06",
+     "L02",
+     "L16"
+    ],
+    "active_check_ids": [
+     "candidate_N_supports / decoy_N_supports",
+     "answerable"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "dose-1/select",
+    "dose-1/explain",
+    "dose-1/rebut",
+    "dose-1/verdict"
+   ],
+   "claim": "Dose combines a textual selection, an explanation in learner words, a reply to an excuse and claim-with-quote verdict.",
+   "conditional_expected_outcome": {
+    "outcome": "supports_observation",
+    "condition": "The inspected sequence preserves selection, explanation, rebuttal and verdict components. This is a design observation, not evidence of learning or deployed judging accuracy.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "The deployed convinced service was not inspected/called. Word count is only an input guard, not proof of reasoning.",
+   "evidence_refs": [
+    {
+     "finding": "R02",
+     "index": 1
+    },
+    {
+     "finding": "R02",
+     "index": 2
+    }
+   ]
+  },
+  {
+   "id": "reference-r03",
+   "source_finding": "R03",
+   "title": "Explicit evidence and misreadings",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "design_strength",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V11",
+     "V12",
+     "L12",
+     "L13"
+    ],
+    "active_check_ids": [
+     "rubric_complete",
+     "accepted_N_M_meets"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "reading-2/check",
+    "close-3/evaluate"
+   ],
+   "claim": "Rubrics split response components, accept paraphrases, and identify particular mistakes. Sympathy permits yes/no/partial positions with weighing of reason against conduct.",
+   "conditional_expected_outcome": {
+    "outcome": "supports_observation",
+    "condition": "The inspected rubrics preserve explicit response components and named misreadings. Accepted-answer correctness and operational scoring still require verification.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Source-inspectable strengths; scoring accuracy and academic approval of every accepted response remain unmeasured.",
+   "evidence_refs": [
+    {
+     "finding": "R03",
+     "index": 1
+    },
+    {
+     "finding": "R03",
+     "index": 2
+    },
+    {
+     "finding": "R03",
+     "index": 3
+    },
+    {
+     "finding": "R03",
+     "index": 4
+    }
+   ]
+  },
+  {
+   "id": "reference-r04",
+   "source_finding": "R04",
+   "title": "Situated teaching-to-application sequence",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "design_strength",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V16",
+     "L07",
+     "L08",
+     "L09"
+    ],
+    "active_check_ids": [
+     "answer_in_seen",
+     "answerable"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "unit-video/segment-4-check-1",
+    "write/paragraph"
+   ],
+   "claim": "Film checks are tied to source segments; later work asks for explanation, evidence and a different-quote paragraph. Film picks are preserved for later retrieval.",
+   "conditional_expected_outcome": {
+    "outcome": "supports_observation",
+    "condition": "The supplied film/check alignment and later application are present. Timings do not prove served media; same-scene variation is not new-text transfer.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Timings do not prove served-media fidelity. Within-scene variation is not new-text transfer or later retention.",
+   "evidence_refs": [
+    {
+     "finding": "R04",
+     "index": 1
+    },
+    {
+     "finding": "R04",
+     "index": 2
+    },
+    {
+     "finding": "R04",
+     "index": 3
+    },
+    {
+     "finding": "R04",
+     "index": 4
+    }
+   ]
+  },
+  {
+   "id": "reference-r05",
+   "source_finding": "R05",
+   "title": "Angry has a defensible second destination",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_item_defect",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V02",
+     "V03",
+     "V10"
+    ],
+    "active_check_ids": [
+     "word_N_target_also_fits"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "words-1/pin"
+   ],
+   "claim": "General word-to-person prompt makes angry→IAGO IS defensible: the same lesson teaches Iago is angry with Othello. The key accepts only Roderigo. Wrong feedback narrows to who shouts at the beginning only after the attempt.",
+   "conditional_expected_outcome": {
+    "outcome": "fail_if_condition_holds",
+    "condition": "The broad visible word-pinning prompt remains unchanged, no prior disambiguation narrows angry, and an Iago destination is supported by what the learner has seen. Otherwise this destination claim remains unverified.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "The authored angry meaning explicitly narrows to furious Roderigo shouting when the scene opens. That explains the intended key but is not a pre-attempt question condition in this renderer: PinWords passes only w.w strings to WordBoard; WordBoard draws word strings only, and the accessible selection buttons also display w.w. Neither component reads meaning. This is a source-code visibility check, not a hosted browser check. The intended distinction is teachable if supplied before the first attempt or scored nonexclusively. One word, not every classification.",
+   "evidence_refs": [
+    {
+     "finding": "R05",
+     "index": 1
+    },
+    {
+     "finding": "R05",
+     "index": 2
+    },
+    {
+     "finding": "R05",
+     "index": 3
+    },
+    {
+     "finding": "R05",
+     "index": 4
+    },
+    {
+     "finding": "R05",
+     "index": 5
+    },
+    {
+     "finding": "R05",
+     "index": 6
+    },
+    {
+     "finding": "R05",
+     "index": 7
+    },
+    {
+     "finding": "R05",
+     "index": 8
+    },
+    {
+     "finding": "R05",
+     "index": 9
+    },
+    {
+     "finding": "R05",
+     "index": 10
+    }
+   ]
+  },
+  {
+   "id": "reference-r06",
+   "source_finding": "R06",
+   "title": "Keyword fallback accepts reversed relations",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "source_reproduced_runtime_defect",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V11",
+     "V20",
+     "L02"
+    ],
+    "active_check_ids": [],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "reading-2/check"
+   ],
+   "claim": "Offline judgeByRules accepts Cassio wanted the job and Iago has the job and Cassio never got it with both rubric components met, done true. Both learner-reachable typed inputs fail the person/outcome relation.",
+   "conditional_expected_outcome": {
+    "outcome": "fail_if_condition_holds",
+    "condition": "The pinned rules fallback actually applies this rubric to the reproduced reversed person/job answers. This is a fallback relation-check fault; semantic service and hosted behavior remain unverified.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Establishes pinned rules fallback defect, not a semantic-model or hosted-deployment error. Fallback is explicitly source-labelled rules; errors/timeouts/unavailability trigger it.",
+   "evidence_refs": [
+    {
+     "finding": "R06",
+     "index": 1
+    },
+    {
+     "finding": "R06",
+     "index": 2
+    },
+    {
+     "finding": "R06",
+     "index": 3
+    },
+    {
+     "finding": "R06",
+     "index": 4
+    }
+   ]
+  },
+  {
+   "id": "reference-r07",
+   "source_finding": "R07",
+   "title": "Fallback drops quotation-to-claim relationship",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "source_reproduced_marker_contract_gap",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V11",
+     "V20"
+    ],
+    "active_check_ids": [],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "record/character-file"
+   ],
+   "claim": "Character-file requires a quote proving the description; its fallback matches describing-word keywords only. It accepts deceitful plus unrelated Call up her father or invented Purple elephants dance and returns met/File.",
+   "conditional_expected_outcome": {
+    "outcome": "fail_if_condition_holds",
+    "condition": "The actual marker is required to verify quotation-to-description support but uses the pinned keyword-only fallback. Invented-quote probes are not established normal UI attacks; curated quotation selection can mask the gap.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Normal UI limits quotations to paragraph/store choices. Invented-quote probes are not established normal learner UI attacks. This is a marker-contract gap partly masked by curated inputs.",
+   "evidence_refs": [
+    {
+     "finding": "R07",
+     "index": 1
+    },
+    {
+     "finding": "R07",
+     "index": 2
+    },
+    {
+     "finding": "R07",
+     "index": 3
+    },
+    {
+     "finding": "R07",
+     "index": 4
+    }
+   ]
+  },
+  {
+   "id": "reference-r08",
+   "source_finding": "R08",
+   "title": "Smiling asserted as a scene detail",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_grounding_risk",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V04",
+     "V05",
+     "V12"
+    ],
+    "active_check_ids": [
+     "feedback_X_points_to_the_text",
+     "correct_feedback_true"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "key-term/term"
+   ],
+   "claim": "Key-term correct feedback says He smiles at Othello while he plots against him. Preceding source teaches irony/appearance but no explicit smile-at-Othello moment. It illustrates a false front but is not cited textual evidence.",
+   "conditional_expected_outcome": {
+    "outcome": "not_verified",
+    "condition": "All preceding learner-visible text and media must be established before treating smiling as an unsupported scene assertion. Local excerpt evidence alone cannot establish every media frame.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "All media frames/stagings were not inspected. Not a claim Iago never smiles in the whole play. The supplied excerpt itself states Othello is not in this scene.",
+   "evidence_refs": [
+    {
+     "finding": "R08",
+     "index": 1
+    },
+    {
+     "finding": "R08",
+     "index": 2
+    },
+    {
+     "finding": "R08",
+     "index": 3
+    }
+   ]
+  },
+  {
+   "id": "reference-r09",
+   "source_finding": "R09",
+   "title": "Sarcasm label needs academic checking",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "factual_review_question",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V04",
+     "V12"
+    ],
+    "active_check_ids": [
+     "feedback_X_true"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "unit-video/segment-5-check-1"
+   ],
+   "claim": "Dramatic-irony key correctly focuses on audience/character knowledge. Its rejected opposite-of-meaning option receives That is sarcasm; an utterance saying the opposite need not be sarcastic. Check its distinction from verbal irony.",
+   "conditional_expected_outcome": {
+    "outcome": "not_verified",
+    "condition": "The supplied review did not verify an independent definition distinguishing sarcasm and verbal irony. Do not promote this concern to a categorical factual defect.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "No external academic definition consulted here. This is a factual review question, not an independently sourced categorical defect.",
+   "evidence_refs": [
+    {
+     "finding": "R09",
+     "index": 1
+    },
+    {
+     "finding": "R09",
+     "index": 2
+    }
+   ]
+  },
+  {
+   "id": "reference-r10",
+   "source_finding": "R10",
+   "title": "Assisted success needs an assisted status",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_assessment_limit",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V07",
+     "V08",
+     "L07",
+     "L08",
+     "L09"
+    ],
+    "active_check_ids": [
+     "earlier_items_give_the_key"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "reading-1/check",
+    "reading-2/check",
+    "reading-3/check",
+    "reading-4/check",
+    "dose-1/verdict",
+    "words-1/verdict",
+    "model/rebuild-2"
+   ],
+   "claim": "Choices and feedback precede same-content open checks; dose provides a claim starter; words final sentence is assembled from three selections after corrected classification. Supports affect the later response conditions.",
+   "conditional_expected_outcome": {
+    "outcome": "not_a_defect_in_guided_practice",
+    "condition": "Earlier choices, supports and assembled sentences remain guided practice. A defect claim applies only if those supported responses are reported as independent unaided production or mastery.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Legitimate guided practice. Not an answer-leak fault unless the result is promoted to independent unaided production/mastery.",
+   "evidence_refs": [
+    {
+     "finding": "R10",
+     "index": 1
+    },
+    {
+     "finding": "R10",
+     "index": 2
+    },
+    {
+     "finding": "R10",
+     "index": 3
+    }
+   ]
+  },
+  {
+   "id": "reference-r11",
+   "source_finding": "R11",
+   "title": "Delivered choices differ from author pool",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_packet_scope_limit",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V05",
+     "V10",
+     "L08"
+    ],
+    "active_check_ids": [
+     "learner_exposure_complete"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "dose-1/select"
+   ],
+   "claim": "Dose source has five candidates and six decoys. Current renderer shows the first two candidates and decoys 5 and 6. Eleven source lines are not an eleven-option learner item.",
+   "conditional_expected_outcome": {
+    "outcome": "not_verified_for_served_item",
+    "condition": "A supplied author pool must be projected to the four choices selected by the inspected renderer before its checks or counts can describe that served item. Other delivery paths remain outside the observation.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Other routes may use additional strong lines; observation is limited to this explicit rendered picks path.",
+   "evidence_refs": [
+    {
+     "finding": "R11",
+     "index": 1
+    },
+    {
+     "finding": "R11",
+     "index": 2
+    },
+    {
+     "finding": "R11",
+     "index": 3
+    }
+   ]
+  },
+  {
+   "id": "reference-r12",
+   "source_finding": "R12",
+   "title": "Progress after reveal is not successful reasoning",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_progress_limit",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V11",
+     "L07",
+     "L10"
+    ],
+    "active_check_ids": [],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "dose-1/explain",
+    "dose-1/rebut"
+   ],
+   "claim": "Dose advances after revealing an explanation on the third unsuccessful try; after three unsuccessful rebuttals it reveals and finishes. Progress does not necessarily mean the learner convinced the character.",
+   "conditional_expected_outcome": {
+    "outcome": "not_a_defect_in_coaching",
+    "condition": "Progress after the third-try reveal is compatible with coaching. It cannot, without further evidence, be reported as successful independent reasoning.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Can be a legitimate coaching policy. Completion must not be promoted to independent mastery.",
+   "evidence_refs": [
+    {
+     "finding": "R12",
+     "index": 1
+    },
+    {
+     "finding": "R12",
+     "index": 2
+    },
+    {
+     "finding": "R12",
+     "index": 3
+    }
+   ]
+  },
+  {
+   "id": "reference-r13",
+   "source_finding": "R13",
+   "title": "Learner suitability and benefit are unmeasured",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "qualification_unknown",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V13",
+     "L11",
+     "L10"
+    ],
+    "active_check_ids": [
+     "learner_exposure_complete"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "unit-video/segment-3-check-1",
+    "unit-video/segment-3-check-2",
+    "unit-video/segment-4-check-1",
+    "unit-video/segment-5-check-1",
+    "retrieval/web",
+    "key-term/term",
+    "reading-1/mcq-1",
+    "reading-1/mcq-2",
+    "reading-1/mcq-3",
+    "reading-1/check",
+    "reading-2/mcq-1",
+    "reading-2/mcq-2",
+    "reading-2/mcq-3",
+    "reading-2/check",
+    "reading-3/mcq-1",
+    "reading-3/mcq-2",
+    "reading-3/check",
+    "reading-4/mcq-1",
+    "reading-4/mcq-2",
+    "reading-4/mcq-3",
+    "reading-4/check",
+    "dose-1/select",
+    "dose-1/explain",
+    "dose-1/rebut",
+    "dose-1/verdict",
+    "model/rebuild-1",
+    "model/rebuild-2",
+    "model/rebuild-3",
+    "write/paragraph",
+    "write/move-0",
+    "write/move-2",
+    "write/move-3",
+    "write/move-4",
+    "close-1/say-back",
+    "close-2/apply-1",
+    "close-2/apply-2",
+    "close-3/evaluate",
+    "words-1/pin",
+    "words-1/verdict",
+    "record/character-file"
+   ],
+   "claim": "No student sample, individual prerequisites, retention probe, outcome comparison or academic gold labels in this review. Individual ZPD and universal quality cannot be certified.",
+   "conditional_expected_outcome": {
+    "outcome": "not_verified",
+    "condition": "No independent labels, learner prerequisites, retention or comparative outcomes were supplied. Individual challenge fit and universal quality cannot be certified from this review.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Specific design observations and reproduced faults stand. Missing outcome data does not imply ineffective teaching.",
+   "evidence_refs": [
+    {
+     "finding": "R13",
+     "index": 1
+    },
+    {
+     "finding": "R13",
+     "index": 2
+    }
+   ]
+  },
+  {
+   "id": "reference-r14",
+   "source_finding": "R14",
+   "title": "Whole paragraph and row rubrics differ",
+   "label": {
+    "source": "source-reviewed-development",
+    "kind": "conditional_rubric_scope_limit",
+    "independent_human_gold": false,
+    "whole_item_approval": false
+   },
+   "criteria": {
+    "source_card_ids": [
+     "V11",
+     "L02",
+     "L19"
+    ],
+    "active_check_ids": [
+     "rubric_complete",
+     "learner_exposure_complete"
+    ],
+    "coverage_note": "Source observation may concern a capability not implemented in this starter; an empty list is an open coverage gap."
+   },
+   "affected_reference_units": [
+    "write/paragraph",
+    "write/move-2",
+    "write/move-3"
+   ],
+   "claim": "Whole-paragraph rubric mentions two words and their word classes. Row rubrics additionally require contextual meaning and what the words demonstrate. Reviewing only the whole rubric omits active reasoning requirements.",
+   "conditional_expected_outcome": {
+    "outcome": "not_verified_with_partial_packet",
+    "condition": "Whole-paragraph assessment must include active row requirements if those determine credit. Inspecting only the whole rubric is incomplete; the source already applies row checks, so no learner bypass is established.",
+    "unmet_condition": "not_verified"
+   },
+   "scope_limitations": "Current UI applies node.moves and row checks. This is evaluator-packet completeness risk, not an established learner bypass; different quote in one scene is not new-text transfer.",
+   "evidence_refs": [
+    {
+     "finding": "R14",
+     "index": 1
+    },
+    {
+     "finding": "R14",
+     "index": 2
+    },
+    {
+     "finding": "R14",
+     "index": 3
+    },
+    {
+     "finding": "R14",
+     "index": 4
+    }
+   ]
+  }
+ ]
+}

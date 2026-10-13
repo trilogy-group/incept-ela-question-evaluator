@@ -1,0 +1,27 @@
+{
+ "version": 1,
+ "boundary": "public-quality-knowledge-and-contracts",
+ "knowledge_snapshot": {
+  "git_commit": "a572e4256a850e2d2183a59262d22f9a3efa6201",
+  "dirty_worktree": true,
+  "record_count": 1279,
+  "records_sha256": "8adc5f0e5026741866a01fb1978d3333f55a616e6fdabf14afd51db858df5b55",
+  "qualification": "Knowledge records retain their own scope, status and counterevidence; inclusion is not universal academic approval.",
+  "provenance_note": "Canonical records are pinned to the public library. File hashes retain the frozen local evaluator export.",
+  "repository": "https://github.com/trilogy-group/incept-learning_truths"
+ },
+ "files": [
+  {
+   "path": "public/quality-standard.json",
+   "sha256": "6b0e4cc904219eceb6c344e7c54a976985a7fd3e8a74ac58ebbfa3709edaf963"
+  },
+  {
+   "path": "schema/lesson-context.schema.json",
+   "sha256": "5041b411f04e9385a2a8dde1c67062a9d90d765c1331b61e50ff8fd223141689"
+  },
+  {
+   "path": "schema/question-set.schema.json",
+   "sha256": "585fb5923ddf060f17718639fac6e7d1d8a13f06f50bce6ae062b8f9ae0c06af"
+  }
+ ]
+}

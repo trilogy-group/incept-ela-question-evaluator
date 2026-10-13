@@ -1,0 +1,6 @@
+{
+  "source_repository": "https://github.com/trilogy-group/question-evaluator",
+  "source_commit": "4228f7763079dc8d552a15f0c559b47075baa564",
+  "copy": "Fresh public snapshot; no original Git history or local artifacts copied.",
+  "excluded": "Retired combined-prototype archive, historical model run artifacts and sibling-env shell launcher."
+}

@@ -1,0 +1,15 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "lesson-context 0.1",
+ "description": "Everything public about a lesson that its questions depend on.",
+ "type": "object",
+ "required": ["contract", "source", "lesson", "native"],
+ "properties": {
+  "contract": {"const": "lesson-context 0.1"},
+  "source": {"type": "object"},
+  "lesson": {"type": "object", "required": ["id", "learning_question", "keywords"], "properties": {
+   "id": {"type": "string"}, "title": {"type": "string"}, "learning_question": {"type": "string"}, "keywords": {"type": "array"}
+  }},
+  "native": {"type": "object", "description": "the lesson in the player's own form; its pages are in the order a student meets them, and a page with an `extra` flag appears only when that extra is on"}
+ }
+}

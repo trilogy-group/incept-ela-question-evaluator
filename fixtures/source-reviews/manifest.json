@@ -1,0 +1,8 @@
+{
+ "version": 1,
+ "path": "reference-review.json",
+ "sha256": "4598f682493cd8801ec388b92a2e24bfa7a6a6169bed29e25bc13f546d4ae70e",
+ "use": "source-supported development observations; NOT independently adjudicated gold",
+ "scope": "40 authored extracted units at pinned source; 14 observations, including strengths and limits",
+ "independent_gold_labels": 0
+}

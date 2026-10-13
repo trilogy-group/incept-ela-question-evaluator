@@ -1,0 +1,26 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "title": "question-set 0.1",
+ "description": "What a generator returns: a lesson's questions in the order a student meets them.",
+ "type": "object",
+ "required": ["contract", "source", "lesson", "made_by", "items"],
+ "properties": {
+  "contract": {"const": "question-set 0.1"},
+  "source": {"type": "object", "description": "where the set came from: a repository and commit for authored sets, a generator run for generated ones"},
+  "lesson": {"type": "string", "description": "the lesson-context's lesson id"},
+  "made_by": {"type": "object", "required": ["kind"], "properties": {"kind": {"enum": ["authored", "generated"]}, "note": {"type": "string"}}},
+  "items": {"type": "array", "items": {
+   "type": "object",
+   "required": ["id", "page", "order", "kind", "pointer", "view", "native"],
+   "properties": {
+    "id": {"type": "string"},
+    "page": {"type": "string", "description": "the lesson page the item sits on"},
+    "order": {"type": "integer", "description": "its place in the order a student meets the lesson's items"},
+    "kind": {"enum": ["film_mcq", "reading_mcq", "key_term_mcq", "rebuild_choice", "open_check", "open_prompt", "word_web", "evidence_select", "say_back", "classify"]},
+    "pointer": {"type": "string", "description": "JSON pointer to the item in the lesson-context's native lesson"},
+    "view": {"type": "object", "description": "choice: stem, options, key (zero-based), option_feedback, correct_feedback; open: prompt and rubric; others: their native fields by name"},
+    "native": {"description": "the item in the lesson player's own form, unchanged"}
+   }
+  }}
+ }
+}

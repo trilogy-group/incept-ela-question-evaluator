@@ -1,0 +1,1685 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-10-13",
+  "purpose": "Private reference question review: evidence-backed source/design claims and scoring reproductions; no generator or learner-outcome certification.",
+  "source": {
+    "name": "ela-lessons",
+    "commit": "3ed708e126aec14b7456679b9236e01c1081df16",
+    "content_path": "src/content/othello-1-1.json",
+    "content_sha256": "04184809a63e492b54fcf82a7583bd3a0b11483285c5920ce3752929947f8337",
+    "upstream_head_matched": true,
+    "working_tree_clean_observed": true
+  },
+  "scope": {
+    "extracted_units": 40,
+    "closed_choice_units": 19,
+    "wrong_options": 54,
+    "format_counts": {
+      "film_mcq": 4,
+      "word_web": 1,
+      "key_term_mcq": 1,
+      "reading_mcq": 11,
+      "open_check": 15,
+      "evidence_select": 1,
+      "open_prompt": 2,
+      "rebuild_choice": 3,
+      "say_back": 1,
+      "classify": 1
+    },
+    "review": "All 40 extracted units read; words/dose/open rubrics/fallback marker and selected film/reading delivery code deeply inspected. Includes rubric subchecks, not forty independent measurements.",
+    "not_reviewed": [
+      "Hosted media/deployment",
+      "Every upstream unit",
+      "Remote convinced service",
+      "Independent academic labels/student outcomes",
+      "New model executions"
+    ],
+    "privacy": "No personal metadata names retained; fictional characters retained."
+  },
+  "verdict": {
+    "short": "A strong reference for lesson-connected guided practice, with a definite content/key ambiguity and reproducible fallback-scoring defects. Overall high-quality or mastery certification is not established.",
+    "what_is_good": [
+      "Appearance/reality/desired-role contrasts",
+      "Evidence followed by explanation and rebuttal",
+      "Component rubrics and specific misreadings",
+      "Teaching-to-application sequence"
+    ],
+    "what_needs_attention": [
+      "Angry classification ambiguity",
+      "Keyword fallback false accepts",
+      "Actual delivered subsets/assisted states",
+      "Feedback source grounding"
+    ],
+    "claim_strength": "Source-supported observations and deterministic reproductions, no calibrated global score."
+  },
+  "external_run_observation": {
+    "repository_alias": "question-evaluator",
+    "path": "runs/2026-10-13-othello-1-1-authored/report.json",
+    "sha256": "bf9aa17864c91ab7bfc21f490c499e5234adcccf565e3e9ac05ca17a60f8363d",
+    "reported_item_status_counts": {
+      "ready": 34,
+      "unsure": 6
+    },
+    "judge_checks": 499,
+    "valid_draws": {
+      "3": 499
+    },
+    "unanimous": 490,
+    "mean_agreement": 0.9926519706078826,
+    "check_verdicts": {
+      "pass": 438,
+      "flag": 16,
+      "unsure": 45
+    },
+    "wrong_option_literal_source_checks": {
+      "pass": 33,
+      "flag": 14,
+      "unsure": 7
+    },
+    "interpretation": "14 off-text judge flags are not fourteen adjudicated faults; grammar/meaning contrasts can be valid absent the passage. Three recorded draws support within-run consistency, not accuracy/qualification/tuning isolation/learning gains."
+  },
+  "findings": [
+    {
+      "id": "R01",
+      "kind": "strength",
+      "criteria": [
+        "V01",
+        "L02",
+        "L16",
+        "L18"
+      ],
+      "title": "Purposeful classification contrasts",
+      "claim": "Words distinguishes reality, appearance and desired job: honest/loyal versus actual disloyalty, lieutenant versus ensign.",
+      "limits": "Supports recognition/practice design, not eleven independent mastery measurements.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6972",
+          "quote": "\"goal\": \"Drag each of today’s words onto Iago or Roderigo. Watch for the traps: what Iago only seems, and the job he only wanted.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/goal"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6999",
+          "quote": "\"wanted\": \"IAGO WANTED\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/boxes/iago/wanted"
+        }
+      ],
+      "items": [
+        "words-1/pin"
+      ]
+    },
+    {
+      "id": "R02",
+      "kind": "strength",
+      "criteria": [
+        "V06",
+        "L02",
+        "L16"
+      ],
+      "title": "Evidence plus explanation and rebuttal",
+      "claim": "Dose combines a textual selection, an explanation in learner words, a reply to an excuse and claim-with-quote verdict.",
+      "limits": "The deployed convinced service was not inspected/called. Word count is only an input guard, not proof of reasoning.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4627",
+          "quote": "\"task\": \"Which line gives Iago away? Then tell Roderigo what it shows.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/tasks/1/task"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4632",
+          "quote": "\"task\": \"Iago has an excuse. Answer him: why does it not hold?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/tasks/2/task"
+        }
+      ],
+      "items": [
+        "dose-1/select",
+        "dose-1/explain",
+        "dose-1/rebut",
+        "dose-1/verdict"
+      ]
+    },
+    {
+      "id": "R03",
+      "kind": "strength",
+      "criteria": [
+        "V11",
+        "V12",
+        "L12",
+        "L13"
+      ],
+      "title": "Explicit evidence and misreadings",
+      "claim": "Rubrics split response components, accept paraphrases, and identify particular mistakes. Sympathy permits yes/no/partial positions with weighing of reason against conduct.",
+      "limits": "Source-inspectable strengths; scoring accuracy and academic approval of every accepted response remain unmeasured.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3069",
+          "quote": "\"requirement\": \"Says what Iago wanted: to be Othello's lieutenant (the promotion, the second-in-command job).\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/rubric/criteria/0/requirement"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3162",
+          "quote": "\"looks_like\": \"Says Iago is angry because Othello married Desdemona. That is Roderigo's grief; Iago gives another reason here.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/rubric/misreadings/0/looks_like"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6886",
+          "quote": "\"requirement\": \"Takes a clear position: we can, cannot, or can partly sympathize with Iago.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/15/nodes/0/rubric/criteria/0/requirement"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6908",
+          "quote": "\"requirement\": \"Weighs the reason against what Iago does with his anger (he lies, plots, uses Roderigo, wakes Brabantio): says whether the reason excuses it. One clause is enough.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/15/nodes/0/rubric/criteria/2/requirement"
+        }
+      ],
+      "items": [
+        "reading-2/check",
+        "close-3/evaluate"
+      ]
+    },
+    {
+      "id": "R04",
+      "kind": "strength",
+      "criteria": [
+        "V16",
+        "L07",
+        "L08",
+        "L09"
+      ],
+      "title": "Situated teaching-to-application sequence",
+      "claim": "Film checks are tied to source segments; later work asks for explanation, evidence and a different-quote paragraph. Film picks are preserved for later retrieval.",
+      "limits": "Timings do not prove served-media fidelity. Within-scene variation is not new-text transfer or later retention.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1491",
+          "quote": "\"at\": 122.37",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/3/mcq/0/at"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5343",
+          "quote": "\"line\": \"Now you think alone. Choose a different quote and answer today’s Learning Question in your own paragraph.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/line"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Films.tsx",
+          "lines": "158",
+          "quote": "const asked = node.segments.flatMap((g, k) => (g.mcq ?? []).map((m, q) => ({ m, id: `${k}-${q}`, at: m.at ?? (g.to ?? 0) + 0.3 })));",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "UnitFilmVideo/asked"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Films.tsx",
+          "lines": "167",
+          "quote": "const was = p.answers[id] ? `${p.answers[id]} | ` : \"\";",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "UnitFilmVideo/onAnswer"
+        }
+      ],
+      "items": [
+        "unit-video/segment-4-check-1",
+        "write/paragraph"
+      ]
+    },
+    {
+      "id": "R05",
+      "kind": "definite_item_fault",
+      "criteria": [
+        "V02",
+        "V03",
+        "V10"
+      ],
+      "title": "Angry has a defensible second destination",
+      "claim": "General word-to-person prompt makes angry→IAGO IS defensible: the same lesson teaches Iago is angry with Othello. The key accepts only Roderigo. Wrong feedback narrows to who shouts at the beginning only after the attempt.",
+      "limits": "The authored angry meaning explicitly narrows to furious Roderigo shouting when the scene opens. That explains the intended key but is not a pre-attempt question condition in this renderer: PinWords passes only w.w strings to WordBoard; WordBoard draws word strings only, and the accessible selection buttons also display w.w. Neither component reads meaning. This is a source-code visibility check, not a hosted browser check. The intended distinction is teachable if supplied before the first attempt or scored nonexclusively. One word, not every classification.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6972",
+          "quote": "\"goal\": \"Drag each of today’s words onto Iago or Roderigo. Watch for the traps: what Iago only seems, and the job he only wanted.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/goal"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7041",
+          "quote": "\"w\": \"angry\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/words/6/w"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7044",
+          "quote": "\"meaning\": \"furious, as Roderigo is when the scene opens, shouting at Iago\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/words/6/meaning"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3060",
+          "quote": "\"check\": \"Why is Iago angry with Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/check"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7249",
+          "quote": "\"text\": \"Not Iago. Who in this scene is shouting in the street when the scene begins?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/lines_by_id/angry|iago|arch/text"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/PinWords.tsx",
+          "lines": "120",
+          "quote": "const rightMan = who === w.to, right = rightMan && section === w.kind;",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "PinWords/judge"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/PinWords.tsx",
+          "lines": "55",
+          "quote": "const left = node.words.map((w) => w.w);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "PinWords/WordBoard construction"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/three/wordStage.ts",
+          "lines": "56",
+          "quote": "constructor(private stage: DoseStage, words: string[], boxes: BoxSpec[], private cast: string[]) {",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "WordBoard/constructor"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/three/wordStage.ts",
+          "lines": "88",
+          "quote": "fitFont(x, word, 112, W - 120); x.fillStyle = INK; x.textAlign = \"center\"; x.textBaseline = \"middle\"; x.fillText(word, W / 2, H / 2 + 6);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "WordBoard/card learner-visible text"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/PinWords.tsx",
+          "lines": "234",
+          "quote": "onClick={() => { const v = picked === w.w ? null : w.w; setPicked(v); board.current?.select(v); }}>{w.w}</button>)}",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "PinWords/accessible selection buttons"
+        }
+      ],
+      "items": [
+        "words-1/pin"
+      ],
+      "visibility_spotcheck": {
+        "paths": [
+          "src/nodes/PinWords.tsx",
+          "src/three/wordStage.ts"
+        ],
+        "meaning_field_read": false,
+        "wordboard_receives": "string[] of w.w only",
+        "accessible_selection_shows": "w.w only",
+        "preplacement_goal": "General word-to-person instruction, with appearance/wanted traps; no furious/opening-shouts qualifier.",
+        "postplacement_feedback": "Adds who is shouting at the beginning after rejecting Iago."
+      }
+    },
+    {
+      "id": "R06",
+      "kind": "definite_runtime_marker_fault",
+      "criteria": [
+        "V11",
+        "V20",
+        "L02"
+      ],
+      "title": "Keyword fallback accepts reversed relations",
+      "claim": "Offline judgeByRules accepts Cassio wanted the job and Iago has the job and Cassio never got it with both rubric components met, done true. Both learner-reachable typed inputs fail the person/outcome relation.",
+      "limits": "Establishes pinned rules fallback defect, not a semantic-model or hosted-deployment error. Fallback is explicitly source-labelled rules; errors/timeouts/unavailability trigger it.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/lib/judge/rules.ts",
+          "lines": "94",
+          "quote": "const met = r.criteria.filter((c) => turns.some((t) => allGroups(c.keywords, t))).map((c) => c.id);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "rulesAssess/met"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/lib/judge/text.ts",
+          "lines": "17",
+          "quote": "export const allGroups = (groups: string[][], toks: string[]) => groups.length > 0 && groups.every((g) => g.some((term) => hit(term, toks)));",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "allGroups"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/lib/judge/index.ts",
+          "lines": "107",
+          "quote": "return judgeByRules(rubric, answer, attempt, history);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "judgeAnswer/catch"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3105",
+          "quote": "\"requirement\": \"Says Othello gave it to someone else, Cassio, instead of Iago: Iago was passed over.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/rubric/criteria/1/requirement"
+        }
+      ],
+      "items": [
+        "reading-2/check"
+      ]
+    },
+    {
+      "id": "R07",
+      "kind": "definite_marker_contract_fault",
+      "criteria": [
+        "V11",
+        "V20"
+      ],
+      "title": "Fallback drops quotation-to-claim relationship",
+      "claim": "Character-file requires a quote proving the description; its fallback matches describing-word keywords only. It accepts deceitful plus unrelated Call up her father or invented Purple elephants dance and returns met/File.",
+      "limits": "Normal UI limits quotations to paragraph/store choices. Invented-quote probes are not established normal learner UI attacks. This is a marker-contract gap partly masked by curated inputs.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7648",
+          "quote": "\"requirement\": \"The word describes what kind of person Iago is, as Scene 1 shows him: an adjective (deceitful, false, two-faced, disloyal, untrustworthy, dishonest, manipulative, Machiavellian, resentful, jealous) or a word for a person (a liar, a villain). A noun for an act, an idea or a feeling (betrayal, deceit, pretense, façade, jealousy) does not describe the person, so it does not count. And the quoted line must be evidence for that word: reading the line, a student could see Iago being that.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/17/nodes/0/rubric/criteria/0/requirement"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/lib/judge/rules.ts",
+          "lines": "94",
+          "quote": "const met = r.criteria.filter((c) => turns.some((t) => allGroups(c.keywords, t))).map((c) => c.id);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "rulesAssess/met"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/components/record/Record.tsx",
+          "lines": "62",
+          "quote": "const lines = own.length ? own : (store?.passages ?? []).map((p) => quoteOf(p.lines));",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "CharacterFile/lines"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/components/record/Record.tsx",
+          "lines": "66",
+          "quote": "const text = `Iago is ${word}. The line that proves it: \"${line}\"`;",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "CharacterFile/file"
+        }
+      ],
+      "items": [
+        "record/character-file"
+      ]
+    },
+    {
+      "id": "R08",
+      "kind": "conditional_grounding_risk",
+      "criteria": [
+        "V04",
+        "V05",
+        "V12"
+      ],
+      "title": "Smiling asserted as a scene detail",
+      "claim": "Key-term correct feedback says He smiles at Othello while he plots against him. Preceding source teaches irony/appearance but no explicit smile-at-Othello moment. It illustrates a false front but is not cited textual evidence.",
+      "limits": "All media frames/stagings were not inspected. Not a claim Iago never smiles in the whole play. The supplied excerpt itself states Othello is not in this scene.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2546",
+          "quote": "\"yes\": \"He smiles at Othello while he plots against him. That is what a Machiavellian villain does.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/4/nodes/0/yes"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2542",
+          "quote": "\"why\": \"Othello is open about his choice. Who smiles while he plots?\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/4/nodes/0/options/3/why"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2761",
+          "quote": "\"why\": \"Othello does not appear in this scene.\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/6/nodes/0/mcqs/0/options/2/why"
+        }
+      ],
+      "items": [
+        "key-term/term"
+      ]
+    },
+    {
+      "id": "R09",
+      "kind": "review_question",
+      "criteria": [
+        "V04",
+        "V12"
+      ],
+      "title": "Sarcasm label needs academic checking",
+      "claim": "Dramatic-irony key correctly focuses on audience/character knowledge. Its rejected opposite-of-meaning option receives That is sarcasm; an utterance saying the opposite need not be sarcastic. Check its distinction from verbal irony.",
+      "limits": "No external academic definition consulted here. This is a factual review question, not an independently sourced categorical defect.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1508",
+          "quote": "\"A character says the opposite of what they really mean\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/4/mcq/0/options/1"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1515",
+          "quote": "\"That is sarcasm. Dramatic irony is about what the audience knows.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/4/mcq/0/feedback/1"
+        }
+      ],
+      "items": [
+        "unit-video/segment-5-check-1"
+      ]
+    },
+    {
+      "id": "R10",
+      "kind": "conditional_assessment_limit",
+      "criteria": [
+        "V07",
+        "V08",
+        "L07",
+        "L08",
+        "L09"
+      ],
+      "title": "Assisted success needs an assisted status",
+      "claim": "Choices and feedback precede same-content open checks; dose provides a claim starter; words final sentence is assembled from three selections after corrected classification. Supports affect the later response conditions.",
+      "limits": "Legitimate guided practice. Not an answer-leak fault unless the result is promoted to independent unaided production/mastery.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4659",
+          "quote": "\"starter\": \"Iago is only pretending to be loyal to Othello, because he says\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/starter"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/PinWords.tsx",
+          "lines": "153",
+          "quote": "const verdict = seems && is_ && quote ? `Iago seems ${seems}, but he is ${is_}, because he says \"${quote.replace(/[.!?]$/, \"\")}.\"` : \"\";",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "PinWords/verdict"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5141",
+          "quote": "\"correct\": \"to obey a leader\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/11/nodes/0/rebuild/3/correct"
+        }
+      ],
+      "items": [
+        "reading-1/check",
+        "reading-2/check",
+        "reading-3/check",
+        "reading-4/check",
+        "dose-1/verdict",
+        "words-1/verdict",
+        "model/rebuild-2"
+      ]
+    },
+    {
+      "id": "R11",
+      "kind": "conditional_delivery_limit",
+      "criteria": [
+        "V05",
+        "V10",
+        "L08"
+      ],
+      "title": "Delivered choices differ from author pool",
+      "claim": "Dose source has five candidates and six decoys. Current renderer shows the first two candidates and decoys 5 and 6. Eleven source lines are not an eleven-option learner item.",
+      "limits": "Other routes may use additional strong lines; observation is limited to this explicit rendered picks path.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Dose.tsx",
+          "lines": "193",
+          "quote": "const good = node.candidates.slice(0, 2);",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Dose/picks"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Dose.tsx",
+          "lines": "194",
+          "quote": "const bad = [node.decoys[4 % node.decoys.length], node.decoys[5 % node.decoys.length]];",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Dose/picks"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4627",
+          "quote": "\"task\": \"Which line gives Iago away? Then tell Roderigo what it shows.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/tasks/1/task"
+        }
+      ],
+      "items": [
+        "dose-1/select"
+      ]
+    },
+    {
+      "id": "R12",
+      "kind": "conditional_progress_limit",
+      "criteria": [
+        "V11",
+        "L07",
+        "L10"
+      ],
+      "title": "Progress after reveal is not successful reasoning",
+      "claim": "Dose advances after revealing an explanation on the third unsuccessful try; after three unsuccessful rebuttals it reveals and finishes. Progress does not necessarily mean the learner convinced the character.",
+      "limits": "Can be a legitimate coaching policy. Completion must not be promoted to independent mastery.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Dose.tsx",
+          "lines": "233",
+          "quote": "if (n >= 3) { setModel(node.explain_reveal); await landLine(held, el); }",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Dose/explain"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Dose.tsx",
+          "lines": "244",
+          "quote": "if (n >= 3) { setModel(node.rebut_reveal); setTrust(30); finish(); }",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Dose/rebut"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4638",
+          "quote": "\"explain_reveal\": \"It shows Iago only pretends to serve Othello: he follows him for his own ends.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/explain_reveal"
+        }
+      ],
+      "items": [
+        "dose-1/explain",
+        "dose-1/rebut"
+      ]
+    },
+    {
+      "id": "R13",
+      "kind": "qualification_unknown",
+      "criteria": [
+        "V13",
+        "L11",
+        "L10"
+      ],
+      "title": "Learner suitability and benefit are unmeasured",
+      "claim": "No student sample, individual prerequisites, retention probe, outcome comparison or academic gold labels in this review. Individual ZPD and universal quality cannot be certified.",
+      "limits": "Specific design observations and reproduced faults stand. Missing outcome data does not imply ineffective teaching.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "11",
+          "quote": "\"question\": \"At the beginning of the play, how does Shakespeare show that Iago is only pretending to be loyal to Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/question"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6964",
+          "quote": "\"kicker\": \"A challenge · about 4 minutes\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/kicker"
+        }
+      ],
+      "items": [
+        "all-40"
+      ]
+    },
+    {
+      "id": "R14",
+      "kind": "conditional_rubric_scope",
+      "criteria": [
+        "V11",
+        "L02",
+        "L19"
+      ],
+      "title": "Whole paragraph and row rubrics differ",
+      "claim": "Whole-paragraph rubric mentions two words and their word classes. Row rubrics additionally require contextual meaning and what the words demonstrate. Reviewing only the whole rubric omits active reasoning requirements.",
+      "limits": "Current UI applies node.moves and row checks. This is evaluator-packet completeness risk, not an established learner bypass; different quote in one scene is not new-text transfer.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6224",
+          "quote": "\"requirement\": \"Zooms in on two words of the quote and names the word class of each (verb, noun, adjective, adverb…).\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/rubric/criteria/3/requirement"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5900",
+          "quote": "\"requirement\": \"Says what the student's chosen word means here, then, after \\\"demonstrating\\\", what it shows about Iago. Any word from the quote is fine; judge the one the student chose.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/moves/rubrics/2/criteria/1/requirement"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Practice.tsx",
+          "lines": "417",
+          "quote": "if (node.moves) {",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Independent/moves"
+        },
+        {
+          "source": "ela-lessons",
+          "path": "src/nodes/Practice.tsx",
+          "lines": "423",
+          "quote": "keywords={lesson.keywords.map((x) => x.word)} paraRubric={node.rubric} avatar={lesson.guide.avatar} name={lesson.guide.name}",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "code_symbol": "Independent/WriteMoves"
+        }
+      ],
+      "items": [
+        "write/paragraph",
+        "write/move-2",
+        "write/move-3"
+      ]
+    }
+  ],
+  "census": [
+    {
+      "id": "unit-video/segment-3-check-1",
+      "order": 1,
+      "format": "film_mcq",
+      "source_pointer": "/pages/1/nodes/0/segments/2/mcq/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1432",
+          "quote": "\"stem\": \"Where are Acts 2 to 5 set?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/2/mcq/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "unit-video/segment-3-check-2",
+      "order": 2,
+      "format": "film_mcq",
+      "source_pointer": "/pages/1/nodes/0/segments/2/mcq/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1449",
+          "quote": "\"stem\": \"Who holds power there?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/2/mcq/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "unit-video/segment-4-check-1",
+      "order": 3,
+      "format": "film_mcq",
+      "source_pointer": "/pages/1/nodes/0/segments/3/mcq/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1472",
+          "quote": "\"check\": \"Who got the job Iago wanted?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/3/mcq/0"
+        }
+      ],
+      "related_findings": [
+        "R04",
+        "R13"
+      ]
+    },
+    {
+      "id": "unit-video/segment-5-check-1",
+      "order": 4,
+      "format": "film_mcq",
+      "source_pointer": "/pages/1/nodes/0/segments/4/mcq/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "1500",
+          "quote": "\"check\": \"What is dramatic irony?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/1/nodes/0/segments/4/mcq/0"
+        }
+      ],
+      "related_findings": [
+        "R09",
+        "R13"
+      ]
+    },
+    {
+      "id": "retrieval/web",
+      "order": 5,
+      "format": "word_web",
+      "source_pointer": "/pages/3/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2000",
+          "quote": "\"lead\": \"Every book in this library is built around one big idea. In Othello, that big idea is…\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/3/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "key-term/term",
+      "order": 6,
+      "format": "key_term_mcq",
+      "source_pointer": "/pages/4/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2527",
+          "quote": "\"task\": \"Which of these is the most Machiavellian?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/4/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R08",
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-1/mcq-1",
+      "order": 7,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/6/nodes/0/mcqs/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2749",
+          "quote": "\"q\": \"Who are the two characters we meet first?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/6/nodes/0/mcqs/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-1/mcq-2",
+      "order": 8,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/6/nodes/0/mcqs/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2771",
+          "quote": "\"q\": \"What has Othello just done?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/6/nodes/0/mcqs/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-1/mcq-3",
+      "order": 9,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/6/nodes/0/mcqs/2",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2793",
+          "quote": "\"q\": \"Why is this marriage a scandal?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/6/nodes/0/mcqs/2"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-1/check",
+      "order": 10,
+      "format": "open_check",
+      "source_pointer": "/pages/6/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "2623",
+          "quote": "\"check\": \"Who are the two characters we meet, and what news are they arguing about?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/6/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-2/mcq-1",
+      "order": 11,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/7/nodes/0/mcqs/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3220",
+          "quote": "\"q\": \"Why is Roderigo angry with Iago?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/mcqs/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-2/mcq-2",
+      "order": 12,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/7/nodes/0/mcqs/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3242",
+          "quote": "\"q\": \"Who did Othello choose as his lieutenant?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/mcqs/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-2/mcq-3",
+      "order": 13,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/7/nodes/0/mcqs/2",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3264",
+          "quote": "\"q\": \"So why is Iago angry with Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/mcqs/2"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-2/check",
+      "order": 14,
+      "format": "open_check",
+      "source_pointer": "/pages/7/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3060",
+          "quote": "\"check\": \"Why is Iago angry with Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/7/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R03",
+        "R06",
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-3/mcq-1",
+      "order": 15,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/8/nodes/0/mcqs/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3806",
+          "quote": "\"q\": \"Roderigo would not follow a man he hated. Why does Iago follow Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/8/nodes/0/mcqs/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-3/mcq-2",
+      "order": 16,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/8/nodes/0/mcqs/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3828",
+          "quote": "\"q\": \"What does “I am not what I am” tell us about Iago?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/8/nodes/0/mcqs/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-3/check",
+      "order": 17,
+      "format": "open_check",
+      "source_pointer": "/pages/8/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "3639",
+          "quote": "\"check\": \"In your own words, what does \\\"I am not what I am\\\" mean?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/8/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-4/mcq-1",
+      "order": 18,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/9/nodes/0/mcqs/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4229",
+          "quote": "\"q\": \"How does Iago wake Brabantio?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/9/nodes/0/mcqs/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-4/mcq-2",
+      "order": 19,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/9/nodes/0/mcqs/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4251",
+          "quote": "\"q\": \"Why must Iago slip away before he is seen?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/9/nodes/0/mcqs/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-4/mcq-3",
+      "order": 20,
+      "format": "reading_mcq",
+      "source_pointer": "/pages/9/nodes/0/mcqs/2",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4273",
+          "quote": "\"q\": \"Is Iago’s “flag and sign of love” real?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/9/nodes/0/mcqs/2"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "reading-4/check",
+      "order": 21,
+      "format": "open_check",
+      "source_pointer": "/pages/9/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4085",
+          "quote": "\"check\": \"Iago shows \\\"a flag and sign of love.\\\" Is it real? How do you know?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/9/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "dose-1/select",
+      "order": 22,
+      "format": "evidence_select",
+      "source_pointer": "/pages/10/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4543",
+          "quote": "\"goal\": \"Prove to Roderigo, in Iago’s own words, that Iago is only pretending to be loyal.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R02",
+        "R11",
+        "R13"
+      ]
+    },
+    {
+      "id": "dose-1/explain",
+      "order": 23,
+      "format": "open_prompt",
+      "source_pointer": "/pages/10/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4636",
+          "quote": "\"explain_ask\": \"What does this line show about Iago? Tell Roderigo in your own words.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R02",
+        "R12",
+        "R13"
+      ]
+    },
+    {
+      "id": "dose-1/rebut",
+      "order": 24,
+      "format": "open_prompt",
+      "source_pointer": "/pages/10/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4639",
+          "quote": "\"rebut_ask\": \"Answer Iago’s excuse…\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R02",
+        "R12",
+        "R13"
+      ]
+    },
+    {
+      "id": "dose-1/verdict",
+      "order": 25,
+      "format": "open_check",
+      "source_pointer": "/pages/10/nodes/0/verdict",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "4586",
+          "quote": "\"close\": \"That settles it. Roderigo doubts him now. In one sentence: what is Iago, and which line proves it?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/10/nodes/0/verdict"
+        }
+      ],
+      "related_findings": [
+        "R02",
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "model/rebuild-1",
+      "order": 26,
+      "format": "rebuild_choice",
+      "source_pointer": "/pages/11/nodes/0/rebuild/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5130",
+          "quote": "\"correct\": \"verb\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/11/nodes/0/rebuild/1/correct"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "model/rebuild-2",
+      "order": 27,
+      "format": "rebuild_choice",
+      "source_pointer": "/pages/11/nodes/0/rebuild/3",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5141",
+          "quote": "\"correct\": \"to obey a leader\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/11/nodes/0/rebuild/3/correct"
+        }
+      ],
+      "related_findings": [
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "model/rebuild-3",
+      "order": 28,
+      "format": "rebuild_choice",
+      "source_pointer": "/pages/11/nodes/0/rebuild/5",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5152",
+          "quote": "\"correct\": \"loyal soldier\"",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/11/nodes/0/rebuild/5/correct"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "write/paragraph",
+      "order": 29,
+      "format": "open_check",
+      "source_pointer": "/pages/12/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "5343",
+          "quote": "\"line\": \"Now you think alone. Choose a different quote and answer today’s Learning Question in your own paragraph.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R04",
+        "R13",
+        "R14"
+      ]
+    },
+    {
+      "id": "write/move-0",
+      "order": 30,
+      "format": "open_check",
+      "source_pointer": "/pages/12/nodes/0/moves/rubrics/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "11",
+          "quote": "\"question\": \"At the beginning of the play, how does Shakespeare show that Iago is only pretending to be loyal to Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/moves/rubrics/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "write/move-2",
+      "order": 31,
+      "format": "open_check",
+      "source_pointer": "/pages/12/nodes/0/moves/rubrics/2",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "11",
+          "quote": "\"question\": \"At the beginning of the play, how does Shakespeare show that Iago is only pretending to be loyal to Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/moves/rubrics/2"
+        }
+      ],
+      "related_findings": [
+        "R13",
+        "R14"
+      ]
+    },
+    {
+      "id": "write/move-3",
+      "order": 32,
+      "format": "open_check",
+      "source_pointer": "/pages/12/nodes/0/moves/rubrics/3",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "11",
+          "quote": "\"question\": \"At the beginning of the play, how does Shakespeare show that Iago is only pretending to be loyal to Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/moves/rubrics/3"
+        }
+      ],
+      "related_findings": [
+        "R13",
+        "R14"
+      ]
+    },
+    {
+      "id": "write/move-4",
+      "order": 33,
+      "format": "open_check",
+      "source_pointer": "/pages/12/nodes/0/moves/rubrics/4",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "11",
+          "quote": "\"question\": \"At the beginning of the play, how does Shakespeare show that Iago is only pretending to be loyal to Othello?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/12/nodes/0/moves/rubrics/4"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "close-1/say-back",
+      "order": 34,
+      "format": "say_back",
+      "source_pointer": "/pages/13/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6494",
+          "quote": "\"line\": \"You have learned that Iago is a Machiavellian villain who is faithless and false. Say it back to me.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/13/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "close-2/apply-1",
+      "order": 35,
+      "format": "open_check",
+      "source_pointer": "/pages/14/nodes/0/rubrics/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6534",
+          "quote": "\"question\": \"Finish the sentence: we know Iago is faithless and untrustworthy when…\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/14/nodes/0/rubrics/0"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "close-2/apply-2",
+      "order": 36,
+      "format": "open_check",
+      "source_pointer": "/pages/14/nodes/0/rubrics/1",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6590",
+          "quote": "\"question\": \"Finish the sentence: we know Iago is false and deceptive when…\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/14/nodes/0/rubrics/1"
+        }
+      ],
+      "related_findings": [
+        "R13"
+      ]
+    },
+    {
+      "id": "close-3/evaluate",
+      "order": 37,
+      "format": "open_check",
+      "source_pointer": "/pages/15/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6875",
+          "quote": "\"question\": \"Can we have sympathy for Iago, or in what way could somebody sympathize with Iago?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/15/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R03",
+        "R13"
+      ]
+    },
+    {
+      "id": "words-1/pin",
+      "order": 38,
+      "format": "classify",
+      "source_pointer": "/pages/16/nodes/0",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "6972",
+          "quote": "\"goal\": \"Drag each of today’s words onto Iago or Roderigo. Watch for the traps: what Iago only seems, and the job he only wanted.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0"
+        }
+      ],
+      "related_findings": [
+        "R01",
+        "R05",
+        "R13"
+      ]
+    },
+    {
+      "id": "words-1/verdict",
+      "order": 39,
+      "format": "open_check",
+      "source_pointer": "/pages/16/nodes/0/verdict",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7481",
+          "quote": "\"question\": \"In one sentence: what does Iago seem, what is he, and which of his lines proves it?\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/16/nodes/0/verdict"
+        }
+      ],
+      "related_findings": [
+        "R10",
+        "R13"
+      ]
+    },
+    {
+      "id": "record/character-file",
+      "order": 40,
+      "format": "open_check",
+      "source_pointer": "/pages/17/nodes/0/rubric",
+      "reading_record": "Prompt, response rule, support fields and supplied lesson context read. No independent qualification label.",
+      "evidence": [
+        {
+          "source": "ela-lessons",
+          "path": "src/content/othello-1-1.json",
+          "lines": "7642",
+          "quote": "\"question\": \"Choose one word for Iago, and the line from the play that proves it.\",",
+          "revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+          "field_pointer": "/pages/17/nodes/0/rubric"
+        }
+      ],
+      "related_findings": [
+        "R07",
+        "R13"
+      ]
+    }
+  ],
+  "offline_marker_reproductions": {
+    "source_revision": "3ed708e126aec14b7456679b9236e01c1081df16",
+    "method": "Node builtin stripTypeScriptTypes; in-memory data URL modules/content JSON; direct judgeByRules. No calls, temporary files or source edits.",
+    "samples": [
+      {
+        "rubric": "reading-2",
+        "answer": "Cassio wanted the job.",
+        "expected_from_rubric": "not met: Does not say Iago wanted it or Cassio got it instead",
+        "observed": {
+          "verdict": "met",
+          "met": [
+            "wanted-the-post",
+            "someone-else-got-it"
+          ],
+          "missing": [],
+          "done": true,
+          "source": "rules"
+        },
+        "normal_ui_input_possible": true,
+        "rubric_pointer": "/pages/7/nodes/0/rubric"
+      },
+      {
+        "rubric": "reading-2",
+        "answer": "Iago has the job and Cassio never got it.",
+        "expected_from_rubric": "not met: Reverses the taught outcome",
+        "observed": {
+          "verdict": "met",
+          "met": [
+            "wanted-the-post",
+            "someone-else-got-it"
+          ],
+          "missing": [],
+          "done": true,
+          "source": "rules"
+        },
+        "normal_ui_input_possible": true,
+        "rubric_pointer": "/pages/7/nodes/0/rubric"
+      },
+      {
+        "rubric": "character-file",
+        "answer": "Iago is deceitful. The line that proves it: \"Call up her father.\"",
+        "expected_from_rubric": "not met: Unrelated real quote",
+        "observed": {
+          "verdict": "met",
+          "met": [
+            "fits"
+          ],
+          "missing": [],
+          "done": true,
+          "source": "rules"
+        },
+        "normal_ui_input_possible": "not established: UI restricts quotes",
+        "rubric_pointer": "/pages/17/nodes/0/rubric"
+      },
+      {
+        "rubric": "character-file",
+        "answer": "Iago is deceitful. The line that proves it: \"Purple elephants dance.\"",
+        "expected_from_rubric": "not met: Invented quote",
+        "observed": {
+          "verdict": "met",
+          "met": [
+            "fits"
+          ],
+          "missing": [],
+          "done": true,
+          "source": "rules"
+        },
+        "normal_ui_input_possible": false,
+        "rubric_pointer": "/pages/17/nodes/0/rubric"
+      }
+    ],
+    "runtime": {
+      "node": "v24.18.0",
+      "attempt": 1,
+      "history": [],
+      "function": "judgeByRules",
+      "module_loading": "Builtin stripTypeScriptTypes with import paths rewritten to in-memory data URLs; content JSON inlined."
+    },
+    "consumed_source_hashes": {
+      "src/lib/judge/index.ts": "e3a7071b630df0a225da2c15ed648da066dded86eaec2fc46ca95d4c8f3dd822",
+      "src/lib/judge/rules.ts": "84476257450fea65fa6b1dd3b9dc1f2cf58428dae74c68b88bc3cf56016750b1",
+      "src/lib/judge/text.ts": "5bf88ac101d2a98d46a0fff364ff4fcefdce169af9bb7f21afe8251e2a952b54",
+      "src/lib/judge/prompt.ts": "6194487f65ade32fa910985c6f5c2669b614091549a079cf8e62ee4abb277928",
+      "src/content/othello-1-1.json": "04184809a63e492b54fcf82a7583bd3a0b11483285c5920ce3752929947f8337"
+    }
+  },
+  "recommended_next_validation": {
+    "first": "Replay definite failures, propose source corrections to its owner; preserve original reference.",
+    "academic_packet": "Original prompt and actual learner context; hide review/model labels; independently resolve ambiguity and feedback.",
+    "negative_controls": "Reversed relations, negations, irrelevant real quotes, fabricated quotes, legitimate paraphrases; distinguish UI-permitted inputs from API-only probes.",
+    "measurement": "Separate content validity, runtime marker validity, availability, repeatability and student outcomes.",
+    "source_grounding": "Use quoted learner-visible text or explicitly label invented illustrations.",
+    "assessment_role": "Record first attempt, supports, hints, reveals, convinced, progress and completion separately."
+  },
+  "validation": {
+    "exact_pinned_quote_instances": 90,
+    "quote_errors": 0,
+    "census_count": 40,
+    "findings": 14,
+    "criterion_ids_verified": true,
+    "live_model_calls": 0,
+    "source_mutations": 0,
+    "write_scope": "Only this review JSON",
+    "resolvable_field_pointers": 70,
+    "scalar_pointer_quote_mismatches": 0,
+    "visibility_spotcheck": "Two pinned components inspected; meaning field not read"
+  }
+}

@@ -1,0 +1,42 @@
+{
+ "version": 1,
+ "source_repository": "reading-engine",
+ "git_commit": "be9c1de4a7d193c78d8f887275f8a9a250367805",
+ "files": [
+  {
+   "source_path": "src/decide/client.js",
+   "source_sha256": "9d6b76b74e87db1c1f01c0e5ed1f2ded0e1608b1b24756cee230d5a4812442e0",
+   "path": "src/typed/client.mjs",
+   "sha256": "4751c9681714681458caf85e4d1533b60fcab0cc68d7262cb6c5dfee4b898013"
+  },
+  {
+   "source_path": "src/decide/questions.js",
+   "source_sha256": "3c824637246f620877225250777ff98420a388655dc5f2673c0515841f348f27",
+   "path": "src/typed/questions.mjs",
+   "sha256": "3c824637246f620877225250777ff98420a388655dc5f2673c0515841f348f27"
+  },
+  {
+   "source_path": "src/decide/providers/fake.js",
+   "source_sha256": "c1a9bef033a11a3ef45e341aebe7b7460472288bb6329fdf80919f5a27a4be51",
+   "path": "src/typed/fake.mjs",
+   "sha256": "c1a9bef033a11a3ef45e341aebe7b7460472288bb6329fdf80919f5a27a4be51"
+  },
+  {
+   "source_path": "src/decide/providers/jev.js",
+   "source_sha256": "fd94a07ef701631e7b02fbe94a1033c8b430c94926fad29a5d0b6d821e7b96bf",
+   "path": "src/typed/jev.mjs",
+   "sha256": "ac2b4d2cee5becab7aa045a06e90d3d365cd2f86498117a847dd91955b8b14db"
+  },
+  {
+   "source_path": "src/decide/retry.js",
+   "source_sha256": "09c775b80ef4d1ea49f352622e431820a0c4b76229ee365d4e0ff57897a561d9",
+   "path": "src/typed/retry.mjs",
+   "sha256": "09c775b80ef4d1ea49f352622e431820a0c4b76229ee365d4e0ff57897a561d9"
+  }
+ ],
+ "meaning": "frozen development transport, aggregation and gates; not academic qualification",
+ "transformations": [
+  "local module paths and extensions",
+  "record serving observations and logical sample call counts"
+ ]
+}

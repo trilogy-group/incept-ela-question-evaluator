@@ -1,0 +1,13 @@
+{
+ "name": "question-evaluator",
+ "private": true,
+ "type": "module",
+ "description": "Judges a question set in the shared contract's format; blind to whatever generated it.",
+ "scripts": {
+  "test": "node --test test/*.test.mjs",
+  "check": "node scripts/check.mjs"
+ },
+ "engines": {
+  "node": ">=18"
+ }
+}

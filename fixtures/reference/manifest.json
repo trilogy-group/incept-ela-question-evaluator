@@ -1,0 +1,25 @@
+{
+ "version": 1,
+ "public_contract_owner": "learning-truths",
+ "original_public_contract_git_commit": "aa956f163a3bfb54b9c471b6ea644da8a9394a8a",
+ "authored_source_commit": "3ed708e126aec14b7456679b9236e01c1081df16",
+ "files": [
+  {
+   "path": "fixtures/reference/lesson-context.json",
+   "sha256": "1f8c93a0671675ab7947493053ca18da4775102419bd6fa4aa193a868213065e"
+  },
+  {
+   "path": "fixtures/reference/question-set.json",
+   "sha256": "0d7b2508ecbf0eb128391c1d6c5da5edd4df4bd4f14a50fdd4aafb12494760a5"
+  },
+  {
+   "path": "contracts/lesson-context.schema.json",
+   "sha256": "5041b411f04e9385a2a8dde1c67062a9d90d765c1331b61e50ff8fd223141689"
+  },
+  {
+   "path": "contracts/question-set.schema.json",
+   "sha256": "585fb5923ddf060f17718639fac6e7d1d8a13f06f50bce6ae062b8f9ae0c06af"
+  }
+ ],
+ "qualification": "public reference fixture; no independent academic gold labels"
+}
