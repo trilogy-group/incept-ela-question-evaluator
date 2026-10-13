@@ -2,13 +2,13 @@
  "version": 1,
  "boundary": "public-quality-knowledge-and-contracts",
  "knowledge_snapshot": {
-  "git_commit": "a572e4256a850e2d2183a59262d22f9a3efa6201",
+  "git_commit": "dacbde58d6754e0c18702ec26594dd71f077a25e",
   "dirty_worktree": true,
   "record_count": 1279,
   "records_sha256": "8adc5f0e5026741866a01fb1978d3333f55a616e6fdabf14afd51db858df5b55",
   "qualification": "Knowledge records retain their own scope, status and counterevidence; inclusion is not universal academic approval.",
   "provenance_note": "Canonical records are pinned to the public library. File hashes retain the frozen local evaluator export.",
-  "repository": "https://github.com/trilogy-group/incept-learning_truths"
+  "repository": "https://github.com/trilogy-group/incept-ela-learning-truths"
  },
  "files": [
   {

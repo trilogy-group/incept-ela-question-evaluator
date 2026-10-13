@@ -1,8 +1,8 @@
-# Incept question evaluator
+# Incept ELA question evaluator
 
 This starter checks a lesson's question sequence. Code checks structure and answer fields; an optional model answers one question per criterion using the supplied lesson context. **It has not been qualified to judge question quality.** Read [AGENTS.md](AGENTS.md) before reviewing or changing it.
 
-Teaching knowledge and shared formats come from [learning-truths](https://github.com/trilogy-group/incept-learning_truths) and its [contract](https://github.com/trilogy-group/incept-learning_truths/tree/main/contract). This public repository contains the implementation and development cases. Generator work must not inspect or consume them. Independent gold labels and held-out tests belong outside this public repository. The evaluator reads finished lesson-context/question-set packets, without access to the generator's code, prompts, drafts or selection logs.
+Teaching knowledge and shared formats come from [incept-ela-learning-truths](https://github.com/trilogy-group/incept-ela-learning-truths) and its [contract](https://github.com/trilogy-group/incept-ela-learning-truths/tree/main/contract). This public repository contains the implementation and development cases. Generator work must not inspect or consume them. Independent gold labels and held-out tests belong outside this public repository. The evaluator reads finished lesson-context/question-set packets, without access to the generator's code, prompts, drafts or selection logs.
 
 ## Run: Node 18 or later, no installation
 

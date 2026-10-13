@@ -35,6 +35,6 @@ test("the 14 development case labels retain their source claims and limits witho
   const registry = read('criteria/criteria.json');
   for (const check of [...registry.checks, ...registry.set]) {
     assert.ok(check.learnings.length > 0); assert.equal(check.record_links.length, check.learnings.length);
-    check.learnings.forEach((id, i) => assert.equal(check.record_links[i], `https://github.com/trilogy-group/incept-learning_truths/blob/main/learnings/${id}.json`));
+    check.learnings.forEach((id, i) => assert.equal(check.record_links[i], `https://github.com/trilogy-group/incept-ela-learning-truths/blob/main/learnings/${id}.json`));
   }
 });

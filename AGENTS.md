@@ -4,7 +4,7 @@ Read README.md, criteria/criteria.json, cases/reference-review.json and the fixt
 
 ## Blind boundaries
 
-- Read only this repository, the public contract/library in learning-truths, and finished public lesson-context/question-set packets.
+- Read only this repository, the public contract/library in incept-ela-learning-truths, and finished public lesson-context/question-set packets.
 - Never read the question-generator repository, its prompts, drafts, examples, logs or selection internals.
 - Keep evaluator implementation and development cases here. Never copy them into generator inputs or shared teaching exports. Keep independent gold labels and sealed tests outside public repositories.
 - Never open or print key, token or env files. A live adapter consumes only a launch credential; run a model only when explicitly authorized.
