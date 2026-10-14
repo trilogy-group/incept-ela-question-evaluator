@@ -62,8 +62,10 @@ export function summarizeProbe(checks, positionMap, control = null) {
   let outcome = unresolved ? "unresolved" : unique ? "unique_supported_option" : positives.length > 1 ? "multiple_supported_options" : "no_supported_option";
   if (control === "duplicate_options") outcome = unique ? "control_violation_unique_duplicate" : unresolved ? "control_unresolved" : "control_no_unique_approval";
   if (control === "missing_passages") outcome = positives.length ? "control_violation_answer_without_passage" : unresolved ? "control_unresolved" : "control_no_answer_without_passage";
+  const answerable = checks.find(check => check.id === "answerable")?.verdict ?? "unavailable";
+  const contradictions = !unresolved && !unique && answerable === "yes" ? ["affirmative_uniqueness_conflicts_with_supported_option_count"] : [];
   return { outcome, positive_options: positives, selected_source_position: unique ? positives[0].source_position : null,
-    answerable: checks.find(check => check.id === "answerable")?.verdict ?? "unavailable",
+    answerable, criterion_contradictions: contradictions,
     clear: checks.find(check => check.id === "clear")?.verdict ?? "unavailable",
     whole_item_status: "unverified", accuracy: "unmeasured" };
 }

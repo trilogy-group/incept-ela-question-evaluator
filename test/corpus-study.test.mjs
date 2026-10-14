@@ -80,6 +80,13 @@ test("controls diagnose symmetry and absent passages separately from source ques
   assert.equal(duplicate.whole_item_status, "unverified"); assert.equal(missing.qualification, false);
 });
 
+test("affirmative uniqueness cannot conceal multiple supported choice labels", async () => {
+  const result = await probe(provider({ probabilities: (id, sample, state) => id.startsWith("option_") ? Number(state.options[id.slice(7)] === "Fox") : 1 }), { control: "duplicate_options" });
+  assert.equal(result.outcome, "control_no_unique_approval");
+  assert.equal(result.positive_options.length, 2);
+  assert.deepEqual(result.criterion_contradictions, ["affirmative_uniqueness_conflicts_with_supported_option_count"]);
+});
+
 test("reported serving revisions are preserved without claiming independent verification", async () => {
   const result = await probe(provider({ revision: "service-build.123" }));
   assert.equal(result.observations[0].reported_served_revision, "service-build.123");

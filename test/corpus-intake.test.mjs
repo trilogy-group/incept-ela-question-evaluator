@@ -55,6 +55,34 @@ test("renderer preserves passage repetitions and keeps authored key and feedback
   assert.equal(c.pilot_eligible, true); assert.match(c.scope, /not a native lesson interpreter/);
 });
 
+test("renderer verse retains preceding titles and exact lines without definitions, timing or later content", () => {
+  const d = renderer("What does the poem compare the moon to?", { options: ["A silver bow", "A cloud"] });
+  const verse = { type: "verse", title: "Before the wedding", lines: ["The moon, like a silver bow", "Shines in the night", "Shines in the night"],
+    words: [{ word: "bow", definition: "PRIVATE_DEFINITION_SENTINEL" }], voiceover: { text: "PRIVATE_VOICEOVER_SENTINEL" },
+    producer: "PRIVATE_PRODUCER_SENTINEL", rubric: { reveal: "PRIVATE_REVEAL_SENTINEL" }, feedback: "PRIVATE_FEEDBACK_SENTINEL" };
+  d.context.units[0].lessons[0].pages = [
+    { id: "earlier", nodes: [verse] },
+    { id: "hidden-page", hidden: true, nodes: [{ type: "verse", title: "PRIVATE_HIDDEN_PAGE", lines: ["Hidden"] }] },
+    { id: "current", nodes: [{ ...verse, hidden: true, title: "PRIVATE_HIDDEN_NODE" }, verse, d.n,
+      { type: "verse", title: "PRIVATE_LATER_NODE", lines: ["Later"] }] },
+    { id: "later", nodes: [{ type: "verse", title: "PRIVATE_LATER_PAGE", lines: ["Later"] }] }
+  ];
+  d.o.pointer = "/units/0/lessons/0/pages/2/nodes/2";
+  const c = normalize(d), expected = "Before the wedding\nThe moon, like a silver bow\nShines in the night\nShines in the night";
+  assert.deepEqual(c.solver_context.stimulus, [{ text: expected }, { text: expected }]);
+  assert.equal(c.pilot_eligible, true); assert.equal(c.solver_context.learner_context_status, "unresolved");
+  assert.deepEqual(c.authored_key.indices, [0]);
+  assert.doesNotMatch(JSON.stringify(c.solver_context), /PRIVATE_|words|definition|voiceover|producer|rubric|reveal|feedback/);
+});
+
+test("renderer verse abstains on an unsupported line shape and does not interpret hidden malformed verse", () => {
+  const d = renderer();
+  d.context.units[0].lessons[0].pages[0].nodes[0] = { type: "verse", title: "A poem", lines: [{ text: "Unverified line structure" }] };
+  assert.throws(() => normalize(d), /verse requires an explicit title and string lines/);
+  d.context.units[0].lessons[0].pages[0].nodes[0].hidden = true;
+  const c = normalize(d); assert.deepEqual(c.solver_context.stimulus, []); assert.equal(c.pilot_eligible, false);
+});
+
 test("finished corpus hashes, row totals and occurrence totals reconcile", async (t) => {
   const f = await fixture(t, [renderer(), qti()]); const result = await loadCorpus(f.directory, { expectedCatalogSha256: f.catalog_sha256 });
   assert.equal(result.counts.rows, 2); assert.equal(result.counts.covered, 2); assert.equal(result.counts.excluded, 0);

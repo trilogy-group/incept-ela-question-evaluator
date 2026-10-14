@@ -125,8 +125,13 @@ function qtiChoice(row, sourceContext) {
 }
 
 // Only passive source text before the operation enters a solver context. Task solutions and routes are omitted.
-const passiveTypes = new Set(["passage"]);
+const passiveTypes = new Set(["passage", "verse"]);
 function passiveText(node) {
+  if (node.type === "verse") {
+    if (!string(node.title) || !strings(node.lines) || !node.lines.some(string)) fail("renderer verse requires an explicit title and string lines");
+    // The retained verse format displays its title and ordered lines. Word definitions and voiceover are separate.
+    return [node.title, ...node.lines].join("\n");
+  }
   const out = [];
   if (typeof node.title === "string") out.push(node.title);
   // These are alternative serializations of the same displayed body, not separate exposures.
@@ -153,7 +158,7 @@ function rendererContext(sourceContext, occurrence) {
       const node = page.nodes[n];
       if (object(node) && node.hidden !== true && passiveTypes.has(node.type)) {
         const text = passiveText(node); if (text) stimulus.push({ text });
-        if (node.type === "passage" && text) passageAvailable = true;
+        if (text) passageAvailable = true;
       }
     }
   }

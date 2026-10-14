@@ -49,7 +49,7 @@ async function child(args, env) {
 export async function runCorpusCli({ root, configFile, config }) {
   const protocolFile = path.join(root, "criteria/corpus-choice-probe.json");
   const protocolBytes = fs.readFileSync(protocolFile), protocol = JSON.parse(protocolBytes);
-  if (protocol.version !== 1 || protocol.qualification !== false || protocol.id !== "blind-choice-development-v1") throw new Error("invalid corpus development protocol");
+  if (protocol.version !== 1 || protocol.qualification !== false || protocol.id !== "blind-choice-development-v2") throw new Error("invalid corpus development protocol");
   const runtime = runtimeSnapshot(root, configFile);
   const judge = arg("judge", "none"), sideJudge = arg("side-judge", "none"), mode = arg("mode", "qualified");
   if (!["none", "jev"].includes(judge) || !["none", "gemini-flash"].includes(sideJudge)) throw new Error("unsupported corpus provider");
