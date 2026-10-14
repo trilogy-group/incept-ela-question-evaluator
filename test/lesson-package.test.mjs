@@ -19,7 +19,7 @@ function fixture() {
       source_assets: assets,
       core_knowledge: assets.map((_, i) => ({ id: `target-${i + 1}` })),
       content_keys: assets.map((_, i) => ({ id: `content-${i + 1}` })),
-      pairing_tables: [{ id: "fixture-pairs", pairs: assets.map((_, i) => ({ id: `pair-${i + 1}` })) }],
+      pairing_tables: [{ id: "fixture-pairs", pairs: assets.map((asset, i) => ({ id: `pair-${i + 1}`, target_ref: `target-${i + 1}`, source_ref: asset.id })) }],
       lesson_plan: { phases }
     },
     sequence_blueprint: []
@@ -116,6 +116,78 @@ test("unknown course references and lost target coverage cannot pass placement c
   assert.equal(check(audit, "every_planned_target_referenced").verdict, "fail");
   assert.deepEqual(check(audit, "every_planned_target_referenced").evidence.missing, ["target-14"]);
   assert.ok(audit.items[13].issues.includes("differs_from_planned_target_refs"));
+});
+
+test("pairing IDs must join the selected target, source, content key and phase", () => {
+  const data = fixture(), pair = data.request.course_context.pairing_tables[0].pairs[0];
+  Object.assign(pair, { target_ref: "target-1", source_ref: "source-1", content_key_ref: "content-1", phase_ref: "F-GUIDED" });
+  let row = runAudit(data).items[0];
+  assert.equal(row.structure, "pass");
+  assert.equal(row.pairing_relationships[0].status, "declared_tuple_checked");
+  assert.equal(row.pairing_relationships[0].semantic_warrant, "requires independent review");
+  for (const [field, otherKnownValue] of [["target_ref", "target-2"], ["source_ref", "source-2"],
+    ["content_key_ref", "content-2"], ["phase_ref", "F-INDEPENDENT"]]) {
+    const changed = structuredClone(data); changed.request.course_context.pairing_tables[0].pairs[0][field] = otherKnownValue;
+    row = runAudit(changed).items[0];
+    assert.equal(row.structure, "fail");
+    assert.ok(row.issues.includes("pairing_relationship_invalid"));
+    assert.ok(row.pairing_relationships[0].issues.includes(`pair_${field}_not_in_item_alignment`));
+  }
+});
+
+test("content-key relationship contradictions and ambiguous pairing IDs stay visible", () => {
+  const data = fixture(), course = data.request.course_context;
+  Object.assign(course.pairing_tables[0].pairs[0], { target_ref: "target-1", source_ref: "source-1", content_key_ref: "content-1", phase_ref: "F-GUIDED" });
+  course.content_keys[0].source_refs = ["source-2"];
+  let row = runAudit(data).items[0];
+  assert.ok(row.pairing_relationships[0].issues.includes("pair_differs_from_content_key_source_refs"));
+  course.content_keys[0].source_refs = ["source-1"];
+  course.pairing_tables.push({ id: "other-table", pairs: [structuredClone(course.pairing_tables[0].pairs[0])] });
+  row = runAudit(data).items[0];
+  assert.ok(row.pairing_relationships[0].issues.includes("missing_or_ambiguous_pair_row"));
+});
+
+test("partial global pairing rows do not acquire absent phase or content-key claims", () => {
+  const data = fixture(), pair = data.request.course_context.pairing_tables[0].pairs[0];
+  Object.assign(pair, { target_ref: "target-1", source_ref: "source-1" });
+  const audit = runAudit(data), row = audit.items[0];
+  assert.equal(row.structure, "pass");
+  assert.equal(row.pairing_relationships[0].status, "undetermined");
+  assert.deepEqual(row.pairing_relationships[0].missing_fields, ["content_key_ref", "phase_ref"]);
+  assert.equal(audit.academic_approval, false);
+  pair.content_key_ref = "content-1";
+  data.request.course_context.content_keys[0].phase_refs = ["F-GUIDED"];
+  const keyScopedButPhaseUnspecified = runAudit(data).items[0];
+  assert.equal(keyScopedButPhaseUnspecified.structure, "pass");
+  assert.equal(keyScopedButPhaseUnspecified.pairing_relationships[0].status, "undetermined");
+  assert.deepEqual(keyScopedButPhaseUnspecified.pairing_relationships[0].missing_fields, ["phase_ref"]);
+});
+
+test("pairing rows cannot omit the shared contract's required target or source identity", () => {
+  for (const field of ["target_ref", "source_ref"]) {
+    const data = fixture(); delete data.request.course_context.pairing_tables[0].pairs[0][field];
+    const row = runAudit(data).items[0];
+    assert.equal(row.structure, "fail");
+    assert.ok(row.pairing_relationships[0].issues.includes(`missing_required_pair_${field}`));
+  }
+});
+
+test("selected duplicate authority IDs cannot change alignment verdict by array order", () => {
+  for (const [field, mutation] of [["content_keys", row => { row.source_refs = ["source-2"]; }],
+    ["source_assets", row => { row.text = "A conflicting source sentence."; }],
+    ["core_knowledge", row => { row.claim = "A conflicting course target."; }]]) {
+    const data = fixture(), rows = data.request.course_context[field], duplicate = structuredClone(rows[0]);
+    mutation(duplicate);
+    Object.assign(data.request.course_context.pairing_tables[0].pairs[0],
+      { target_ref: "target-1", source_ref: "source-1", content_key_ref: "content-1", phase_ref: "F-GUIDED" });
+    rows.unshift(duplicate);
+    const first = runAudit(data).items[0];
+    rows.push(rows.shift());
+    const last = runAudit(data).items[0];
+    assert.equal(first.structure, "fail");
+    assert.equal(last.structure, "fail");
+    assert.deepEqual(first.issues, last.issues);
+  }
 });
 
 test("nested planned placement, roles, support and the actual prerequisite page order are enforced", () => {

@@ -8,6 +8,11 @@ import { seenBefore, asText } from "./seen.mjs";
 export const digest = value => crypto.createHash("sha256").update(typeof value === "string" || Buffer.isBuffer(value) ? value : JSON.stringify(value)).digest("hex");
 const arr = value => Array.isArray(value) ? value : [];
 const present = value => typeof value === "string" && value.trim().length > 0;
+function grouped(rows) {
+  const map = new Map();
+  for (const row of rows) { if (!map.has(row.id)) map.set(row.id, []); map.get(row.id).push(row); }
+  return map;
+}
 const aliases = { mcq: ["reading_mcq", "key_term_mcq"], source_choice: ["reading_mcq"], evidence_selection: ["evidence_select"],
   short_explanation: ["open_check", "open_prompt"], scr: ["open_check", "open_prompt"], classification: ["classify"],
   integrated_response: ["open_check", "open_prompt"], rebuttal: ["open_check", "open_prompt"] };
@@ -31,10 +36,11 @@ export function loadLessonPackage(directory, { coursePin } = {}) {
 
 export function auditLessonAlignment(request, set, context = null) {
   const course = request.course_context ?? {}, phases = arr(course.lesson_plan?.phases), blueprint = arr(request.sequence_blueprint);
-  const assets = new Map(arr(course.source_assets).map(asset => [asset.id, asset]));
-  const targets = new Set(arr(course.core_knowledge).map(target => target.id));
-  const keys = new Set(arr(course.content_keys).map(key => key.id));
-  const pairs = new Set(arr(course.pairing_tables).flatMap(table => arr(table.pairs).map(pair => pair.id)));
+  const assetRows = grouped(arr(course.source_assets)), targetRows = grouped(arr(course.core_knowledge)), keyRows = grouped(arr(course.content_keys));
+  const assets = new Map([...assetRows].filter(([, rows]) => rows.length === 1).map(([id, rows]) => [id, rows[0]]));
+  const targets = new Set(targetRows.keys()), keys = new Set(keyRows.keys());
+  const pairMap = grouped(arr(course.pairing_tables).flatMap(table => arr(table.pairs))), pairs = new Set(pairMap.keys());
+  const phaseRows = grouped(phases);
   const phaseMap = new Map(phases.map((phase, index) => [phase.id, { ...phase, position: index }]));
   const pageMap = new Map(arr(context?.native?.pages).map((page, index) => [page.id, index]));
   const checks = [], add = (id, condition, evidence) => checks.push({ id, verdict: condition ? "pass" : "fail", evidence });
@@ -51,8 +57,12 @@ export function auditLessonAlignment(request, set, context = null) {
       const expected = desired[field] ?? (field === "target_refs" ? plan.target : null);
       if (Array.isArray(expected) && (expected.some(ref => !refs[field].includes(ref)) || refs[field].some(ref => !expected.includes(ref)))) issues.push(`differs_from_planned_${field}`);
     }
+    for (const [field, rows] of [["target_refs", targetRows], ["source_refs", assetRows], ["content_key_refs", keyRows], ["pair_refs", pairMap]]) {
+      if (refs[field].some(ref => (rows.get(ref)?.length ?? 0) > 1)) issues.push(`ambiguous_${field}`);
+    }
     const phase = phaseMap.get(alignment.phase_ref);
     if (!phase || (desired.phase_ref && alignment.phase_ref !== desired.phase_ref)) issues.push("unknown_or_wrong_phase");
+    if ((phaseRows.get(alignment.phase_ref)?.length ?? 0) > 1) issues.push("ambiguous_phase_ref");
     if (phase) {
       if (phase.position < previousPhase) issues.push("phase_order_reversed");
       if (item.page !== phase.id) issues.push("item_page_differs_from_declared_phase");
@@ -76,7 +86,31 @@ export function auditLessonAlignment(request, set, context = null) {
       const asset = assets.get(anchor.source_ref);
       if (!asset || !refs.source_refs.includes(anchor.source_ref) || !present(anchor.quote) || !String(asset.text ?? "").includes(anchor.quote)) issues.push("source_anchor_not_exact_in_declared_asset");
     }
+    const pairingRelationships = refs.pair_refs.map(id => {
+      const candidates = pairMap.get(id) ?? [], pair = candidates[0], problems = [];
+      if (candidates.length !== 1) problems.push("missing_or_ambiguous_pair_row");
+      for (const field of ["target_ref", "source_ref"]) {
+        if (!pair || !present(pair[field])) problems.push(`missing_required_pair_${field}`);
+      }
+      const fields = [["target_ref", refs.target_refs], ["source_ref", refs.source_refs],
+        ["content_key_ref", refs.content_key_refs], ["phase_ref", [alignment.phase_ref]]];
+      for (const [field, selected] of fields) {
+        if (pair && Object.hasOwn(pair, field) && (!present(pair[field]) || !selected.includes(pair[field])))
+          problems.push(`pair_${field}_not_in_item_alignment`);
+      }
+      const candidatesForKey = keyRows.get(pair?.content_key_ref) ?? [], key = candidatesForKey.length === 1 ? candidatesForKey[0] : null;
+      if (candidatesForKey.length > 1) problems.push("ambiguous_pair_content_key");
+      for (const [field, pairField] of [["target_refs", "target_ref"], ["source_refs", "source_ref"], ["phase_refs", "phase_ref"]]) {
+        if (key && Object.hasOwn(pair, pairField) && Object.hasOwn(key, field) && (!Array.isArray(key[field]) || !key[field].includes(pair[pairField])))
+          problems.push(`pair_differs_from_content_key_${field}`);
+      }
+      const missing = fields.map(([field]) => field).filter(field => !pair || !Object.hasOwn(pair, field));
+      if (problems.length) issues.push("pairing_relationship_invalid");
+      return { pair_ref: id, status: problems.length ? "invalid" : missing.length ? "undetermined" : "declared_tuple_checked",
+        missing_fields: missing, issues: problems, semantic_warrant: "requires independent review" };
+    });
     return { item_id: item.id, order: item.order, kind: item.kind, alignment, source_anchors: anchors,
+      pairing_relationships: pairingRelationships,
       structure: issues.length ? "fail" : "pass", issues: [...new Set(issues)], factual_entailment: "requires independent review" };
   });
   add("every_planned_target_referenced", [...targets].every(target => observedTargets.has(target)), { missing: [...targets].filter(target => !observedTargets.has(target)) });

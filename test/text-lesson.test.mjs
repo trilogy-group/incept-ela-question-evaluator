@@ -178,6 +178,55 @@ test("source bindings resolve the declared item field and reject absent or unres
   }
 });
 
+test("declared procedure, prior teaching and scoped relationships enter editorial review only", () => {
+  const pkg = fixture(), before = prepareTextLesson(pkg);
+  Object.assign(pkg.request.course_context, {
+    authorized_procedure: { source: "Supplied course procedure", steps: ["Read", "Find", "Explain"], status: "proposed",
+      producer: "PRIVATE_PRODUCER_ID", prompt: "PRIVATE_WRITER_PROMPT" },
+    prior_exposure: [{ role: "worked-instruction", content: "PRIVATE_WORKED_INTERPRETATION", source_refs: ["source"],
+      timing: "After the first attempt, before later application", actual_learner_event: "PRIVATE_UNVERIFIED_EVENT" }],
+    knowledge_map: { revision: "fixture-v1", nodes: [{ id: "target", claim: "Declared performance" }, { id: "prerequisite", role: "access" },
+      { id: "unrelated", claim: "PRIVATE_UNRELATED_TARGET" }], edges: [{ from: "prerequisite", to: "target", relation: "soft-support; not a calibrated gate" },
+      { from: "unrelated", to: "another", relation: "unrelated" }] },
+    pairing_tables: [{ id: "table", pairs: [{ id: "pair", target_ref: "target", source_ref: "source", rationale: "Proposed source relationship" }] }]
+  });
+  pkg.request.known_constraints = ["PRIVATE_CONSTRAINT: require an integrated explanation, not disconnected component checks."];
+  pkg.set.items[0].alignment.pair_refs = ["pair"];
+  const plan = prepareTextLesson(pkg), constraints = plan.cases[0].editorial.declared_course_constraints;
+  for (const [index, item] of plan.cases.entries()) {
+    assert.deepEqual(item.blind, before.cases[index].blind);
+    assertBlind(item.blind);
+  }
+  assert.deepEqual(constraints.authorized_procedure.steps, ["Read", "Find", "Explain"]);
+  assert.equal(constraints.authorized_procedure.status, "proposed");
+  assert.match(constraints.prior_exposure[0].content, /WORKED_INTERPRETATION/);
+  assert.match(constraints.known_constraints[0], /integrated explanation/);
+  assert.deepEqual(constraints.knowledge_relationships.nodes.map(node => node.id), ["target", "prerequisite"]);
+  assert.deepEqual(constraints.knowledge_relationships.edges.map(edge => edge.relation), ["soft-support; not a calibrated gate"]);
+  assert.equal(constraints.selected_pairings[0].rationale, "Proposed source relationship");
+  assert.doesNotMatch(JSON.stringify(constraints), /PRIVATE_PRODUCER_ID|PRIVATE_WRITER_PROMPT|PRIVATE_UNVERIFIED_EVENT|PRIVATE_UNRELATED_TARGET/);
+  const instruction = JSON.stringify(plan.cases[0].editorial_questions.find(check => check.id === "fits_declared_performance"));
+  assert.match(instruction, /not automatically answer leakage/);
+  assert.match(instruction, /Missing policy cannot be invented/);
+});
+
+test("absent course policy stays missing and malformed supported fields cannot disappear silently", () => {
+  const baseline = prepareTextLesson(fixture()).cases[0].editorial.declared_course_constraints;
+  assert.equal(baseline.authorized_procedure, null);
+  assert.equal(baseline.knowledge_relationships, null);
+  assert.ok(baseline.missing.includes("prior_exposure"));
+  const mutations = [
+    course => { course.authorized_procedure = { steps: ["Read", { answer: "PRIVATE_KEY" }] }; },
+    course => { course.prior_exposure = [{ role: { answer: "PRIVATE_KEY" } }]; },
+    course => { course.knowledge_map = { edges: [{ from: "target", relation: { answer: "PRIVATE_KEY" } }] }; },
+    course => { course.known_constraints = [{ answer: "PRIVATE_KEY" }]; }
+  ];
+  for (const mutate of mutations) {
+    const pkg = fixture(); mutate(pkg.request.course_context);
+    assert.throws(() => prepareTextLesson(pkg), /unsupported declared course/);
+  }
+});
+
 test("one uncertain or conflicting sample vetoes blind author-key agreement in the text route", async () => {
   const plan = prepareTextLesson(fixture());
   for (const probabilities of [[1, 1, 0.5], [1, 1, 0]]) {
@@ -222,7 +271,7 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   const pkg = fixture(), sourceText = pkg.context.native.pages[1].nodes[0].blocks[0].lines.map(line => line.line).join("\n");
   pkg.request.course_context.source_assets = [{ id: "source", text: sourceText }];
   pkg.request.course_context.content_keys = [{ id: "content" }];
-  pkg.request.course_context.pairing_tables = [{ id: "pairs", pairs: [{ id: "pair" }] }];
+  pkg.request.course_context.pairing_tables = [{ id: "pairs", pairs: [{ id: "pair", target_ref: "target", source_ref: "source" }] }];
   pkg.request.course_context.lesson_plan = { phases: [
     { id: "ORIENT", after: [] }, { id: "READ", after: ["ORIENT"] }, { id: "LATER", after: ["READ"] }
   ] };

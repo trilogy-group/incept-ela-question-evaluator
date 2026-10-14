@@ -2583,7 +2583,7 @@
         "test-the-skill-it-claims",
         "design-the-evidence-before-the-item"
       ],
-      "operationalization": "Task and marking guide follow explicitly declared performance, role and support; no course target or policy is inferred from prose.",
+      "operationalization": "Task and marking guide follow explicitly declared performance, role, support and supplied course constraints. Procedure, prior teaching and scoped relationships are editorial context, not observed learner events or calibrated prerequisite gates; no absent course policy is inferred.",
       "applicability": {
         "decision_source": "explicit declaration only; source prose is not executable policy",
         "conditions": [

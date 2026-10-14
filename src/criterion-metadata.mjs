@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 
-const CATALOG_SHA256 = "8685f537f047dcee7513ebddbc7a7bf760b4b2bc64fcd4e0f8cdf52d2f8ca1f1";
+const CATALOG_SHA256 = "f0c2e04a46ab577ba443aeadecbd538c71315e154e143042a22e36d364f88179";
 const SOURCE_SHA256 = "5d93d80f678ec54c54be8b6d0a166399f32d883077462f08f1268dbdd8286a46";
 const catalogUrl = new URL("../criteria/route-checks.json", import.meta.url);
 const sourceUrl = new URL("../fixtures/criterion-source-records.json", import.meta.url);
