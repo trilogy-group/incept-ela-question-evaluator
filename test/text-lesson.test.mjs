@@ -300,6 +300,10 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   const manifest = read("manifest.json"), report = read("report.json"), audit = read("lesson-audit.json"), review = read("review-packet.json");
   assert.equal(digest(fs.readFileSync(path.join(out, "criterion-sources.json"))), manifest.criterion_sources_sha256);
   assert.ok(read("criterion-sources.json").checked > 0);
+  assert.equal(digest(fs.readFileSync(path.join(out, "quote-diagnostics.json"))), manifest.quote_diagnostics_sha256);
+  assert.equal(read("quote-diagnostics.json").qualification, false);
+  assert.deepEqual(read("quote-diagnostics.json").provenance.package_file_sha256, hashes);
+  assert.equal(read("quote-diagnostics.json").counts.unavailable_source_fields, 0);
   assert.equal(result.items, 4);
   assert.equal(result.model_calls, 0);
   assert.equal(result.qualified, false);
