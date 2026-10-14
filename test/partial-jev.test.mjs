@@ -97,7 +97,7 @@ test("live adapter suppresses raw provider diagnostics before a failure can reac
     const artifact = JSON.stringify({ rep, log });
     assert.equal(artifact.includes("PRIVATE_PROVIDER_BODY_SENTINEL"), false);
     assert.equal(artifact.includes("synthetic-test-credential"), false);
-    assert.match(artifact, /provider details suppressed/);
+    assert.deepEqual([...new Set(log.flatMap((row) => row.failure_observations.map((failure) => failure.code)))], ["UNAVAILABLE"]);
   } finally { globalThis.fetch = saved; }
 });
 

@@ -1,6 +1,7 @@
 // Independent development signal. Primary verdicts, qualification evidence and human labels never enter this route.
 import crypto from "node:crypto";
 import { evaluateProjection } from "./evaluate.mjs";
+import { safeFailureCode } from "./typed/client.mjs";
 
 const SIDE_PROVIDER = "maat-gemini-flash";
 const DEFAULT_MODEL = "gemini-group/gemini-3.8-flash";
@@ -29,8 +30,10 @@ export async function reviewSideProjection(context, set, { provider = null, prov
       let response;
       try { response = await candidate.ask(state, questions, options); }
       catch (error) {
-        const code = typeof error?.code === "string" && /^(?:HTTP_(?:[1-5][0-9]{2}|UNKNOWN)|TRANSPORT_UNAVAILABLE|TIMEOUT|INVALID_JSON|INVALID_CATEGORICAL|INCOMPLETE_COMPLETION)$/.test(error.code) ? error.code : "UNAVAILABLE";
-        throw new Error(`side provider unavailable (${code}); provider details suppressed`);
+        const code = safeFailureCode(error);
+        const sanitized = new Error(`side provider unavailable (${code}); provider details suppressed`);
+        sanitized.code = code;
+        throw sanitized;
       }
       for (const question of questions) if (response?.answers?.[question.id]?.noul === 0.5) uncertain.add(pairKey(key, question.id));
       return response;

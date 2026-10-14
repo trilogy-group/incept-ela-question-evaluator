@@ -7,7 +7,7 @@
    "source_path": "src/decide/client.js",
    "source_sha256": "9d6b76b74e87db1c1f01c0e5ed1f2ded0e1608b1b24756cee230d5a4812442e0",
    "path": "src/typed/client.mjs",
-   "sha256": "4751c9681714681458caf85e4d1533b60fcab0cc68d7262cb6c5dfee4b898013"
+   "sha256": "6ad077c76d0c526b97f241241d03a8dbfc6381091b47a149746104eb1cb77324"
   },
   {
    "source_path": "src/decide/questions.js",
@@ -38,6 +38,7 @@
  "transformations": [
   "local module paths and extensions",
   "record serving observations and logical sample call counts",
-  "preserve missing reported model identity instead of substituting the requested alias"
+  "preserve missing reported model identity instead of substituting the requested alias",
+  "record bounded provider and validation failure codes for each attempted sample, including recovery"
  ]
 }

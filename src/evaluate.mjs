@@ -207,13 +207,15 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
         const a = r.answers[x.q.id];
         const gate = [...(a?.gate_reasons || []), ...serving];
         const accuracy = qualifications.get(x.q.id);
+        const criterionCall = mode === "qualified" ? calls.find((call) => Object.hasOwn(call.answers, x.q.id)) : null;
+        if (criterionCall && (criterionCall.meta.retried > 0 || criterionCall.meta.serving_observations.some((observation) => observation.unavailable))) gate.push("request_recovery_in_qualified_route");
         if (mode === "qualified" && r.meta.serving_observations.some((o) => !o.unavailable && (o.model !== accuracy.model || o.reported_served_revision !== accuracy.served_revision))) gate.push("serving_identity_does_not_match_certificate");
         if (mode === "qualified" && Date.parse(accuracy.expires_at) <= Date.now()) gate.push("qualification_expired_during_request");
         const observed = judgeVerdict(a, x.expect, x.required);
         if (mode === "qualified" && (observed === "flag" ? "fail" : observed) !== accuracy.verified_expected_verdict) gate.push("verdict_disagrees_with_verified_label");
         if (a?.valid !== samples) gate.push("incomplete_sample_set");
         const actualPacket = mode === "qualified" ? packets.get(x.q.id) : { state: judgeState(it, seen.text, lq, keywords, profile), questions: eligible.map((entry) => entry.q) };
-        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", criterion_packet_sha256: sha(JSON.stringify(packets.get(x.q.id))), request_packet_sha256: sha(JSON.stringify(actualPacket)), scope: "selected", requested: true, accuracy_qualification: publicQualification(accuracy), verdict: serving.length || gate.some((reason) => ["serving_identity_does_not_match_certificate", "qualification_expired_during_request", "verdict_disagrees_with_verified_label"].includes(reason)) || a?.valid !== samples ? "unavailable" : observed,
+        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", criterion_packet_sha256: sha(JSON.stringify(packets.get(x.q.id))), request_packet_sha256: sha(JSON.stringify(actualPacket)), scope: "selected", requested: true, accuracy_qualification: publicQualification(accuracy), verdict: serving.length || gate.some((reason) => ["serving_identity_does_not_match_certificate", "qualification_expired_during_request", "verdict_disagrees_with_verified_label", "request_recovery_in_qualified_route"].includes(reason)) || a?.valid !== samples ? "unavailable" : observed,
           p_yes: a?.unavailable ? null : Number(a.value.toFixed(3)), agreement: a?.agreement ?? null, valid: a?.valid ?? 0, gate });
       }
     }

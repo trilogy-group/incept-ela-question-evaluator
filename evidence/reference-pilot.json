@@ -1,0 +1,237 @@
+{
+ "version": 1,
+ "status": "development-proof",
+ "academic_qualification": "unqualified",
+ "study_source_commit": "fffcc70",
+ "study_tag": "evaluator-pilot-v1",
+ "knowledge_baseline": {
+  "release": "knowledge-v1",
+  "sha256": "365c0a5a2a3f460aa6fb8d8f87cf8ed9949b8863ef5df44200ec6477e8d1f8e9"
+ },
+ "input": {
+  "context_projection_sha256": "047706b73638b7d001a29ef930c62aa0017d0bd3dedf085621f938f8199ee6fd",
+  "set_projection_sha256": "f3a6ca175a2ab659183a4c1bfb1f4c36bc55957726164d6ad31b7cad4c2562d7"
+ },
+ "packet_sha256": "119cbd4def93da35314f9c074f8ea01d9f19b6a077b627f7d4ee2da03082a606",
+ "runtime_sha256": "fed58158b705214e35b41af142d6c3952d7bfe8eb05003846d3b1eb9f3f19b75",
+ "study_config_sha256": "0bf497e2076df4302d1b0cfdee5202a44c2df9db8d3ab4e312d78d724978994b",
+ "design": {
+  "reference_units": 40,
+  "selected_partial_criteria": 125,
+  "selected_units": 13,
+  "full_draws": 3,
+  "samples_per_request": 3,
+  "fresh_processes": true,
+  "independent_human_gold_labels": 0,
+  "fresh_sealed_holdout": false,
+  "learner_exposure": "unverified native reconstruction"
+ },
+ "models": {
+  "requested_primary": "jev-latest",
+  "reported_primary": [
+   "jev-1.13.0"
+  ],
+  "requested_side": "gemini-group/gemini-3.8-flash",
+  "reported_side": [
+   "gemini-3.8-flash"
+  ],
+  "serving_revisions_verified": false
+ },
+ "known_fault": {
+  "source_case": "reference-r05",
+  "item_pointer": "/pages/16/nodes/0",
+  "criterion": "word_7_iago_is_also_fits",
+  "claim": "The word angry is keyed to Roderigo while earlier lesson content explicitly describes Iago as angry; this supports reviewing multiple defensible placements.",
+  "source_evidence": {
+   "path": "fixtures/reference/lesson-context.json",
+   "line": 2789,
+   "quote": "Iago has his own reason to be angry"
+  },
+  "source_status": "conditional source-reviewed development observation; not independent academic gold",
+  "draws": [
+   {
+    "draw": 1,
+    "primary": {
+     "verdict": "fail",
+     "p_yes": 0.827,
+     "valid_samples": 3
+    },
+    "side": {
+     "verdict": "fail",
+     "p_yes": 1,
+     "valid_samples": 3
+    }
+   },
+   {
+    "draw": 2,
+    "primary": {
+     "verdict": "fail",
+     "p_yes": 0.817,
+     "valid_samples": 3
+    },
+    "side": {
+     "verdict": "fail",
+     "p_yes": 1,
+     "valid_samples": 3
+    }
+   },
+   {
+    "draw": 3,
+    "primary": {
+     "verdict": "fail",
+     "p_yes": 0.82,
+     "valid_samples": 3
+    },
+    "side": {
+     "verdict": "fail",
+     "p_yes": 1,
+     "valid_samples": 3
+    }
+   }
+  ]
+ },
+ "results": {
+  "draws": [
+   {
+    "draw": 1,
+    "primary_counts": {
+     "unsure": 39,
+     "fails": 1
+    },
+    "primary_selected": 125,
+    "primary_usable": 125,
+    "primary_unsure": 2,
+    "side_requested": 543,
+    "side_usable": 501,
+    "side_unavailable": 42,
+    "side_unsure": 13,
+    "comparison": {
+     "primary_criteria": 543,
+     "side_criteria": 543,
+     "matched_pairs": 543,
+     "comparable_pairs": 111,
+     "agreements": 107,
+     "disagreements": 4,
+     "excluded_pairs": 432,
+     "primary_only": 0,
+     "side_only": 0,
+     "primary_unsure": 2,
+     "primary_unavailable": 418,
+     "primary_other": 0,
+     "side_unsure": 13,
+     "side_unavailable": 42,
+     "side_other": 0
+    },
+    "logical_primary_calls": 39,
+    "logical_side_calls": 120,
+    "report_sha256": "0a26d294fea544cc8e10f80b1525ceb54a00d266f22f54e49b3c13897048e15e"
+   },
+   {
+    "draw": 2,
+    "primary_counts": {
+     "unsure": 39,
+     "fails": 1
+    },
+    "primary_selected": 125,
+    "primary_usable": 125,
+    "primary_unsure": 3,
+    "side_requested": 543,
+    "side_usable": 384,
+    "side_unavailable": 159,
+    "side_unsure": 11,
+    "comparison": {
+     "primary_criteria": 543,
+     "side_criteria": 543,
+     "matched_pairs": 543,
+     "comparable_pairs": 91,
+     "agreements": 91,
+     "disagreements": 0,
+     "excluded_pairs": 452,
+     "primary_only": 0,
+     "side_only": 0,
+     "primary_unsure": 3,
+     "primary_unavailable": 418,
+     "primary_other": 0,
+     "side_unsure": 11,
+     "side_unavailable": 159,
+     "side_other": 0
+    },
+    "logical_primary_calls": 39,
+    "logical_side_calls": 123,
+    "report_sha256": "4904dc8d58abd99911b24a0d55970dd68f2d8a8cf9d84877b8475132e7a1a56b"
+   },
+   {
+    "draw": 3,
+    "primary_counts": {
+     "unsure": 39,
+     "fails": 1
+    },
+    "primary_selected": 125,
+    "primary_usable": 125,
+    "primary_unsure": 3,
+    "side_requested": 543,
+    "side_usable": 396,
+    "side_unavailable": 147,
+    "side_unsure": 10,
+    "comparison": {
+     "primary_criteria": 543,
+     "side_criteria": 543,
+     "matched_pairs": 543,
+     "comparable_pairs": 102,
+     "agreements": 102,
+     "disagreements": 0,
+     "excluded_pairs": 441,
+     "primary_only": 0,
+     "side_only": 0,
+     "primary_unsure": 3,
+     "primary_unavailable": 418,
+     "primary_other": 0,
+     "side_unsure": 10,
+     "side_unavailable": 147,
+     "side_other": 0
+    },
+    "logical_primary_calls": 39,
+    "logical_side_calls": 126,
+    "report_sha256": "f6f4649daa07709d5034c73911eac56a425b8eb59b40314a71408b90d3cee921"
+   }
+  ],
+  "primary_verdicts_stable": 123,
+  "primary_verdicts_varied": 2,
+  "primary_scores_varied_without_verdict_change": 108,
+  "side_repeat_summary": {
+   "checks_observed": 834,
+   "checks_with_differing_decisions": 190,
+   "checks_with_same_decision_and_varying_p_yes": 17,
+   "checks_with_incomplete_structure": 0
+  },
+  "logical_primary_calls": 117,
+  "logical_side_calls": 369,
+  "actual_http_or_billed_requests": "not established by these logical counts"
+ },
+ "safety": {
+  "default_qualified_run": {
+   "candidate_criteria": 543,
+   "eligible": 0,
+   "model_calls": 0,
+   "full_draws": 3,
+   "identical_checks": true
+  },
+  "human_review": {
+   "sheets": 2,
+   "criteria": 125,
+   "resolved": 0,
+   "pending": 125
+  },
+  "current_hardening": [
+   "Qualified routing rejects transport or malformed-answer recovery.",
+   "Current journals retain allowlisted failure codes per attempted sample."
+  ],
+  "historical_logging_limit": "This frozen study did not retain specific error codes for partially unavailable batches. Missing samples are explicit and never pass."
+ },
+ "replay": {
+  "command": "node bin/evaluate.mjs --config evidence/reference-pilot-config.json --judge jev --mode development --side-judge gemini-flash",
+  "credentials": "launch environment only; no credentials in this evidence",
+  "meaning": "The same procedure and settings can be rerun; stochastic outputs and an unverified serving revision cannot be reproduced bit for bit."
+ },
+ "meaning": "Observed detection of one documented ambiguity and repeatability/availability of development judgments. Agreement and consistency do not establish correctness, academic approval, universal transfer or learner outcomes."
+}

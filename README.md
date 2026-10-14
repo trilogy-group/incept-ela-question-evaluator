@@ -97,4 +97,6 @@ node bin/evaluate.mjs --review score --bundle .local/pilot/bundle.json --labels 
 
 These commands make zero model calls. Scoring binds the input, build, profile, baseline and labels. Without reviewed labels and model answers, accuracy is unmeasured. For a declared Jev development study, prepare with both `--review-model <requested-model>` and `--reported-model <served-model>`, then run with `--judge jev --mode development`. Changed serving identities cannot be scored against the declared model. All pilot outputs stay private and unqualified. These correlated, previously public cases are not a fresh sealed holdout.
 
+[The recorded development proof](evidence/reference-pilot.json) ran three fresh-process draws. Both judges flagged the documented “angry” placement problem each time: the key assigns it to Roderigo while earlier lesson content describes Iago as angry. Jev kept the same verdict on 123 of 125 selected checks; two varied. Gemini had 42, 159 and 147 unavailable checks across its draws. The evidence includes source, input and runtime digests, replay settings and limits. Academic accuracy remains unmeasured.
+
 The repository checker detects literal home paths and credential-shaped values. To check a list of personal names, supply an external JSON file with `--name-list`; otherwise that check is unavailable.

@@ -134,3 +134,39 @@ test("default Jev CLI runs outside checkout with no credential when no family ha
     assert.ok(report.items.every((it) => it.judge === null));
   } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
 });
+
+test("qualified routing rejects successful recovery after every initial sample has a transport error", async () => {
+  const q = one(), qualification = syntheticRegistry(q), log = [];
+  let attempts = 0;
+  const provider = { name: "jev", model: "jev-1.13.0", async ask(_state, questions) {
+    attempts++;
+    assert.deepEqual(questions.map((question) => question.id), ["key_correct"]);
+    if (attempts <= 3) throw new Error("synthetic first-attempt transport failure");
+    return { model: "jev-1.13.0", served_revision: "synthetic-reviewed-revision", answers: { key_correct: { noul: 0.95 } } };
+  } };
+  const report = await evaluate(context, q, { provider, qualification, trustedReviewers, log });
+  const check = report.items[0].checks.find((row) => row.id === "key_correct");
+  assert.equal(attempts, 6); assert.equal(log[0].retried, 1); assert.equal(log[0].logical_sample_calls, 6);
+  assert.equal(log[0].serving_observations.filter((row) => row.unavailable).length, 3);
+  assert.equal(check.accuracy_qualification.eligible, true); assert.equal(check.valid, 3);
+  assert.equal(check.verdict, "unavailable"); assert.ok(check.gate.includes("request_recovery_in_qualified_route"));
+  assert.equal(report.evaluator.qualification, "unqualified"); assert.equal(report.status, "unverified");
+});
+
+test("qualified routing rejects malformed-answer recovery even when every serving observation reports the right identity", async () => {
+  const q = one(), qualification = syntheticRegistry(q), log = [];
+  let attempts = 0;
+  const provider = { name: "jev", model: "jev-1.13.0", async ask(_state, questions) {
+    attempts++;
+    assert.deepEqual(questions.map((question) => question.id), ["key_correct"]);
+    return { model: "jev-1.13.0", served_revision: "synthetic-reviewed-revision",
+      answers: attempts <= 3 ? {} : { key_correct: { noul: 0.95 } } };
+  } };
+  const report = await evaluate(context, q, { provider, qualification, trustedReviewers, log });
+  const check = report.items[0].checks.find((row) => row.id === "key_correct");
+  assert.equal(attempts, 6); assert.equal(log[0].retried, 1); assert.equal(log[0].logical_sample_calls, 6);
+  assert.ok(log[0].serving_observations.every((row) => !row.unavailable && row.model === "jev-1.13.0" && row.reported_served_revision === "synthetic-reviewed-revision"));
+  assert.equal(check.accuracy_qualification.eligible, true); assert.equal(check.valid, 3);
+  assert.equal(check.verdict, "unavailable"); assert.ok(check.gate.includes("request_recovery_in_qualified_route"));
+  assert.equal(report.evaluator.qualification, "unqualified"); assert.equal(report.status, "unverified");
+});

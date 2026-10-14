@@ -1,0 +1,11 @@
+{
+ "version": 1,
+ "execution": "offline-only",
+ "context": "fixtures/reference/lesson-context.json",
+ "question_set": "fixtures/reference/question-set.json",
+ "output_root": ".local/runs",
+ "qualification_file": ".local/qualification/jev.json",
+ "trusted_reviewers_file": ".local/qualification/trusted-reviewers.json",
+ "samples": 3,
+ "repeats": 3
+}
