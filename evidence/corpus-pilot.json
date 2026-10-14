@@ -1,0 +1,417 @@
+{
+  "version": 1,
+  "status": "development-observations",
+  "task": "B1005",
+  "academic_qualification": "unqualified",
+  "input": {
+    "catalog_sha256": "f515497fdb1d9a1a616a453dd70061d7e3c3ee7e2c20eb2f3113c41e19ce059c",
+    "unique_representations_or_variants": 4172,
+    "source_occurrences": 5350,
+    "source_snapshots": 37,
+    "independent_question_count": "not established"
+  },
+  "field_checks": {
+    "rows": 4172,
+    "source_occurrences": 5350,
+    "answer_contract_checked": 3443,
+    "rows_with_field_failures": 96,
+    "by_status": {
+      "pass": 19620,
+      "fail": 97,
+      "flag": 705,
+      "unknown": 4840,
+      "not_applicable": 5832
+    },
+    "semantic_quality": "unmeasured",
+    "meaning": "Source field constraints and cues only; exports, item quality and learner delivery are separate claims."
+  },
+  "studies": [
+    {
+      "phase": "initial",
+      "source_commit": "5179f5db27f9f42aed0b62d95bbac2f279b7d8db",
+      "protocol_sha256": "1bf8635dbeb5baba06262fbaca75706d7f967e70fa6c9c22791ca2056bacaeb0",
+      "packet_sha256": "7db43b52f5833d55f7c708936041533c4eed166eefb346f0208339201af50d98",
+      "runtime_sha256": "9ceeacd6d161d3fb203f218f0c1da6431bb9862f55174edb5490a113a79274da",
+      "config_sha256": "f47c0429db2fc07a83f4f6cb65386dc984164698817b704224166ed24dba4362",
+      "private_report_sha256": "27d811a574cfc15fe12e7013d8ecd34a24e61f8d299ea9c8fcf3ab7e041cc1a9",
+      "source_cases": 39,
+      "control_probes": 8,
+      "draws": 3,
+      "samples_per_probe": 3,
+      "fresh_processes": true,
+      "draw_order": "First two inputs identical; third shifts options once.",
+      "logical_sample_calls": 846,
+      "models": {
+        "primary": {
+          "provider": "jev",
+          "requested_model": "jev-latest",
+          "reported_models": [
+            "jev-1.13.0"
+          ],
+          "serving_revision_verified": false,
+          "source_case_draws": 117,
+          "source_outcomes": {
+            "unique_supported_option": 114,
+            "unresolved": 3
+          },
+          "answerable_verdicts": {
+            "yes": 113,
+            "no": 3,
+            "unsure": 1
+          },
+          "clear_verdicts": {
+            "yes": 114,
+            "unsure": 3
+          },
+          "identical_input_repeated_verdicts": {
+            "same": 39,
+            "varied": 0,
+            "distinct_cases": 39
+          },
+          "all_three_draws_same_verdict": 38,
+          "source_key_comparison": {
+            "matches": 114,
+            "mismatches": 0,
+            "not_unique_or_unresolved": 3,
+            "key_status": "Unvalidated author intent; not academic gold."
+          },
+          "control_outcomes": {
+            "control_no_unique_approval": 12,
+            "control_no_answer_without_passage": 12
+          },
+          "duplicate_option_affirmative_uniqueness": 12,
+          "unique_duplicate_approvals": 0,
+          "missing_passage_answer_supports": 0,
+          "sample_failure_codes": {},
+          "logical_sample_calls": 423,
+          "per_draw": [
+            {
+              "draw": 1,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "unresolved": 1
+              }
+            },
+            {
+              "draw": 2,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "unresolved": 1
+              }
+            },
+            {
+              "draw": 3,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "unresolved": 1
+              }
+            }
+          ]
+        },
+        "side": {
+          "provider": "maat-gemini-flash",
+          "requested_model": "gemini-group/gemini-3.8-flash",
+          "reported_models": [
+            "gemini-3.8-flash"
+          ],
+          "serving_revision_verified": false,
+          "source_case_draws": 117,
+          "source_outcomes": {
+            "unique_supported_option": 112,
+            "unresolved": 5
+          },
+          "answerable_verdicts": {
+            "yes": 112,
+            "unavailable": 4,
+            "no": 1
+          },
+          "clear_verdicts": {
+            "yes": 113,
+            "unavailable": 4
+          },
+          "identical_input_repeated_verdicts": {
+            "same": 37,
+            "varied": 2,
+            "distinct_cases": 39
+          },
+          "all_three_draws_same_verdict": 37,
+          "source_key_comparison": {
+            "matches": 112,
+            "mismatches": 0,
+            "not_unique_or_unresolved": 5,
+            "key_status": "Unvalidated author intent; not academic gold."
+          },
+          "control_outcomes": {
+            "control_no_unique_approval": 12,
+            "control_unresolved": 12
+          },
+          "duplicate_option_affirmative_uniqueness": 0,
+          "unique_duplicate_approvals": 0,
+          "missing_passage_answer_supports": 0,
+          "sample_failure_codes": {
+            "TIMEOUT": 6
+          },
+          "logical_sample_calls": 423,
+          "per_draw": [
+            {
+              "draw": 1,
+              "source_outcomes": {
+                "unique_supported_option": 37,
+                "unresolved": 2
+              }
+            },
+            {
+              "draw": 2,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "unresolved": 1
+              }
+            },
+            {
+              "draw": 3,
+              "source_outcomes": {
+                "unique_supported_option": 37,
+                "unresolved": 2
+              }
+            }
+          ]
+        }
+      },
+      "draw_reports": [
+        {
+          "draw": 1,
+          "sha256": "a592616eacbbed28b0947a1a41be436e0a46e96ee7fd3feff66e5610074ede15"
+        },
+        {
+          "draw": 2,
+          "sha256": "2805670e0d57fce5446bfe366b2c297ce54c89d04135bb68f49a193bcb27d039"
+        },
+        {
+          "draw": 3,
+          "sha256": "8012bf781ab05a66bf453e2e2d336715ef4a4792aaa8e18339178206ec5ed744"
+        }
+      ],
+      "accuracy": "unmeasured",
+      "independent_human_gold_labels": 0
+    },
+    {
+      "phase": "refined",
+      "source_commit": "9fae87ea11f42e7471d4bf8d55db8bb0b565e353",
+      "protocol_sha256": "57f202384a9c8eb14d5bba23e2acb6760ff818405c09f5a007f9f152709350eb",
+      "packet_sha256": "bc470d324858016fbeeb3c8d2b9c4ae4ed47b1f334fa46ab4d431d4aab35a4bf",
+      "runtime_sha256": "6333dedcfe3597b61d0dbac785d3c4121e4ec658712255e3dce1bbf78eceb08d",
+      "config_sha256": "f47c0429db2fc07a83f4f6cb65386dc984164698817b704224166ed24dba4362",
+      "private_report_sha256": "6314b7b243852cebea26b476c84ea452144882985311493d9d49389c2fc5fa6d",
+      "source_cases": 39,
+      "control_probes": 8,
+      "draws": 3,
+      "samples_per_probe": 3,
+      "fresh_processes": true,
+      "draw_order": "First two inputs identical; third shifts options once.",
+      "logical_sample_calls": 846,
+      "models": {
+        "primary": {
+          "provider": "jev",
+          "requested_model": "jev-latest",
+          "reported_models": [
+            "jev-1.13.0"
+          ],
+          "serving_revision_verified": false,
+          "source_case_draws": 117,
+          "source_outcomes": {
+            "unique_supported_option": 116,
+            "unresolved": 1
+          },
+          "answerable_verdicts": {
+            "yes": 117
+          },
+          "clear_verdicts": {
+            "yes": 117
+          },
+          "identical_input_repeated_verdicts": {
+            "same": 38,
+            "varied": 1,
+            "distinct_cases": 39
+          },
+          "all_three_draws_same_verdict": 38,
+          "source_key_comparison": {
+            "matches": 116,
+            "mismatches": 0,
+            "not_unique_or_unresolved": 1,
+            "key_status": "Unvalidated author intent; not academic gold."
+          },
+          "control_outcomes": {
+            "control_no_unique_approval": 12,
+            "control_no_answer_without_passage": 12
+          },
+          "duplicate_option_affirmative_uniqueness": 0,
+          "unique_duplicate_approvals": 0,
+          "missing_passage_answer_supports": 0,
+          "sample_failure_codes": {},
+          "logical_sample_calls": 423,
+          "per_draw": [
+            {
+              "draw": 1,
+              "source_outcomes": {
+                "unique_supported_option": 39
+              }
+            },
+            {
+              "draw": 2,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "unresolved": 1
+              }
+            },
+            {
+              "draw": 3,
+              "source_outcomes": {
+                "unique_supported_option": 39
+              }
+            }
+          ]
+        },
+        "side": {
+          "provider": "maat-gemini-flash",
+          "requested_model": "gemini-group/gemini-3.8-flash",
+          "reported_models": [
+            "gemini-3.8-flash"
+          ],
+          "serving_revision_verified": false,
+          "source_case_draws": 117,
+          "source_outcomes": {
+            "unique_supported_option": 116,
+            "multiple_supported_options": 1
+          },
+          "answerable_verdicts": {
+            "yes": 116,
+            "no": 1
+          },
+          "clear_verdicts": {
+            "yes": 117
+          },
+          "identical_input_repeated_verdicts": {
+            "same": 39,
+            "varied": 0,
+            "distinct_cases": 39
+          },
+          "all_three_draws_same_verdict": 38,
+          "source_key_comparison": {
+            "matches": 116,
+            "mismatches": 0,
+            "not_unique_or_unresolved": 1,
+            "key_status": "Unvalidated author intent; not academic gold."
+          },
+          "control_outcomes": {
+            "control_no_unique_approval": 12,
+            "control_unresolved": 12
+          },
+          "duplicate_option_affirmative_uniqueness": 0,
+          "unique_duplicate_approvals": 0,
+          "missing_passage_answer_supports": 0,
+          "sample_failure_codes": {},
+          "logical_sample_calls": 423,
+          "per_draw": [
+            {
+              "draw": 1,
+              "source_outcomes": {
+                "unique_supported_option": 39
+              }
+            },
+            {
+              "draw": 2,
+              "source_outcomes": {
+                "unique_supported_option": 39
+              }
+            },
+            {
+              "draw": 3,
+              "source_outcomes": {
+                "unique_supported_option": 38,
+                "multiple_supported_options": 1
+              }
+            }
+          ]
+        }
+      },
+      "draw_reports": [
+        {
+          "draw": 1,
+          "sha256": "0092ec7a0e818162f4ddf117cb30ec94a9ece78bb4d0fad8bbd313477d10621d"
+        },
+        {
+          "draw": 2,
+          "sha256": "f65a4651fd200fcb95247c4991ea3052f603a68f0e622d574e3164c45c673b82"
+        },
+        {
+          "draw": 3,
+          "sha256": "36b4a310376fab8c8650e0d0ad538498c86868ab1a1579d795f2b6c5236c016c"
+        }
+      ],
+      "accuracy": "unmeasured",
+      "independent_human_gold_labels": 0
+    }
+  ],
+  "field_findings": {
+    "historical_export_option_id_collisions": 95,
+    "duplicate_option_text_rows": 1,
+    "duplicate_text_overlaps_collision_rows": true,
+    "separate_authored_qti_constraint_conflicts": 1,
+    "interpretation": "95 flattened export rows need response-boundary repair; they are not established learner-item defects. One QTI key needs two associations per target despite match-max=1. Runtime enforcement and current-course parity unverified.",
+    "qti_source": {
+      "repository": "trilogy-group/alpha_courses",
+      "commit": "be66fbe62a5a841fd2f3f294dee0b3f497d7bb4b",
+      "member_sha256": "c7e1a25a4b5a1700eb64da21a393b337115b6f721acd43de9dca5d4ce029ef38",
+      "git_blob": "2ef1c1ed5c60c70496fedbb780fe8006f5c324f0",
+      "source_verification": "Retained XML matches original cached source bytes and archive member; source receipt records pinned Git-tree verification.",
+      "standard": "https://www.imsglobal.org/spec/qti/v3p0/impl/"
+    }
+  },
+  "refinements": [
+    "Preserve learner-visible verse title and lines; the first study omitted one required poem excerpt.",
+    "Allow factual stimulus embedded in the question or learner instruction; the first protocol used passages only.",
+    "Ask about exactly one selectable option label, including duplicate twins, and expose criterion contradictions."
+  ],
+  "review_concerns": [
+    {
+      "case": "case-020",
+      "scope": "Pinned historical export; current native lesson unverified.",
+      "observation": "Two offered events occur after the named event. Gemini supported both in the rotated draw after selecting the source key alone in the first two.",
+      "status": "Conditional wording concern; variation observed in the rotated draw, with sampling and answer-order effects not separated. Not independent academic gold."
+    },
+    {
+      "case": "case-021",
+      "observation": "Jev retained the keyed positive option, but one sample was uncertain about another option in the identical-input repeat. The complete solve remained unresolved.",
+      "status": "Observed sample/gate variation; not a confirmed question defect."
+    }
+  ],
+  "boundaries": {
+    "human_gold_labels": 0,
+    "qualified_scopes": 0,
+    "whole_items_approved": 0,
+    "native_delivery": "unverified",
+    "coverage": "Derived single-choice text diagnostics only; not rubric scoring, difficulty, course alignment, media access, or sequence quality.",
+    "sampling": "Deterministic bounded plan across source strata, avoiding known source/version and passage duplicates; not random or established independent sampling.",
+    "controls": "Four source cases have two altered controls each; controls and repeats do not add independent real cases.",
+    "model_confidence": "Engineering abstention gates; probabilities and categorical codes are not academic accuracy.",
+    "actual_http_or_billed_requests": "not established by logical sample counts",
+    "publication": "Aggregate metadata only; learner content, keys, model journals and private review materials remain local."
+  },
+  "replay": {
+    "command": "node -- bin/evaluate.mjs --config evidence/corpus-pilot-config.json --corpus /path/question-examples --catalog-sha256 f515497fdb1d9a1a616a453dd70061d7e3c3ee7e2c20eb2f3113c41e19ce059c --mode development --judge jev --side-judge gemini-flash",
+    "credentials": "Launch environment or explicitly authorized filtered env file; no credentials in artifacts.",
+    "meaning": "Procedure and settings can be rerun. Stochastic outputs and unverified serving revision are not bit-for-bit reproducible."
+  },
+  "verification": {
+    "tests_passed": 181,
+    "privacy_errors": 0,
+    "default_reference_items": 40,
+    "default_reference_status": "All unsure, unverified; zero model calls.",
+    "qualified_default_jev_run": {
+      "candidate_criteria": 543,
+      "eligible": 0,
+      "model_calls": 0,
+      "ran_from_another_directory": true
+    }
+  }
+}
