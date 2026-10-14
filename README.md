@@ -6,7 +6,7 @@ Read [AGENTS.md](AGENTS.md) before changing it. Teaching knowledge and shared fo
 
 ## Start here
 
-Node 18 or later; no installation, credential or sibling checkout is needed.
+Node 18.18 or later; no installation, credential or sibling checkout is needed. Replay receipts record the actual runtime used.
 
 ```sh
 npm test

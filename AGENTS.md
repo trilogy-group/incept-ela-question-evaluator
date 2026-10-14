@@ -22,6 +22,6 @@ npm test
 npm run check
 ```
 
-Run the reference without a model using `node bin/evaluate.mjs`. No installation or sibling checkout is required. Preserve test results and source hashes. Mock tests verify integration, not model accuracy.
+Run the reference with Node 18.18 or later using `node bin/evaluate.mjs`. No installation or sibling checkout is required. Preserve test results and source hashes. Mock tests verify integration, not model accuracy.
 
 Useful feedback names the case or file, identifies the defect or missing scope, cites what the learner sees and gives a reproducible check. Distinguish confirmed source faults, conditional concerns and unknowns. This handover covers packaging; do not start research, model-heavy work or HTML reports.
