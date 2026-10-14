@@ -208,7 +208,7 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   t.after(() => fs.rmSync(standalone, { recursive: true, force: true }));
   for (const directory of ["src", "criteria", "contracts", "bin"]) fs.cpSync(path.join(repository, directory), path.join(standalone, directory), { recursive: true });
   fs.mkdirSync(path.join(standalone, "fixtures"));
-  for (const file of ["fixtures/knowledge-baseline.json", "config.lesson.json"]) fs.copyFileSync(path.join(repository, file), path.join(standalone, file));
+  for (const file of ["fixtures/knowledge-baseline.json", "fixtures/criterion-source-records.json", "config.lesson.json"]) fs.copyFileSync(path.join(repository, file), path.join(standalone, file));
   const finished = path.join(standalone, ".local", "finished");
   fs.mkdirSync(finished, { recursive: true });
   const pkg = fixture(), sourceText = pkg.context.native.pages[1].nodes[0].blocks[0].lines.map(line => line.line).join("\n");
@@ -241,6 +241,8 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   const result = JSON.parse(child.stdout), out = path.join(standalone, ".local", "test");
   const read = name => JSON.parse(fs.readFileSync(path.join(out, name), "utf8"));
   const manifest = read("manifest.json"), report = read("report.json"), audit = read("lesson-audit.json"), review = read("review-packet.json");
+  assert.equal(digest(fs.readFileSync(path.join(out, "criterion-sources.json"))), manifest.criterion_sources_sha256);
+  assert.ok(read("criterion-sources.json").checked > 0);
   assert.equal(result.items, 4);
   assert.equal(result.model_calls, 0);
   assert.equal(result.qualified, false);

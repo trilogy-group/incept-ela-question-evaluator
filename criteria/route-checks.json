@@ -1,0 +1,3788 @@
+{
+  "version": 1,
+  "source_snapshot": {
+    "path": "fixtures/criterion-source-records.json",
+    "sha256": "5d93d80f678ec54c54be8b6d0a166399f32d883077462f08f1268dbdd8286a46",
+    "source_commit": "7ec8d702e1e0aa11af9399bd9fe7158c736cf22d"
+  },
+  "qualification": false,
+  "meaning": "Checked reflection of existing operations. Metadata never changes prompts, thresholds, required flags or qualification; source conditions are not inferred executable policy.",
+  "native_registry_contract": [
+    {
+      "id": "one_key",
+      "method": "code",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "one-answer-the-text-settles"
+      ]
+    },
+    {
+      "id": "options_distinct",
+      "method": "code",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "options-that-differ-in-meaning"
+      ]
+    },
+    {
+      "id": "feedback_each_wrong_option",
+      "method": "code",
+      "required": true,
+      "applies_to": "choice with feedback",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "wrong_feedback_names_key",
+      "method": "code",
+      "required": false,
+      "applies_to": "choice with feedback",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "plain_voice",
+      "method": "code",
+      "required": false,
+      "applies_to": "choice with feedback",
+      "learnings": [
+        "one-plain-voice-for-every-line"
+      ]
+    },
+    {
+      "id": "key_is_longest",
+      "method": "code",
+      "required": false,
+      "applies_to": "choice",
+      "learnings": [
+        "no-cue-in-the-item-itself"
+      ]
+    },
+    {
+      "id": "word_counts",
+      "method": "code",
+      "required": false,
+      "applies_to": "choice",
+      "learnings": [
+        "a-readability-score-is-not-difficulty"
+      ]
+    },
+    {
+      "id": "quotes_exact",
+      "method": "code",
+      "required": true,
+      "applies_to": "all",
+      "learnings": [
+        "exact-quotations"
+      ]
+    },
+    {
+      "id": "rubric_complete",
+      "method": "code",
+      "required": true,
+      "applies_to": "open_check",
+      "learnings": [
+        "say-what-earns-each-point"
+      ]
+    },
+    {
+      "id": "reveal_present",
+      "method": "code",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "two-tries-then-the-answer"
+      ]
+    },
+    {
+      "id": "accept_examples",
+      "method": "code",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "give-the-marker-what-the-rule-names"
+      ]
+    },
+    {
+      "id": "accepted_answers_pass_keywords",
+      "method": "code",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "check-a-markers-reply-against-its-criteria"
+      ]
+    },
+    {
+      "id": "first_nudge_passes_keyword_filter",
+      "method": "code",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "aimed-at-the-marker",
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "candidates_and_decoys_apart",
+      "method": "code",
+      "required": true,
+      "applies_to": "evidence_select",
+      "learnings": [
+        "offer-the-strongest-evidence"
+      ]
+    },
+    {
+      "id": "lines_are_the_play",
+      "method": "code",
+      "required": true,
+      "applies_to": "evidence_select",
+      "learnings": [
+        "exact-quotations"
+      ]
+    },
+    {
+      "id": "candidates_are_strong",
+      "method": "code",
+      "required": false,
+      "applies_to": "evidence_select",
+      "learnings": [
+        "offer-the-strongest-evidence"
+      ]
+    },
+    {
+      "id": "every_word_has_a_box",
+      "method": "code",
+      "required": true,
+      "applies_to": "classify",
+      "learnings": [
+        "settle-in-code-then-bind-the-judge"
+      ]
+    },
+    {
+      "id": "slots_match_words",
+      "method": "code",
+      "required": true,
+      "applies_to": "classify",
+      "learnings": [
+        "settle-in-code-then-bind-the-judge"
+      ]
+    },
+    {
+      "id": "key_correct",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ]
+    },
+    {
+      "id": "option_X_correct",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "one-answer-the-text-settles"
+      ]
+    },
+    {
+      "id": "answer_in_seen",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "assume-and-test-only-what-was-taught",
+        "a-question-must-need-the-text"
+      ]
+    },
+    {
+      "id": "feedback_X_true",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "feedback_X_points_to_the_text",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "correct_feedback_true",
+      "method": "judge",
+      "required": true,
+      "applies_to": "choice",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "feedback_X_gives_answer",
+      "method": "judge",
+      "required": false,
+      "applies_to": "choice",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "option_X_from_the_text",
+      "method": "judge",
+      "required": false,
+      "applies_to": "choice",
+      "learnings": [
+        "wrong-options-only-knowledge-can-reject"
+      ]
+    },
+    {
+      "id": "serves_the_lesson",
+      "method": "judge",
+      "required": false,
+      "applies_to": "choice",
+      "learnings": [
+        "test-the-skill-it-claims"
+      ]
+    },
+    {
+      "id": "reveal_meets_N",
+      "method": "judge",
+      "required": true,
+      "applies_to": "open_check",
+      "learnings": [
+        "guides-describe-reasoning-not-fact-lists"
+      ]
+    },
+    {
+      "id": "accepted_N_M_meets",
+      "method": "judge",
+      "required": true,
+      "applies_to": "open_check",
+      "learnings": [
+        "give-the-marker-what-the-rule-names"
+      ]
+    },
+    {
+      "id": "misreading_N_passes",
+      "method": "judge",
+      "required": true,
+      "applies_to": "open_check",
+      "learnings": [
+        "check-a-markers-reply-against-its-criteria"
+      ]
+    },
+    {
+      "id": "answerable",
+      "method": "judge",
+      "required": true,
+      "applies_to": "open_check, open_prompt",
+      "learnings": [
+        "assume-and-test-only-what-was-taught"
+      ]
+    },
+    {
+      "id": "prompt_clear",
+      "method": "judge",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "say-what-earns-each-point"
+      ]
+    },
+    {
+      "id": "nudge_N_M_gives_answer",
+      "method": "judge",
+      "required": false,
+      "applies_to": "open_check",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "candidate_N_supports / decoy_N_supports",
+      "method": "judge",
+      "required": true,
+      "applies_to": "evidence_select",
+      "learnings": [
+        "offer-the-strongest-evidence"
+      ]
+    },
+    {
+      "id": "word_N_fits",
+      "method": "judge",
+      "required": true,
+      "applies_to": "classify",
+      "learnings": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ]
+    },
+    {
+      "id": "reveal_true",
+      "method": "judge",
+      "required": true,
+      "applies_to": "open_prompt",
+      "learnings": [
+        "feedback-that-sends-the-student-back"
+      ]
+    },
+    {
+      "id": "evidence_options_present",
+      "method": "code",
+      "required": true,
+      "applies_to": "evidence_select",
+      "learnings": [
+        "offer-the-strongest-evidence"
+      ]
+    },
+    {
+      "id": "classification_items_present",
+      "method": "code",
+      "required": true,
+      "applies_to": "classify",
+      "learnings": [
+        "settle-in-code-then-bind-the-judge"
+      ]
+    },
+    {
+      "id": "learner_exposure_complete",
+      "method": "context",
+      "required": true,
+      "applies_to": "all",
+      "learnings": [
+        "give-the-judge-what-the-student-sees"
+      ]
+    },
+    {
+      "id": "word_N_target_also_fits",
+      "method": "judge",
+      "required": true,
+      "applies_to": "classify",
+      "learnings": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ]
+    },
+    {
+      "id": "key_positions",
+      "learnings": [
+        "spread-the-right-answers-position"
+      ]
+    },
+    {
+      "id": "key_is_longest_rate",
+      "learnings": [
+        "no-cue-in-the-item-itself"
+      ]
+    },
+    {
+      "id": "keywords_used_by_questions",
+      "learnings": [
+        "produce-it-dont-just-pick-it"
+      ]
+    },
+    {
+      "id": "earlier_items_give_the_key",
+      "learnings": [
+        "nothing-gives-the-answer-first"
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "one_key",
+      "id_pattern": "^one_key$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "key shape",
+      "records": [
+        "one-answer-the-text-settles"
+      ],
+      "operationalization": "Exactly one integer keyed position is in range; this is not source correctness.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "one_key"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "options_distinct",
+      "id_pattern": "^options_distinct$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "option representation",
+      "records": [
+        "options-that-differ-in-meaning"
+      ],
+      "operationalization": "Normalized option strings differ; semantic equivalence is checked separately.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "options_distinct"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "feedback_each_wrong_option",
+      "id_pattern": "^feedback_each_wrong_option$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "feedback fields",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Presence of wrong-option feedback, with the current rebuild_choice exception; not feedback truth or effectiveness.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "feedback_each_wrong_option"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "wrong_feedback_names_key",
+      "id_pattern": "^wrong_feedback_names_key$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "surface leakage proxy",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Reports content-word overlap with the key; overlap is not itself an academic leak verdict.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "wrong_feedback_names_key"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "plain_voice",
+      "id_pattern": "^plain_voice$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "voice patterns",
+      "records": [
+        "one-plain-voice-for-every-line"
+      ],
+      "operationalization": "Flags selected punctuation/opening praise patterns under the current reference voice convention; not a universal grade-independent voice policy.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "plain_voice"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "key_is_longest",
+      "id_pattern": "^key_is_longest$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "surface cue proxy",
+      "records": [
+        "no-cue-in-the-item-itself"
+      ],
+      "operationalization": "Flags a uniquely longest option by character count; length is not proof of cueing or invalidity.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "key_is_longest"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "word_counts",
+      "id_pattern": "^word_counts$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "word counts",
+      "records": [
+        "a-readability-score-is-not-difficulty"
+      ],
+      "operationalization": "Counts normalized words; no readability threshold, challenge judgment or learner outcome.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "word_counts"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "quotes_exact",
+      "id_pattern": "^quotes_exact$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "source wording",
+      "records": [
+        "exact-quotations"
+      ],
+      "operationalization": "For recognizable play-like quotations only, checks normalized phrase containment; not all factual claims or exact punctuation.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "quotes_exact"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "rubric_complete",
+      "id_pattern": "^rubric_complete$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "rubric fields",
+      "records": [
+        "say-what-earns-each-point"
+      ],
+      "operationalization": "Every listed criterion has requirement text; this does not establish complete or valid scoring.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "rubric_complete"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "reveal_present",
+      "id_pattern": "^reveal_present$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "reveal field",
+      "records": [
+        "two-tries-then-the-answer"
+      ],
+      "operationalization": "Presence is advisory for open_check; does not adopt the contested two-attempt policy.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "reveal_present"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "reveal_present",
+      "id_pattern": "^reveal_present$",
+      "scope": {
+        "kinds": [
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "reveal field",
+      "records": [
+        "two-tries-then-the-answer"
+      ],
+      "operationalization": "Current open_prompt contract requires a reveal field; this is a route-specific shape requirement, not a universal retry rule.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "reveal_present"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "accept_examples",
+      "id_pattern": "^accept_examples$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "rubric examples",
+      "records": [
+        "give-the-marker-what-the-rule-names"
+      ],
+      "operationalization": "Accepted examples are present; their validity is a separate semantic check.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "accept_examples"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "accepted_answers_pass_keywords",
+      "id_pattern": "^accepted_answers_pass_keywords$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "keyword consistency",
+      "records": [
+        "check-a-markers-reply-against-its-criteria"
+      ],
+      "operationalization": "Authored accepted examples satisfy authored keyword groups; not live marking validity.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "accepted_answers_pass_keywords"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "first_nudge_passes_keyword_filter",
+      "id_pattern": "^first_nudge_passes_keyword_filter$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "keyword leakage proxy",
+      "records": [
+        "aimed-at-the-marker",
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Authored first nudge satisfies authored keyword groups; reports a risk without inferring a first-attempt leak.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "first_nudge_passes_keyword_filter"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "candidates_and_decoys_apart",
+      "id_pattern": "^candidates_and_decoys_apart$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "evidence representation",
+      "records": [
+        "offer-the-strongest-evidence"
+      ],
+      "operationalization": "Candidate and decoy normalized strings are disjoint; support must be judged separately.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "candidates_and_decoys_apart"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "lines_are_the_play",
+      "id_pattern": "^lines_are_the_play$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "evidence wording",
+      "records": [
+        "exact-quotations"
+      ],
+      "operationalization": "Declared candidate/decoy/strong lines occur in normalized lesson play text; not evidence relevance.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "lines_are_the_play"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "candidates_are_strong",
+      "id_pattern": "^candidates_are_strong$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "author strong-line membership",
+      "records": [
+        "offer-the-strongest-evidence"
+      ],
+      "operationalization": "Candidates appear in the authored strong-line list; that list is not independent quality evidence.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "candidates_are_strong"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "every_word_has_a_box",
+      "id_pattern": "^every_word_has_a_box$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "classification mapping",
+      "records": [
+        "settle-in-code-then-bind-the-judge"
+      ],
+      "operationalization": "Keyed destinations exist; does not decide whether the description fits.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "every_word_has_a_box"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "slots_match_words",
+      "id_pattern": "^slots_match_words$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "classification capacity",
+      "records": [
+        "settle-in-code-then-bind-the-judge"
+      ],
+      "operationalization": "Authored slots equal authored keyed counts; no inference about knowledge or elimination shortcuts.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "slots_match_words"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "evidence_options_present",
+      "id_pattern": "^evidence_options_present$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "evidence fields",
+      "records": [
+        "offer-the-strongest-evidence"
+      ],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "evidence_options_present"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "classification_items_present",
+      "id_pattern": "^classification_items_present$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "classification fields",
+      "records": [
+        "settle-in-code-then-bind-the-judge"
+      ],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "classification_items_present"
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "input_contract",
+      "id_pattern": "^input_contract$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native",
+      "stage": "field",
+      "id": "format_coverage",
+      "id_pattern": "^format_coverage$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "code"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native",
+      "stage": "context",
+      "id": "learner_exposure_complete",
+      "id_pattern": "^learner_exposure_complete$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "context"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "learner exposure",
+      "records": [
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Authentic served view and conditional routes are not verified in reconstruction; current evaluator marks this unavailable. Metadata cannot make it complete.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "learner_exposure_complete"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "key_correct",
+      "id_pattern": "^key_correct$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source correctness",
+      "records": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "A keyed option is supported by supplied learner words; applies to this single-key route only.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "key_correct"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "option_[A-Z]_correct",
+      "id_pattern": "^option_[A-Z]_correct$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "answer uniqueness",
+      "records": [
+        "one-answer-the-text-settles"
+      ],
+      "operationalization": "Each non-key label is independently checked for correctness under the actual question and supplied source.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "option_X_correct"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "answer_in_seen",
+      "id_pattern": "^answer_in_seen$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source sufficiency",
+      "records": [
+        "assume-and-test-only-what-was-taught",
+        "a-question-must-need-the-text"
+      ],
+      "operationalization": "Available supplied material contains needed evidence; this does not establish that the task requires that material.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "answer_in_seen"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "feedback_[A-Z]_true",
+      "id_pattern": "^feedback_[A-Z]_true$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "feedback truth",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Factual claims in the presented feedback are true of supplied learner material.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "feedback_X_true"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "feedback_[A-Z]_points_to_the_text",
+      "id_pattern": "^feedback_[A-Z]_points_to_the_text$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "feedback reference",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "A pointer names something actually present; this does not measure pedagogical usefulness.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "feedback_X_points_to_the_text"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "correct_feedback_true",
+      "id_pattern": "^correct_feedback_true$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "feedback truth",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Confirmation claims are true of supplied material.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "correct_feedback_true"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "feedback_[A-Z]_gives_answer",
+      "id_pattern": "^feedback_[A-Z]_gives_answer$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "feedback leakage",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Advisory check of whether wrong-answer feedback supplies the requested answer; task role and permitted support remain explicit conditions.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "feedback_X_gives_answer"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "option_[A-Z]_from_the_text",
+      "id_pattern": "^option_[A-Z]_from_the_text$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "distractor topicality",
+      "records": [
+        "wrong-options-only-knowledge-can-reject"
+      ],
+      "operationalization": "Only topical presence of person/place/event/idea is checked; it does not establish a plausible misconception or a knowledge-dependent distractor.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "option_X_from_the_text"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "serves_the_lesson",
+      "id_pattern": "^serves_the_lesson$",
+      "scope": {
+        "kinds": [
+          "film_mcq",
+          "reading_mcq",
+          "key_term_mcq",
+          "rebuild_choice"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "lesson relevance",
+      "records": [
+        "test-the-skill-it-claims"
+      ],
+      "operationalization": "Broad relevance to learning question/text, advisory; not equivalent to target-skill alignment at declared depth.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "serves_the_lesson"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "reveal_meets_[1-9][0-9]*",
+      "id_pattern": "^reveal_meets_[1-9][0-9]*$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric example support",
+      "records": [
+        "guides-describe-reasoning-not-fact-lists"
+      ],
+      "operationalization": "Authored reveal meets each explicit criterion; not general task-to-rubric coverage.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "reveal_meets_N"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "accepted_[1-9][0-9]*_[1-9][0-9]*_meets",
+      "id_pattern": "^accepted_[1-9][0-9]*_[1-9][0-9]*_meets$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric example support",
+      "records": [
+        "give-the-marker-what-the-rule-names"
+      ],
+      "operationalization": "First two authored accepted examples per criterion meet that explicit criterion; no exhaustive answer-space claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "accepted_N_M_meets"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "misreading_[1-9][0-9]*_passes",
+      "id_pattern": "^misreading_[1-9][0-9]*_passes$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric rejection",
+      "records": [
+        "check-a-markers-reply-against-its-criteria"
+      ],
+      "operationalization": "A declared misreading must not meet all authored requirements; no independently labelled misconception is invented.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "misreading_N_passes"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "answerable",
+      "id_pattern": "^answerable$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt",
+          "say_back",
+          "word_web"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source sufficiency",
+      "records": [
+        "assume-and-test-only-what-was-taught"
+      ],
+      "operationalization": "Task can be attempted from supplied words; not measured learner readiness or difficulty.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "answerable"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "prompt_clear",
+      "id_pattern": "^prompt_clear$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "task clarity",
+      "records": [
+        "say-what-earns-each-point"
+      ],
+      "operationalization": "Advisory check of requested writing clarity.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "prompt_clear"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "nudge_[1-9][0-9]*_[12]_gives_answer",
+      "id_pattern": "^nudge_[1-9][0-9]*_[12]_gives_answer$",
+      "scope": {
+        "kinds": [
+          "open_check"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "hint leakage",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "First two authored hints point rather than supply answer, evaluated with role/support conditions unresolved until explicitly declared.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "nudge_N_M_gives_answer"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "candidate_[1-9][0-9]*_supports",
+      "id_pattern": "^candidate_[1-9][0-9]*_supports$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "evidence relevance",
+      "records": [
+        "offer-the-strongest-evidence"
+      ],
+      "operationalization": "Authored candidate supports the actual learner-visible prompt/claim; not a global strongest-evidence measurement.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "candidate_N_supports / decoy_N_supports"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "decoy_[1-9][0-9]*_supports",
+      "id_pattern": "^decoy_[1-9][0-9]*_supports$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "evidence relevance",
+      "records": [
+        "offer-the-strongest-evidence"
+      ],
+      "operationalization": "Authored decoy must not support the actual learner-visible prompt/claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "candidate_N_supports / decoy_N_supports"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "word_[1-9][0-9]*_fits",
+      "id_pattern": "^word_[1-9][0-9]*_fits$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "classification support",
+      "records": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "One authored destination is defensible under learner-visible descriptions; no teacher-only meaning may narrow it.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "word_N_fits"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "word_[1-9][0-9]*_.+_(?:is|seems|wanted)_also_fits",
+      "id_pattern": "^word_[1-9][0-9]*_.+_(?:is|seems|wanted)_also_fits$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "classification uniqueness",
+      "records": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Other offered destinations are independently checked under visible wording; this route requires a single placement.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "word_N_target_also_fits"
+    },
+    {
+      "route": "native",
+      "stage": "semantic",
+      "id": "reveal_true",
+      "id_pattern": "^reveal_true$",
+      "scope": {
+        "kinds": [
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": true,
+        "method": "judge"
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source correctness",
+      "records": [
+        "feedback-that-sends-the-student-back"
+      ],
+      "operationalization": "Authored shown answer is true of supplied material; not the only possible interpretation.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "reveal_true"
+    },
+    {
+      "route": "native",
+      "stage": "set",
+      "id": "key_positions",
+      "id_pattern": "^key_positions$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "sequence instrumentation",
+      "records": [
+        "spread-the-right-answers-position"
+      ],
+      "operationalization": "Current code counts key position distribution; no universal uniformity threshold is adopted.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "key_positions"
+    },
+    {
+      "route": "native",
+      "stage": "set",
+      "id": "key_is_longest_rate",
+      "id_pattern": "^key_is_longest_rate$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "sequence instrumentation",
+      "records": [
+        "no-cue-in-the-item-itself"
+      ],
+      "operationalization": "Counts the current longest-key flags; does not establish cue-based solving.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "key_is_longest_rate"
+    },
+    {
+      "route": "native",
+      "stage": "set",
+      "id": "keywords_used_by_questions",
+      "id_pattern": "^keywords_used_by_questions$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "sequence instrumentation",
+      "records": [
+        "produce-it-dont-just-pick-it"
+      ],
+      "operationalization": "Checks lexical mentions only; does not show learner production or target mastery.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "keywords_used_by_questions"
+    },
+    {
+      "route": "native",
+      "stage": "set",
+      "id": "earlier_items_give_the_key",
+      "id_pattern": "^earlier_items_give_the_key$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "code"
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "sequence instrumentation",
+      "records": [
+        "nothing-gives-the-answer-first"
+      ],
+      "operationalization": "Normalized exact substring of earlier authored reveals in later choice keys is a risk signal; actual branch exposure and paraphrases are not verified.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      },
+      "native_registry_id": "earlier_items_give_the_key"
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "key_valid",
+      "id_pattern": "^key_valid$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "options_distinct",
+      "id_pattern": "^options_distinct$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "feedback_bound_to_options",
+      "id_pattern": "^feedback_bound_to_options$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "evidence_exact_in_visible_text",
+      "id_pattern": "^evidence_exact_in_visible_text$",
+      "scope": {
+        "kinds": [
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "entries_present",
+      "id_pattern": "^entries_present$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "categories_present",
+      "id_pattern": "^categories_present$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "category_ids_unique",
+      "id_pattern": "^category_ids_unique$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "entry_ids_unique",
+      "id_pattern": "^entry_ids_unique$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "all_entries_have_declared_mapping",
+      "id_pattern": "^all_entries_have_declared_mapping$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "feedback_bound_to_entries",
+      "id_pattern": "^feedback_bound_to_entries$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "rubric_requirements_present",
+      "id_pattern": "^rubric_requirements_present$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "sample_response_present",
+      "id_pattern": "^sample_response_present$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "field",
+      "id": "binding_[1-9][0-9]*_field_exists",
+      "id_pattern": "^binding_[1-9][0-9]*_field_exists$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select",
+          "classify",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks only the declared field or reference integrity; does not establish semantic validity, learner knowledge or quality.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "option_[A-Z]",
+      "id_pattern": "^option_[A-Z]$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source correctness",
+      "records": [
+        "one-answer-the-text-settles"
+      ],
+      "operationalization": "Independently evaluates each option against the exact prompt, alternatives and best qualifier; this route is single-best.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "answerable",
+      "id_pattern": "^answerable$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "answer uniqueness",
+      "records": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Exactly one selectable label must be defensible; choose-all is a different operation, not silently converted.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "entry_[1-9][0-9]*_[A-Z]",
+      "id_pattern": "^entry_[1-9][0-9]*_[A-Z]$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "classification support",
+      "records": [
+        "one-answer-the-text-settles",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Checks each entry against each visible category, without inferring a teacher mapping.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "answerable",
+      "id_pattern": "^answerable$",
+      "scope": {
+        "kinds": [
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "classification uniqueness",
+      "records": [
+        "one-answer-the-text-settles"
+      ],
+      "operationalization": "Each entry has exactly one defensible category in this narrower text profile.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "answerable",
+      "id_pattern": "^answerable$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source sufficiency",
+      "records": [
+        "assume-and-test-only-what-was-taught"
+      ],
+      "operationalization": "A defensible response can be written from supplied text/instruction; does not imply individual learner readiness.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "blind",
+      "id": "clear",
+      "id_pattern": "^clear$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select",
+          "classify",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "task clarity",
+      "records": [
+        "say-what-earns-each-point"
+      ],
+      "operationalization": "Requested response is clear; evidence sufficiency is a separate check.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "fits_declared_performance",
+      "id_pattern": "^fits_declared_performance$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select",
+          "classify",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "construct alignment",
+      "records": [
+        "test-the-skill-it-claims",
+        "design-the-evidence-before-the-item"
+      ],
+      "operationalization": "Task and marking guide follow explicitly declared performance, role and support; no course target or policy is inferred from prose.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "feedback_grounded",
+      "id_pattern": "^feedback_grounded$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select",
+          "classify",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "feedback truth",
+      "records": [
+        "explanations-must-fit-the-item-given"
+      ],
+      "operationalization": "Actual factual feedback claims are supported by seen text; absence or instructions do not create a factual claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "rubric_covers_required_response",
+      "id_pattern": "^rubric_covers_required_response$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt",
+          "reading_mcq",
+          "evidence_select",
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric coverage",
+      "records": [
+        "require-the-criterion-the-task-is-for",
+        "sample-answers-cover-every-part"
+      ],
+      "operationalization": "Full credit requires every explicitly requested feature and combination rule; integrated response cannot be replaced by unconnected subchecks.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "rubric_consistent",
+      "id_pattern": "^rubric_consistent$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt",
+          "reading_mcq",
+          "evidence_select",
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric consistency",
+      "records": [
+        "say-what-earns-each-point"
+      ],
+      "operationalization": "Criteria, accepted alternatives and combination rules are mutually applicable without unstated rules.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "sample_meets_rubric",
+      "id_pattern": "^sample_meets_rubric$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt",
+          "reading_mcq",
+          "evidence_select",
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "rubric example support",
+      "records": [
+        "guides-describe-reasoning-not-fact-lists"
+      ],
+      "operationalization": "Sample meets task/rubric full-credit requirements using supported claims; author sample is not independent gold.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "rubric_allows_defensible_alternatives",
+      "id_pattern": "^rubric_allows_defensible_alternatives$",
+      "scope": {
+        "kinds": [
+          "open_check",
+          "open_prompt",
+          "reading_mcq",
+          "evidence_select",
+          "classify"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "answer-space coverage",
+      "records": [
+        "accept-every-answer-the-text-supports"
+      ],
+      "operationalization": "Allows defensible source-grounded phrasing/evidence where the declared task permits alternatives.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "editorial",
+      "id": "binding_[1-9][0-9]*_faithful",
+      "id_pattern": "^binding_[1-9][0-9]*_faithful$",
+      "scope": {
+        "kinds": [
+          "reading_mcq",
+          "evidence_select",
+          "classify",
+          "open_check",
+          "open_prompt"
+        ],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "source relation",
+      "records": [
+        "the-key-must-trace-to-the-source"
+      ],
+      "operationalization": "Quoted anchor actually has its declared supports/limits relation to the bound field; lack of support is not itself contradiction.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "alignment",
+      "id": "declared_course_inputs",
+      "id_pattern": "^declared_course_inputs$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "declared alignment",
+      "records": [],
+      "operationalization": "Checks declared plan/target/phase references only; referenced coverage is not demonstrated learner knowledge or academic alignment.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "alignment",
+      "id": "planned_slots_filled",
+      "id_pattern": "^planned_slots_filled$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "declared alignment",
+      "records": [],
+      "operationalization": "Checks declared plan/target/phase references only; referenced coverage is not demonstrated learner knowledge or academic alignment.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "alignment",
+      "id": "every_planned_target_referenced",
+      "id_pattern": "^every_planned_target_referenced$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "declared alignment",
+      "records": [],
+      "operationalization": "Checks declared plan/target/phase references only; referenced coverage is not demonstrated learner knowledge or academic alignment.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "alignment",
+      "id": "every_planned_question_phase_represented",
+      "id_pattern": "^every_planned_question_phase_represented$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "declared alignment",
+      "records": [],
+      "operationalization": "Checks declared plan/target/phase references only; referenced coverage is not demonstrated learner knowledge or academic alignment.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "alignment",
+      "id": "all_teaching_phases_present",
+      "id_pattern": "^all_teaching_phases_present$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "declared alignment",
+      "records": [],
+      "operationalization": "Checks declared plan/target/phase references only; referenced coverage is not demonstrated learner knowledge or academic alignment.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "set",
+      "id": "all_mcq_keys_use_one_position",
+      "id_pattern": "^all_mcq_keys_use_one_position$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "instrumentation",
+      "question_quality_claim": false,
+      "quality_dimension": "sequence instrumentation",
+      "records": [],
+      "operationalization": "Reports a key-position pattern only; it is not a universal rejection or measured shortcut.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "prompt_present",
+      "id_pattern": "^prompt_present$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "options_present",
+      "id_pattern": "^options_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "single_choice",
+          "multiple_select",
+          "evidence_selection",
+          "word_selection"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "options_distinct",
+      "id_pattern": "^options_distinct$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "single_choice",
+          "multiple_select",
+          "evidence_selection",
+          "word_selection"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "key_valid",
+      "id_pattern": "^key_valid$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "single_choice",
+          "multiple_select",
+          "evidence_selection",
+          "word_selection"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "entries_present",
+      "id_pattern": "^entries_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "classification"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "categories_present",
+      "id_pattern": "^categories_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "classification"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "mapping_valid",
+      "id_pattern": "^mapping_valid$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "classification"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "rubric_requirements_present",
+      "id_pattern": "^rubric_requirements_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "written_response",
+          "oral_response",
+          "word_web"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "sample_answer_present",
+      "id_pattern": "^sample_answer_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "written_response",
+          "oral_response",
+          "word_web"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "blanks_present",
+      "id_pattern": "^blanks_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "inline_choice"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "blank_keys_valid",
+      "id_pattern": "^blank_keys_valid$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "inline_choice"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "recall_statement_present",
+      "id_pattern": "^recall_statement_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "say_back"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "recall_is_not_reasoning_grade",
+      "id_pattern": "^recall_is_not_reasoning_grade$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "say_back"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "report_scale_present",
+      "id_pattern": "^report_scale_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "self_report"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "report_is_not_correctness_grade",
+      "id_pattern": "^report_is_not_correctness_grade$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "self_report"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "family_field_interpreter_available",
+      "id_pattern": "^family_field_interpreter_available$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "binding_[1-9][0-9]*_declared_and_exact",
+      "id_pattern": "^binding_[1-9][0-9]*_declared_and_exact$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "instruction_present",
+      "id_pattern": "^instruction_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "nonresponse"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "bank_entries_present",
+      "id_pattern": "^bank_entries_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "shared_cloze"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "shared_blank_keys_valid",
+      "id_pattern": "^shared_blank_keys_valid$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "shared_cloze"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "shared_bank_reuse_obeys_rule",
+      "id_pattern": "^shared_bank_reuse_obeys_rule$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "shared_cloze"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "response_entries_present",
+      "id_pattern": "^response_entries_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "matching",
+          "sequence"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "matching_options_present",
+      "id_pattern": "^matching_options_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "matching"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "matching_mapping_valid",
+      "id_pattern": "^matching_mapping_valid$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "matching"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "sequence_key_is_permutation",
+      "id_pattern": "^sequence_key_is_permutation$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "sequence"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "ordering_rule_and_tie_policy_present",
+      "id_pattern": "^ordering_rule_and_tie_policy_present$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "sequence"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "field",
+      "id": "instruction_has_no_response_key",
+      "id_pattern": "^instruction_has_no_response_key$",
+      "scope": {
+        "kinds": [],
+        "families": [
+          "nonresponse"
+        ]
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "transport integrity",
+      "records": [],
+      "operationalization": "Checks declared activity transport fields/references only; no semantic quality, oral-performance measurement, learner knowledge or academic approval is claimed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    },
+    {
+      "route": "native",
+      "stage": "set",
+      "id": "set_scope_coverage",
+      "id_pattern": "^set_scope_coverage$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": false,
+        "method": "context"
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "interpreter coverage",
+      "records": [],
+      "operationalization": "One or more accepted native operations lack a verified interpreter; set checks are unavailable. This is coverage bookkeeping, not a source-backed quality judgment or approval.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "The emitted operation must match this route, stage and kind/family scope.",
+          "Assessment purpose must be supplied separately from KB criterion/method/context role.",
+          "An unresolved course condition or conflicting rule remains undetermined."
+        ]
+      }
+    }
+  ]
+}

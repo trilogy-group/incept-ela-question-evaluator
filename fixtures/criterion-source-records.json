@@ -1,0 +1,826 @@
+{
+  "version": 1,
+  "source_repository": "https://github.com/trilogy-group/incept-ela-learning-truths",
+  "source_commit": "7ec8d702e1e0aa11af9399bd9fe7158c736cf22d",
+  "baseline_release": "knowledge-v1",
+  "records": [
+    {
+      "id": "a-question-must-need-the-text",
+      "path": "learnings/a-question-must-need-the-text.json",
+      "record_sha256": "db61f685bb5176985be4bcf85a4efecd462272b07d2b47e1ef6d044a293b2018",
+      "statement": "A question about a text must need the text.",
+      "role": "criterion",
+      "facets": [
+        "integrity",
+        "stimulus"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "In the reading project, questions were given to a model from a different family with the passage withheld; when it\nstill picked the key, the question did not test the passage. On one seed bank, 4 of 11 items that had all passed a\nquality benchmark leaked\n(`grade3-reading/knowledge_bot/knowledge/kb-0070-passage-blind-solve-g5-seedbank-2026-06-24.qmd`). Re-run with a\nstronger solver from another family, only 20 of 95 items that had passed survived, and 187 of 3,146 untested\ncandidates (`grade3-reading/knowledge_bot/knowledge/kb-0235-g5-course-build-pipeline-2026-06-23-to-06-30.qmd`). The\nlesson engine's own give-away check was answered from general knowledge of a famous text until it was narrowed to the\nquestion's own words (`g9/transformer/v02/QA.md`, \"Found and fixed in integration\").",
+      "against": "some leaks were near\nmisses where world knowledge tempts but the key needs the text, and the root cause was encyclopedic passages, not the\nquestions (the same two files). A later run found: the leak verdict depended on the blind solver, since the same audited items had blind accuracy 1.0 under one solver and about 0.0 under another (`grade3-reading/knowledge_bot/knowledge/kb-0096-fable-vs-haiku-strictness-audit-2026-07-09.qmd`). A later run found: a model's blind solve may give false positives or negatives against real students, and a solver that bluffs its way through without the passage inflates leak rates (`grade3-reading/knowledge_bot/knowledge/kb-0080-map-proxy-case-for-approval-2026-07-02-incept-map-proxy-approval-package.qmd`). A later run found: a form rebuilt on a familiar topic went live with all 5 items rated at high risk of being answered from background knowledge, accepted as formative practice rather than a check that the passage was read (`grade3-reading/artifacts/alpha-read-packager/v2_final_package/docs/COURSE_QUALITY_GATE_REPORT.md`). A later run found counter-evidence (`grade3-reading/ti-courseplans/courses/map-proxy-assessment/validity/02_ITEM_BANK.md`). A later run found counter-evidence (`grade3-reading/artifacts/g5_build_2026_07_02/feedback_clean.md`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0072-learnings-from-incept-map-proxy-2026-06-25.qmd`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0221-early-planning-history-and-sep22-snapshots.qmd`). A later run found counter-evidence (`grade3-reading/ti-courseplans/docs/practice-layer-spec.md`). The first run's headline case no longer stands: a calibrated newer solver answers it 3/3 without either the text or the earlier lessons, and the report withdraws the claim that a plain blind check could not detect it (`grade3-reading/artifacts/demo-unit-2026-07-10/spine-gate/SPINE-GATE-REPORT.md`, lines 7 and 105-113). The capstone counts come from the same dated solver. The first catch is historical, since a newer solver answered that item 3 of 3 times with no text at all (`grade3-reading/knowledge_bot/knowledge/kb-0120-rivers-demo-unit-live-2026-07-13.qmd`), and the one run built to measure the effect used different solvers and bars in its two conditions, so it could not isolate what earlier lessons add (`grade3-reading/artifacts/spine-solve-calibration-2026-07-10/REPORT.md`). A later run found: The lesson engine's give-away check was narrowed to the question's own words after it answered from general knowledge of a famous text, and by design it now passes a question anyone who knows the work can answer; the engine has no other check that a question cannot be answered without the text (`g9/transformer/v02/QA.md`). A later run found counter-evidence (`g9/transformer/src/mechanics/open-check.js`). A later run found counter-evidence (`g9-transformer-audit/2026-10-09-best-of-everything.json`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 143,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "a-readability-score-is-not-difficulty",
+      "path": "learnings/a-readability-score-is-not-difficulty.json",
+      "record_sha256": "8a7f8cba5ce93707b64bd0084223b0734fc721f7c44f8eed8dc83fa4613a3aa9",
+      "statement": "A readability score is not a text's difficulty: judge difficulty from the exact excerpt students read, by reading it as well as by formula.",
+      "role": "context",
+      "facets": [
+        "stimulus",
+        "measurement",
+        "demand"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "The staged assessment standard flags a readability score as a secondary proxy, not item difficulty itself (`grade3-reading/knowledge_bot/pr-proposals/ti-courseplans-standards/staged/docs/standards/assessment-design.md`). The project's reading-science summary holds that text difficulty is a match among the text, the reader's knowledge and the task, so no single readability number can gate a text (`grade3-reading/knowledge_bot/skills/reading-science/applied/teaching-comprehension-insights-brainlift.qmd`). Its digest of a national reading study records that readability estimates disagree with one another and give no diagnostic information for individualizing instruction (`grade3-reading/knowledge_bot/skills/reading-science/DIGEST-rand-mr1465-2002.qmd`; RAND Reading Study Group 2002, https://www.rand.org/pubs/monograph_reports/MR1465.html). Weigh the new knowledge the excerpt carries, the reader's knowledge and the task. Rate decoding and understanding separately, gate no text on one number, and never swap out the words that carry its knowledge to lower a score.",
+      "against": "The measure is a heuristic: the notes call the FK-to-band reading \"a judgment call, not a psychometric fact\" and say the bands are not to be reused as policy (the same file, lines 4 and 15). For that same book, a documented whole-book Lexile measure was kept as the better evidence of its band, ahead of the formula's own figures (`grade3-reading/artifacts/g5-course/pd-texts/winnie-the-pooh-onepager.md`, line 27).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 25,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "accept-every-answer-the-text-supports",
+      "path": "learnings/accept-every-answer-the-text-supports.json",
+      "record_sha256": "3b0f516ff3ec53c80df4fe3f39c6e0635f7c0e8c0fc9d00848d80269007747bc",
+      "statement": "Accept every answer the text defensibly supports, and check that the hints and the reveal don't steer students toward only one of them.",
+      "role": "criterion",
+      "facets": [
+        "key",
+        "hints",
+        "feedback"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "An external audit of four Grade 3 lessons found a step whose key accepted only one of two defensible actions, rejecting one that the story's next line follows directly, and a blank whose rubric accepted either of two characters while the reveal and the second hint steered only toward one. Both were still open in the register.",
+      "against": "none found",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 43,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "aimed-at-the-marker",
+      "path": "learnings/aimed-at-the-marker.json",
+      "record_sha256": "4abf700299dfe8566e4736e21df80e0edb7787e08a93ee1ad85170e01303949f",
+      "statement": "Beside every judgment of a student's words, ask whether they are aimed at the marker rather than the task.",
+      "role": "method",
+      "facets": [
+        "marking",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g9",
+        "g3"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "The reading engine's guard asks, beside every judgment of a student's words, whether they try to instruct or persuade\nwhoever marks them; only a confident yes acts, and commands quoted from the text don't count\n(`g9/transformer/src/mechanics/util.js`, `addressesGrader`). The marker in finding 5\n(`othello-unit-video/research/FINDINGS.md`) caught all 3 answers that tried to talk it into a pass, and the\nadversarial scripted reader tries it in every playtest (`g9/transformer/src/quality/personas.js`).",
+      "against": "A later run found: an AP judge's integrity check caught open self-advocacy but not a plain four-line explanation that primed its reading of the item as correct (`icloud-work/aptraining/Cheater/reports/EXPLOIT_CATALOG.md`). A later run found counter-evidence (`g9-transformer-audit/2026-10-09-best-of-everything.json`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 38,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "assume-and-test-only-what-was-taught",
+      "path": "learnings/assume-and-test-only-what-was-taught.json",
+      "record_sha256": "f4d22637086b60370422433906bdca998227ab1d73821cee40e750940a592a3b",
+      "statement": "An item, its options, hints and pointers may require only what the student has met by then on every path, common knowledge, or what the item or reference materials supply.",
+      "role": "criterion",
+      "facets": [
+        "alignment",
+        "sequence"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "The reading project's lint checks that what a lesson assumes is a subset of what earlier lessons in the unit added, in unit order. A weekly quality check still found a taught word that never appears in its lesson's passage, while three of that lesson's checks assessed the child on it. What the item supplies includes the student's reference materials, and a further value or principle must be given too. The same bound covers response forms: no item may require or grade a response form the lesson hasn't taught and modelled.",
+      "against": "The lint has no baseline across units, so a unit's first lesson must assume nothing, and the spec says nothing about what a unit may assume on entry. What counts as standard course content was judged by a model, not checked against the course framework. The same contract loosens the rule for short-answer items, which may draw on the target fact plus reasonable outside knowledge (`APinceptbench/docs/GENERATOR_API_SPEC.md`), and the essay rubric gives a point for specific evidence beyond the documents (`APinceptbench/ap_benchmark/prompts/official_ap_prompts.py`). Read together, the bound is what the course taught, not a single fact or a single set of documents. It holds where the assessment supplies reference materials or a passage; where recall is the skill being tested, a recalled fact is the point. The check deliberately leaves out taught vocabulary and invented practice scenarios, which would otherwise be flagged falsely (`grade3-reading/knowledge_bot/knowledge/kb-0234-misc-artifacts-gate-eval-checks-recovery.qmd`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 47,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "check-a-markers-reply-against-its-criteria",
+      "path": "learnings/check-a-markers-reply-against-its-criteria.json",
+      "record_sha256": "239dd0a60f42f536edf22ab3d80626fdb5cffac5260171da3dbd77f5e48c98bc",
+      "statement": "Check that a model marker returns exactly one verdict per authored criterion, and treat a missing, invented, duplicated or malformed verdict as a marking failure, never a pass or miss.",
+      "role": "method",
+      "facets": [
+        "marking",
+        "evaluation",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "A Grade 5 open answer was rejected although it was the course's own supported answer, byte-identical to its reveal (`grade3-reading/ui-audit-2026-09-08/BEAD-REGISTER.json`, line 72). Replaying the exact request through the real scoring route returned a positive judgment under an invented criterion ID, which the route counted as a miss. Once the route accepted only the exact authored criterion IDs, each with one complete boolean, malformed output stopped becoming a learner's wrong answer and the unchanged answer was accepted (line 84). The recount repair applies the rule from the other side: a required criterion whose verdict is missing, duplicated with conflicting verdicts or malformed cannot pass (line 197).",
+      "against": "The live failure's raw reply was lost, so its cause rests on a reproduction: \"Its internal cause is not yet isolated because the original HTTP/model response was not captured.\" (`grade3-reading/ui-audit-2026-09-08/BEAD-REGISTER.json`, line 72). The closure keeps that limit and records no human or deployment acceptance (line 84).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 8,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "design-the-evidence-before-the-item",
+      "path": "learnings/design-the-evidence-before-the-item.json",
+      "record_sha256": "0398dbceb6f3a6e399dc5559fa185f3d8e6082fb86aab840f76bfcc7959c0d7e",
+      "statement": "Before writing a scored item, state what it is evidence for: the knowledge it targets, the claim a right answer supports and the evidence that counts.",
+      "role": "method",
+      "facets": [
+        "alignment",
+        "evidence-of-learning",
+        "scoring-guide"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "The reading project's assessment rules say that with no knowledge component, claim, evidence indicators, task conditions, outcome space and scoring rule, there is no assessment. The rule follows evidence-centred design, which the project's assessment evidence base cites (Mislevy, Almond & Lukas 2003). Besides the target, claim and evidence, state the task conditions, the range of answers including variants and near misses, the scoring rule and the shortcuts that must fail.",
+      "against": "An adopted rule drawn from the reading project's assessment entries; the note records no measurement behind it.",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 15,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "exact-quotations",
+      "path": "learnings/exact-quotations.json",
+      "record_sha256": "fdc0337a9d1fe3ee0e9f5583cbd4074c06ff182f22394459c44d4af0229824e9",
+      "statement": "Quote exactly, and check every quotation against the text in code.",
+      "role": "criterion",
+      "facets": [
+        "stimulus",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g9"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "Every block also gets a house check that every quotation is the text's exact words; a near miss is matched with a 3D\nversion's own matcher and given the text's wording for the correction (`g9/transformer/src/mechanics/util.js`,\n`houseChecks`; `g9/transformer/src/glue/threejs.js`). The film kit's plates quote the text word for word\n(`othello-unit-video/kit/docs/STANDARDS.md`).",
+      "against": "A later run found: In the reading engine a contract requires a modelled inference in a reveal beat to be wrapped whole in curly quotes; the clash with exact quotation was recorded as a contradiction awaiting a ruling, and the lessons kept the quote marks (`grade3-reading/artifacts/feedback-inceptbench-2026-09-29/REGISTER.md`). A later run found counter-evidence (`grade3-reading/artifacts/feedback-inceptbench-2026-09-29/REGISTER.md`). A later run found: in a 3D version's paragraph task the lesson engine counts as evidence an exact quotation of two words or more, or one of three words or more that is only nearly the text's (`g9/transformer/src/glue/threejs-archivist.js`). A later run found counter-evidence (`g9/transformer/test/quotes.test.mjs`). A later run found counter-evidence (`g9-transformer-audit/2026-10-09-best-of-everything.json`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 132,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "explanations-must-fit-the-item-given",
+      "path": "learnings/explanations-must-fit-the-item-given.json",
+      "record_sha256": "faf5871dc741b140d284bceac525146d43602800008a5be1f691851418052780",
+      "statement": "Explanations, hints and feedback must be true of the item as given.",
+      "role": "criterion",
+      "facets": [
+        "feedback",
+        "hints",
+        "key"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "In one reported case the judge scored factual accuracy 1.0 on an inference item whose explanation called a wrong option 'a fact stated explicitly in the text' when that claim was not in the passage, because it accepted the explanation's description of itself without checking (`icloud-work/inceptbench-main/tests/test_evaluator_prompt_rules_967.py`). The reading and writing rules now make the judge verify such labels against the passage, and the ELA rules forbid using the explanation as the sole source of truth (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/sat_rw_evaluation.txt`; `icloud-work/inceptbench-main/src/inceptbench/prompts/question/ela_evaluation.txt`). The closed-ended rubric treats explanations, hints, feedback templates and diagnostic notes as part of the content and fails an item whose support text discusses values that are not among its options, counting it under clarity rather than accuracy when code has confirmed the answer (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/closed_ended_evaluation.txt`). An explanation is written for the options' final order and backs the keyed option and no other, which code checks, failing the item when it can't tell. A judge checks every other claim that explanations, hints and feedback make against the item itself.",
+      "against": "Each experiment had 10 items, and three different fixes each passed 10 of 10, among them a shuffle in code that rewrote every letter reference and a self-check instruction, so keeping the letters in sync matters more than the order of the steps (`icloud-work/ap-social-studies-generator/docs/archive/EXPERIMENT_RESULTS_2026-02-18.md`). A pattern check catches only explicit letter phrases: an explanation can argue for a wrong option without naming it (`icloud-work/ap-social-studies-generator/python/benchmark_runs/analysis_iter1.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 17,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "feedback-that-sends-the-student-back",
+      "path": "learnings/feedback-that-sends-the-student-back.json",
+      "record_sha256": "4633bc7397a63d0555ebd21eeb31adb389da41e3b17fa2d077bbbf983d02fdd6",
+      "statement": "Feedback on a wrong answer says where to look, never what the student has to produce, and only what is true of what they were given.",
+      "role": "criterion",
+      "facets": [
+        "feedback",
+        "hints"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "Code holds feedback that names the right answer or speaks of how a film is made (\"the second frame\"); the judge then\nchecks each line against what the film has said and shown by its stop, and against the text\n(`g9/transformer/src/mechanics/util.js`, `stopChecks` and `feedbackJudged`). The checks exist because a finished block\nhad a line saying the film had said something it hadn't. Since then, drafts have been held for \"the second frame\" and\nfor feedback that named the answer, and the film check made again under these checks had all 9 lines confirmed\n(`g9/transformer/v02/QA.md`, \"Video essay and the unit-video modules\"). A hint may point to the line to read, even\nquote it, but copies no run of the answer (`g9/transformer/src/mechanics/open-check.js`); where the line itself is the\nanswer, the hint names who speaks or what moment to look at, without quoting it\n(`g9/transformer/src/mechanics/evidence-hunt.js`); a nearly exact quotation is told it is near, without the text's\nwording (`g9/transformer/src/glue/animated-judge.js`). The film kit's rule is the same: feedback on a wrong option\nsays why it is wrong and points back to the scene without naming the right one\n(`othello-unit-video/.claude/skills/uvk-checks-make/SKILL.md`).",
+      "against": "the key-words block's hint gives the word's\nfirst letter (`g9/transformer/src/mechanics/key-words.js`), and after the last try a 3D version's reply gives the\ntext's wording (`g9/transformer/src/glue/`). A later run found: a research summary on choice items says the minimum effective feedback is showing the correct answer, and that without feedback the wrong options can be learned as true (`grade3-reading/knowledge_bot/knowledge/kb-0159-mcq-principles-blueprints.qmd`). A later run found: the prompts a reading QC pipeline runs pass feedback on a wrong option that states the correct answer outright, so that the student 'should leave knowing what the right answer is and why' (`icloud-work/incept/incept-multilingual-generation/src/external_submodules/reading-question-qc/qc_pipeline/config/prompts.json`). A later run found: a reading-question feedback rubric bundled with the AP work's evaluator requires feedback on a wrong choice to state the correct answer or clearly guide the student to it, so the student leaves knowing the right answer (`icloud-work/inceptbench/submodules/reading-question-qc/qc_pipeline/config/prompts.json`). A later run found: an AP lesson spec's corrective line for a link that is only chronology names example mechanisms the answer could use, which says what to produce rather than only where to look (`grade3-reading/edullm-review-hub/course-packages/courses/apush/source/sealed-authoring/authoring/apush/canonical/unit2/lesson-01.json`). A later run found: research summarised in an MCQ guide that, to keep students from later giving the wrong options they saw as answers, the minimum effective feedback is showing the correct answer (`grade3-reading/knowledge_bot/knowledge/kb-0159-mcq-principles-blueprints.qmd`). A later run found counter-evidence (`icloud-work/incept/inceptbench/src/inceptbench/prompts/mcq_set/evaluation.txt`). A later run found counter-evidence (`icloud-work/incept/incept-multilingual-generation/src/external_submodules/reading-question-qc/qc_pipeline/config/prompts.json`). A later run found counter-evidence (`icloud-work/inceptbench/submodules/reading-question-qc/qc_pipeline/config/prompts.json`). A later run found counter-evidence (`grade3-reading/artifacts/g5_build_2026_07_02/feedback_clean.md`). A later run found counter-evidence (`ti-courseplans-audit/docs/instruction-quality-standard.md`). A later run found counter-evidence (`ti-courseplans-audit/skills/g3-reading-red-team/references/dimensions/D1-gradual-release-explicit-instruction.md`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0081-g3-reviewer-feedback-raw-2026-07-02-reading-explorers-v2-review-verbatim.qmd`). A later run found counter-evidence (`grade3-reading/ti-courseplans/feedback/feedback1/Generic Instruction BrainLift.md`). A later run found counter-evidence (`grade3-reading/ti-courseplans/feedback/feedback1/Direct Instruction BrainLift.md`). A later run found counter-evidence (`shadow-content-eval/SKILL.md`). A later run found counter-evidence (`shadow-bench/src/inceptbench/prompts/lesson_bundle/evaluation.txt`). The synthesis says the evidence is \"Drawn from second-language classrooms, so applied here by analogy to early oral language.\", and for growing a child's language in comprehension talk it still prefers recasts and follow-up questions over right-or-wrong marking. The research comes from second-language classrooms and is applied to early oral language by analogy (`ti-courseplans-audit/skills/course-red-team/references/opportunities-to-respond-brainlift.md`). A later run found: the code check that holds feedback naming the answer needs at least three of the answer's words in a row, so it never flags a one- or two-word answer: on one film block, two wrong-option lines naming a two-word key passed while a three-word key in the next question was caught (`g9/transformer/src/mechanics/util.js`). A later run found counter-evidence (`g9/transformer/src/mechanics/key-words.js`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 148,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "give-the-judge-what-the-student-sees",
+      "path": "learnings/give-the-judge-what-the-student-sees.json",
+      "record_sha256": "fbcb3f885e2a7239d896103bd4710d00660f41638c8fd661e634f71440374afd",
+      "statement": "Give a judge exactly what the student sees, one bounded question at a time.",
+      "role": "method",
+      "facets": [
+        "evaluation"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9",
+        "research"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "Every failure the reading engine has had was a judge asked to rule with the evidence missing\n(`grade3-reading/engine/skills/jev-verify/SKILL.md`). One of its checks was handed a bare question with no passage and\nno options, read \"no context given\" as \"not answerable\", and fired on 77 of 78 items; it now sees the passage and the\noptions the reader sees (`grade3-reading/engine/EVIDENCE-2026-09-22.md`). In a published study, giving a model judge a\nreference answer cut its false passes from 14 of 20 to 3 of 20 (Zheng et al. 2023,\nhttps://doi.org/10.48550/arXiv.2306.05685). In the lesson engine each check is one yes-or-no question about named\nfields of its state, with the student's words in their own field (`g9/transformer/README.md`, \"How a block is made\"),\nand a question must be one the statement can meet: two readings of a question are neither true nor false, so the judge\nasks only that nothing said goes against the text (`g9/transformer/src/mechanics/video-essay.js`).",
+      "against": "after the\nfix that check still fired on 41% (`grade3-reading/engine/EVIDENCE-2026-09-22.md`), and the lesson engine's precision\non its questions is not yet measured (`g9/transformer/v01/QA.md`). A later run found: the AP question-set pipeline stripped each set's image before the evaluator scored it (`icloud-work/ML learnings/mcq_set_journey.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 85,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "give-the-marker-what-the-rule-names",
+      "path": "learnings/give-the-marker-what-the-rule-names.json",
+      "record_sha256": "48af640155b0c03e861797a2d26d6d5ccae9e5af20b8c35de0eca20b6a97d46f",
+      "statement": "A marker can apply a rubric's rule only if it is given what the rule refers to; otherwise enforce the rule in code.",
+      "role": "method",
+      "facets": [
+        "marking",
+        "scoring-guide"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "In the marking test, one rubric said a quotation must not be the one the lesson's guide had used, but the marker was\nnever told which quotation that was, so an answer that broke the rule met every criterion, and on the re-check it\npassed all five again (`g9/review/2026-10-07-archivist-marking-test/README.md`). A rule the marker can't see has to be\nenforced in code: the lesson engine settles a \"quote\" criterion in code, against the text\n(`g9/transformer/src/glue/animated-judge.js`).",
+      "against": "A later run found counter-evidence (`icloud-work/inceptbench/docs/EVALUATOR_VARIANCE_FIX.md`). A later run found counter-evidence (`shadow-bench/`). A later run found counter-evidence (`g9/transformer/src/mechanics/compare-paragraphs.js`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 54,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "guides-describe-reasoning-not-fact-lists",
+      "path": "learnings/guides-describe-reasoning-not-fact-lists.json",
+      "record_sha256": "5fd7b7b0a70b0c73dcd223e0b460406d5433ef4a5aa17daefe7cb6eaba2d5974",
+      "statement": "A marking guide describes the reasoning that earns credit in a few checks, not facts or keywords, which can be wrong or matched by an answer lacking the reasoning.",
+      "role": "criterion",
+      "facets": [
+        "scoring-guide",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3",
+        "g9"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "The AP generator's system message tells it that short-answer scoring guidance describes criteria, not evidence lists (`icloud-work/aptraining/.agent/research/inference_clean.md`). In the failure analysis, factual accuracy caused 14 of 18 failures in one course's short-answer items, and a postmortem traced them to the guide itself: the writer filled its sample-response and acceptable-evidence fields with plausible but wrong historical examples (`icloud-work/aptraining/.agent/research/failure_taxonomy.md`). Every fact a guide lists, especially one its writer recalls rather than verifies, is another chance to be wrong.",
+      "against": "Telling the small writer to leave specific facts out did not work: it wrote wrong specific facts instead (the same analysis). the same note calls that instruction good enough for a large model and insufficient for a 14B one (`icloud-work/ML learnings/sft_v7_benchmark_postmortem.md`). The course's own published guide lists examples: its short-answer scoring guidelines say what credited responses must do and then give \"Examples that earn this point include the following:\" (`icloud-work/ap-social-studies-generator/curriculum/ceds/ap-european-history-ced.pdf`, pdftotext -layout output, line 12660). The same change also removed about 300 lines of other prompt constraints (`icloud-work/ap-social-studies-generator/python/benchmark/CHANGELOG_RELENTLESS.md`, line 179), so the drop is not the list change alone. It is design guidance, not a measurement, and for a short recall answer the same library credits any two of an accepted set instead (`grade3-reading/knowledge_bot/knowledge/kb-0158-assessment-pattern-library-brainlift.qmd`). The fix was not yet tested when the note was written; those runs came before it (same file, line 137). A ban on lists alone did not work: the same report says that for these notes “don’t list specific facts” failed and that verified-facts-only constraints are stronger. The handover's techniques come from a sibling generator whose best run used a different grader version, which it calls design evidence, not certified current scores. In a 15-item replay, short-answer sample responses were too generic for the scorer, and the repair that added concrete examples by topic was one of the changes in the version that passed 15 of 15 (`icloud-work/aptraining-crystal-copy-20260521/full-copy/aptraining-root/parallel-ideas-lab/experiments/failed_export_replay/RUNNING_SUMMARY.md`, lines 205-225); that version repaired an existing run rather than a fresh one (line 249). The same BrainLift keeps full automation for numeric, diagram and property-based answers with explicit tolerances, where the space of valid answers is small.",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 63,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "no-cue-in-the-item-itself",
+      "path": "learnings/no-cue-in-the-item-itself.json",
+      "record_sha256": "01b3235b6e8cc8099b0fcc43fec39ab11243e128bb5523302f185eda6da2f402",
+      "statement": "No surface feature may single out the key: keep options alike in length, grammar, register and scope.",
+      "role": "criterion",
+      "facets": [
+        "options",
+        "integrity",
+        "distractors",
+        "stem"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3",
+        "research"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "Generated multiple-choice items were given to a model from another family with the passage withheld; it recovered the key for 62.7% of them, and the leaked items showed wrong options with absolute words, a key that was systematically the longest, wrong options that contradict each other, and keys that were the obvious balanced or textbook-sounding answer. Selection-from-the-text items leaked when the question or span wording signposted the right phrases, and in one unit they survived only with at least two competing spans of the same shape and a question the solver could not resolve without the text. Sorting items leaked when passage titles were the category labels, while neutral labels (Source A, Source B, Both) gave the construction that produced 700 certified items, and two-part answer-and-evidence items with elaborate options were left out because one part could solve the other. The key is never the longest, shortest, most specific, most hedged, odd one out or only option sharing a distinctive word with the stem or source. Use no absolute words or 'all/none of the above'. Check lengths in code, item by item and across the set, and move reasoning from the key into its feedback where it runs long.",
+      "against": "A length cue matters only where length can be exploited: a review left a sorting item's uniquely short extra alone, because extras are not keyed to prompts (`grade3-reading/artifacts/g5-course/ADVERSARIAL-REVIEW-2026-09-04-R16.md`, line 52). Removing cues does not fix leaks whose cause is the passage: for the same generator's items, the report judged the leak not fixable with option-length patches (`grade3-reading/artifacts/LANE2_GENERATOR.md`, line 31). a blind solver that guessed from option length and wording flagged items that needed the passage and were clean, so a solver's guess alone does not prove a cue. The measured effect comes from four exams at one institution and covers item-writing flaws of every kind; the AP rule is a stated criterion with no count of failures; and a research summary warns that the most plausible wrong options are also the likeliest to be learned as true when no feedback follows. The same generator's structure judge is told that \"Sentence length alone (unless extreme like a phrase vs. paragraph)\" is not a structural difference (`icloud-work/incept/sat-reading-generation/sat-prompts.json`, line 80), leaving length to the code check. A grades 9-10 reading generator makes the cue a fixed rule, \"The correct answer MUST NEVER be the longest option.\" (`icloud-work/incept/incept-multilingual-generation/src/external_submodules/reading-question-qc/ck_gen - prompts.json`, line 12, and again on lines 6, 18, 48 and 54); a key that is never the longest is a pattern of its own. The absolute-language list also catches ordinary words such as only, so a word filter can fail sound options (`icloud-work/evaluator/ap_benchmark/hard_fail/rules.py`, line 38). And the pipeline's fixed key order, 'Use locked answer keys A, C, and B in that order.' (`icloud-work/evaluatorML/.agent/memory/e2e_pipeline/iterate_repair_to_100.py`, line 201), balances each set but repeats one position pattern across every set, which is itself a surface cue. A word ban is blunt: one validation rule fails a true statement for its absolute words (`icloud-work/ap-social-studies-generator/docs/validation_rules.md`). The writer's banned-word list had no enforcement, absolute language still appeared in 35% of items, and no rate after enforcement is recorded (`icloud-work/k_12_social_studies/python/improvement_plan_prompts.md`). The length cue rests on guidance, not on a measured case. Ordinary topic-word overlap is acceptable (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/sat_rw_evaluation.txt`, lines 75-76), and a single echo of a category label is borderline unless it is the dominant word in the label (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/match_evaluation.txt`, line 379). A fixed word list is blunt: the AP benchmark's check before the judge fails an item when any option, distractor or key, contains words such as \"total\", \"complete\" or \"never\", while the judge's own rule allows absolutes when they are historically accurate. The validators look for the tells a blind solver would exploit rather than solving the item blind, which the same file says needs a model. A recalibrated blind solver certified 10 questions an older solver had over-flagged, and the leak vectors behind those flags included the right option being the longest. In a select-all item the length cue is confounded: picking the two longest options gave one right and one wrong (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/readiness-l5-2026-09-17/sim-review/lens-item-stats.md`, line 102). An automated shape flag can be a false positive, kept on record so the raw score is not taken at face value (`grade3-reading/artifacts/feedback-inceptbench-2026-09-18/REGISTER.md`, line 14). a solver audit certified as clean ten questions that an over-eager solver had flagged, partly by picking the longest option (`grade3-reading/knowledge_bot/knowledge/kb-0096-fable-vs-haiku-strictness-audit-2026-07-09.qmd`, lines 49-63). Most mechanical form flags were false positives once read: \"The options are parallel; they only open with different words.\" (`shadow-content-eval/reports/G3-U1-L14-review.md`, line 112); \"in none of them is the correct option the longest or shortest outlier in a way that gives it away.\" (`shadow-content-eval/reports/G3-U1-L11-review.md`, line 106). The thresholds were set, not measured, and neither the tell's rate in real items nor its effect on students is on record. Copying is not always a cue: a validator's first version \"over-blocked known passing rows because InceptBench tolerates some source-referential wording\" (aptraining-local/den-of-ideation/experiments/b0035_mcqset_stage_validator/RESULTS.md, line 24), and the records read give no measured effect of the check on its own. A later run found counter-evidence (`grade3-reading/engine/reports/PETER-PAN-IMPROVEMENTS-2026-09-28.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 187,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "nothing-gives-the-answer-first",
+      "path": "learnings/nothing-gives-the-answer-first.json",
+      "record_sha256": "e3bc12f4ff0656848f634abef9bda16279ab4b7b98b98ade468da752d976661e",
+      "statement": "Nothing a student sees or hears may give the answer before the first attempt, including the picture behind a paused question.",
+      "role": "criterion",
+      "facets": [
+        "integrity",
+        "media"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "The film's method: nothing a student sees or hears may give an answer before the first attempt; checks sit after the\nscene they ask about, and the film is blurred while a question is on screen\n(`othello-unit-video/research/METHODS.md`). The blur came after two checks paused over plates that showed their answer\n(`g9/film/v06/README.md`), and the kit's rule counts the question's own wording too\n(`othello-unit-video/.claude/skills/uvk-checks-make/SKILL.md`). A meta-analysis found learning impeded when a video is\nnot paused for interaction (Ploetzner 2024, https://doi.org/10.1080/10494820.2022.2123002). In the lesson engine,\nnothing a student needs to work out is on screen before they answer; a word card that showed the meaning before the\nquestion, and a delivery choice that showed what the speaker wants before the pick, were both fixed\n(`g9/transformer/src/glue/animated.js`; `g9/transformer/v02/QA.md`, \"Found and fixed\").",
+      "against": "one build's exported\nlesson still carries the key in its data (`g9/transformer/src/glue/animated.js`), and by the kit's own rule a check asks\nonly about what the film has just said, so it tests what was just heard. A later run found counter-evidence (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/closed_ended_evaluation.txt`). A later run found counter-evidence (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/ROUND-RESULT.md`). A later run found counter-evidence (`othello-course-renderer-draft/repo/docs/video/u1-intro-audit.md`). The validator fails only an order identical to the key (`grade3-reading/course-renderer/scripts/validate-contracts.mjs`, line 823), so an order one swap from the answer still passes it.",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 160,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "offer-the-strongest-evidence",
+      "path": "learnings/offer-the-strongest-evidence.json",
+      "record_sha256": "260b86cc1c5e724c9fe6a8570decec61baef154f7c2e9a45a8db5a47966def45",
+      "statement": "When students pick evidence from a set, the strongest evidence must be in the set, and the rubric must not credit evidence they can't pick.",
+      "role": "criterion",
+      "facets": [
+        "options",
+        "scoring-guide"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "Reviews of tap-the-evidence items in two Grade 3 lessons found three faults (`shadow/content-eval/reports/G3-U2-L1-review.md`, `shadow/content-eval/reports/G3-U1-L14-review.md`). The sentence linking a plant's job to its survival was missing from the tappable list, a rubric accepted a sentence that isn't one of the tappable spans, and the strongest clue in a paragraph couldn't be tapped. All three were judgment calls in the reviews.",
+      "against": "none found",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 3,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "one-answer-the-text-settles",
+      "path": "learnings/one-answer-the-text-settles.json",
+      "record_sha256": "d625e0968a87ba09454f03f6ecb12f8c2e7f3e2a071a43308916cc6622bceb36",
+      "statement": "A choice question needs one answer the text settles; check the right option, and each wrong one, on its own.",
+      "role": "criterion",
+      "facets": [
+        "key",
+        "distractors"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g9"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "Every choice block asks the judge whether the keyed option is right, given what the student has read or heard, and\nseparately whether each other option is wrong (`g9/transformer/src/mechanics/quick-check.js`,\n`g9/transformer/src/mechanics/film-check.js`, `g9/transformer/src/mechanics/video-essay.js`). All of them have to hold.",
+      "against": "none found",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 88,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "one-plain-voice-for-every-line",
+      "path": "learnings/one-plain-voice-for-every-line.json",
+      "record_sha256": "b50e17ff3075b56f80e15585b90ba0ff64427acdbea8cffbd5f051b9a465dce1",
+      "statement": "Every line a student reads gets one plain voice: no praise, no exclamation marks, no verdict the screen already shows, and at most one question, none in a closing line.",
+      "role": "criterion",
+      "facets": [
+        "wording",
+        "feedback"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g9"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "Every line a student reads passes the same cleaner in code: no gushing, at most one question while a try remains and\nnone in a closing line, no semicolon or dash standing in for a comma, and no opening verdict, since the screen shows\nthe verdict itself (`g9/transformer/src/house.js`). The rules are a 3D version's reply cleaners and an animated\nversion's punctuation, used as they are. A test turns \"Great job! You found the line. Which word matters? And why?\"\ninto \"You found the line. Which word matters?\" (`g9/transformer/test/glue.test.mjs`). Before the rule, feedback opened\nwith \"This is correct;\" under the build's own YES (`g9/transformer/v02/QA.md`, \"Found and fixed\").",
+      "against": "without the\n3D version's code on the machine, its praise and question rules don't run (`g9/transformer/src/glue/threejs.js`). A later run found: another reading course's register for ten-year-olds bans younger-grade praise such as medals and confetti but asks for specific process praise instead, with feedback kept to 40 words and one scaffolding question on a miss, so whether a line may praise at all differs between courses (`grade3-reading/knowledge_bot/knowledge/kb-0195-g5-book-lane-secret-garden-closed.qmd`). A later run found: a Grade 5 reading course asks for specific process praise that names what the student's move accomplished, rather than no praise, after a review found the same generic praise and medal on all nine lesson endings, though it graded that as polish only (`grade3-reading/artifacts/g5-course/LESSON-AUTHORING-PLAYBOOK.md`). A later run found counter-evidence (`grade3-reading/incept-read-app/apps/broker/WRITING-SCORE.md`). A later run found counter-evidence (`grade3-reading/incept-read-app/docs/G4-SCR-example-native-qti.md`). A later run found counter-evidence (`g9/transcript/chat-transcript.redacted.txt`). A later run found counter-evidence (`grade3-reading/ti-courseplans/skills/g3-reading-red-team/references/dimensions/D12-motivation-engagement.md`). A later run found counter-evidence (`grade3-reading/artifacts/g5-deploy/EVALUATION-API.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 68,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "options-that-differ-in-meaning",
+      "path": "learnings/options-that-differ-in-meaning.json",
+      "record_sha256": "e712b3d6a31bc619ce179ab5cf449fe7594a539457ae80f4832772232d661edb",
+      "statement": "Check that the options differ in meaning, not just in wording: identical or equivalent options leave more than one right answer and no real distractor.",
+      "role": "criterion",
+      "facets": [
+        "options",
+        "distractors",
+        "key"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "In two runs of 298 generated items that passed at 3.7% and 3.0%, factual accuracy failed on 78% of items, among them items whose four options were identical (`icloud-work/incept/nova_forge/archive/old_docs/platform/PATTERN_ANALYSIS_RESULTS.md`, lines 10-11, 21 and 24). A production math generator's wrapper filters equivalent distractors, and its requirements rule out pairs such as 1/2 and 5/10 unless multi-answer is supported (`icloud-work/incept/nova_forge/qwen3-math/docs/inceptml_full_report.md`, lines 41 and 73). A reading question check flags a distractor that uses different wording for essentially the same meaning as the right answer (`icloud-work/incept/incept-multilingual-generation/src/external_submodules/reading-question-qc/qc_pipeline/config/prompts.json`, line 21).",
+      "against": "Equivalent options are allowed when every one of them is keyed: the rule holds only \"unless multi-answer is supported\" (`icloud-work/incept/nova_forge/qwen3-math/docs/inceptml_full_report.md`, line 73).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 22,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "produce-it-dont-just-pick-it",
+      "path": "learnings/produce-it-dont-just-pick-it.json",
+      "record_sha256": "a7dc69a6f5adc68df6865311823c14f2184e7653e565a31e0a9bf020c2712827",
+      "statement": "Anything taught needs graded work where learners produce it, as picking, recognising, mentioning or echoing it never counts, and no earlier check may use a taught word as its answer.",
+      "role": "criterion",
+      "facets": [
+        "evidence-of-learning",
+        "format",
+        "alignment"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "An audit found two taught words that had been acquired but that no graded task ever required using. The reading project then ruled that every taught word needs a graded point where the child produces it in an evaluative sentence of their own, and that recognition in a multiple-choice question never counts, however many options it has. Its item rules say not to certify productive knowledge with recognition alone, and its lesson rulings judge a lesson by what students produce over what they click. Response counts must leave out one-word echoes.",
+      "against": "A meta-analysis summarised in the reading project found multiple-choice practice tests had a larger effect than short-answer ones (g = +0.70 against g = +0.48), so picking can still be good practice; the rule is about what counts as evidence of learning. For diagnosis, the course's assessment brainlift calls multiple choice the optimal format, for its speed and its isolation of one piece of knowledge (`grade3-reading/ti-courseplans/feedback/feedback3/WF - Assessment  Feedback Brain - 260624-200115.md`, SPOV 10), and the brainlift on opportunities to respond itself says neither response type is better, each belonging to a different job. The designs differ on whether the word should be one the text never uses: two lessons choose such a word, and a third holds back a word that appears in its text. A later run found: A lesson-component spec for the reading course teaches one high-leverage word with a student-friendly definition and checks it with one usage multiple-choice question and no speaking, so recognition is the only check on the taught word (`grade3-reading/_archive/2026-08-13-consolidation/codex-history-extract/HUMAN-g3r-2026-07-27T08-38-36-019fa24b-fb42-7e61-a954-216db3ef77a4.md`). A later run found counter-evidence (`grade3-reading/curriculum-gen/audits/PETER-PAN-AUDIT-2026-08-24.md`). A later run found counter-evidence (`grade3-reading/course-renderer/docs/pedagogy/example-lesson-components-2026-08-06.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 38,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "require-the-criterion-the-task-is-for",
+      "path": "learnings/require-the-criterion-the-task-is-for.json",
+      "record_sha256": "5c32bc01f9944f61391b496e7d3960c30ab085be6192e9058afffbd685198b95",
+      "statement": "Make marking require the content the task exists for, so an answer with that content wrong can't pass on strong language, structure or evidence.",
+      "role": "criterion",
+      "facets": [
+        "scoring-guide",
+        "marking",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "A Grade 3 recount was marked by how many of its three criteria were met, with a pass bar of 2: one asked for the events in order, the other two for a connective and a taught word (`grade3-reading/ui-audit-2026-09-08/BEAD-REGISTER.json`, line 197). A retelling that reversed the story's events was accepted, and a controlled run of the real scoring route, with synthetic model replies, reproduced the arithmetic. A census of 111 visible assessment objects found one more recount with the same bypass, at 2 of 4. Once the factual criterion was required, the real contradiction was rejected and an explicit factual correction was accepted (line 210).",
+      "against": "The live model's own verdicts were not captured, \"The native packet does not expose the provider's raw criterion booleans.\" (`grade3-reading/ui-audit-2026-09-08/BEAD-REGISTER.json`, line 197), so the live false pass is tied to the count rule only by the controlled probe, and a required criterion does not make the marker right: \"The flag is not a guarantee that the model never misjudges comprehension.\" (line 197). The fix must not over-tighten: its failure conditions include \"an accurate supported answer is forced to meet all optional criteria\" (line 197), and \"Contract required_for_pass sign-off remains the separate .51 merge gate\" (line 199).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 10,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "sample-answers-cover-every-part",
+      "path": "learnings/sample-answers-cover-every-part.json",
+      "record_sha256": "51de96dd1ce953941f1360b1cff0521890aad45a9b17598515f4c3f5024bfc8d",
+      "statement": "Make sure every part a question asks for appears in its sample answers, not only in the parts the student sees.",
+      "role": "criterion",
+      "facets": [
+        "scoring-guide",
+        "key"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "In a calibration of AP history items, a short-answer item's sample responses failed to answer the religious justifications and gender roles its prompt required. The fix asked the answer-key verifier to check that every requested component appears in the sample responses, not just in the student-facing parts. Failure analysis of one run's export also counted 21 sample-answer errors.",
+      "against": "none found",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 3,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "say-what-earns-each-point",
+      "path": "learnings/say-what-earns-each-point.json",
+      "record_sha256": "54cedad672ac218115d4a87340e59a5691b7d9031f0bbd747afe5c0613094409",
+      "statement": "Write marking criteria for each question that say exactly what earns each point, not a generic category or task-type rubric, so vague answers fail and valid wordings pass.",
+      "role": "criterion",
+      "facets": [
+        "scoring-guide",
+        "marking"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3",
+        "research"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "An AP evaluator scores the marking criteria of a short-answer item as a binary check, in the slot it uses for distractor quality on choice items. It passes with clear criteria for what earns each point and well-defined acceptable answers, and fails with ambiguous criteria, where it is unclear what a correct response is. Generic wording passes a judge as clear criteria without separating a vague answer from a good one, though every fact the guide lists is another chance to be wrong.",
+      "against": "an AP generator's spec requires specific evidence for each point, and a smaller model told not to list specific facts listed wrong ones instead. the study marked code, not written answers, and in the AP work the named evidence items written into each question's scoring notes were where errors gathered: 15 of 17 factual-accuracy failures were in the scoring notes, and the fix was notes that describe the reasoning that earns the point instead of listing evidence. Naming facts in a guide adds chances to be wrong: one wrong example in a list of three discredited a sample answer (`icloud-work/aptraining/workspace/comms/_deprecated/outboxes/from_atlas/2026-05-04T1430Z_v40h_spot_verify.md`). Rubrics do not by themselves make the judgement of complex work valid; that depends on how well they fit the construct and the task (`grade3-reading/knowledge_bot/knowledge/kb-0153-assessment-pack-brainlift.qmd`). The 15 of 15 came from five changes made at once on a 15-item set, so how much the topic-specific guide contributed is unknown.",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 34,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "settle-in-code-then-bind-the-judge",
+      "path": "learnings/settle-in-code-then-bind-the-judge.json",
+      "record_sha256": "4f10abee6a2969d8cdaf560f8e5e8ebbba828c27aabb325f94c4a36f5ee61ccf",
+      "statement": "Settle in code everything code can decide, such as format, parts and key validity, before a judge sees the item, then give the judge those results as binding facts.",
+      "role": "method",
+      "facets": [
+        "evaluation",
+        "key"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "The question evaluator used in the AP work added a math checker because a model judge could score the same compound-interest question 1.0 in one run and 0.0 in the next. A symbolic library now computes the answer before the judge scores the item, and when it proves the answer correct the judge must accept factual accuracy as 1.0. Tested on 81 math questions with 3 runs each, 486 evaluations gave 0 regressions and the same score every time. Code can settle the format, the parts present, the number of options, the key's validity and the final score, leaving the judge only questions of meaning.",
+      "against": "the step that turns an item into something the checker can compute can misrepresent the problem, so the judge may still override an \"incorrect\" verdict, and the measured gain was 3 net improvements. The binding is only as good as what the code was given: when the math verifier calls an answer incorrect, the judge may still override it, because \"the extraction step can sometimes misrepresent the problem (wrong equation format, missing variables)\" (`icloud-work/incept/inceptbench/docs/internals/math-verifier.md`, lines 62-65). The lookup was proposed, not built or tested. None found. The hard-fail rules there are word patterns, for example any distractor containing \"never\" or \"always\", and no rate of wrong hard fails is recorded (`icloud-work/evaluator/docs/EVALUATION_PROCESS.md`, line 133). Filing format faults under alignment is what the judge's rubric asked for: it asks whether the format is correct and fails curriculum alignment if not, though that rubric file postdates the run. Where a code check rests on a model's own extraction, the same evaluator leaves the judge free: a math check's finding of an error may be overridden because \"the extraction step can sometimes misrepresent the problem\", and a picture check may lift a fail while its contradictions stay advisory. The cue fix changed several things at once and was tried on two samples, so the effect of naming the excuses alone is unknown. Code checks catch only the obvious: a validator probe found that visible deterministic rules cannot reliably identify the evaluator's latent concerns without damaging items that passed, and the rejected branch already ran local validators before its model ranker. The reading-level code also defers to the model near a band edge or on unreliable text. None found. The split is an adopted rule, and nothing in this evidence compares the two kinds of check. Under that project's one-attempt rule a failed check is logged, never used to call the model again: the same audit counts validation that triggers a retry as a crutch (`icloud-work/aptraining/.agent/research/inference_clean.md`, line 400). A probe of a deterministic validator suite on 461 generated AP items caught 19 of 102 failures and rejected 22 of 351 passes: \"The visible deterministic rules catch the obvious defects but cannot reliably identify the evaluator's latent concerns without damaging passed controls.\" (icloud-work/aptraining-crystal-copy-20260521/full-copy/aptraining-root/parallel-ideas-lab/reports/a0f_validator_probe_20260519.md, line 42).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 92,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "spread-the-right-answers-position",
+      "path": "learnings/spread-the-right-answers-position.json",
+      "record_sha256": "0b6d3b65c28294fe4c74259b32ff9e9bcc58f72e472086a5e0e4c0a2ed3790df",
+      "statement": "Spread the right answer's position evenly across a set, and check it in code.",
+      "role": "criterion",
+      "facets": [
+        "key",
+        "integrity"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g3",
+        "g9"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "Across one four-lesson arc in the reading project, 29 of 40 multiple-choice questions had the right answer first and\nthe fourth position appeared once; a child who noticed would beat a 72% base rate by always choosing A\n(`grade3-reading/artifacts/arc-audit/SIM-REVIEW-D5-D6-D11-D13.md`). Rebalanced, another set went from 56% choice A to\nan even spread over 117 questions\n(`grade3-reading/ti-courseplans/courses/g3-reading/iteration-2/approval-package-v2/sources/RESPONSE-MATRIX.md`). My own\nfilm player lists the right option first in 5 of its 7 choice steps and never shuffles them\n(`g9/player/content/archivist-checks-v7.json`, `g9/player/index.html`).",
+      "against": "the reading project's blind-solve\nchecks never tested position (the same review), and the lesson engine doesn't check it yet. A later run found counter-evidence (`othello-course-renderer-draft/repo/docs/process/CONTRACT-SIGNOFFS.md`). A later run found counter-evidence (`grade3-reading/artifacts/u4l2-build/BEAT-SPEC.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 138,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "test-the-skill-it-claims",
+      "path": "learnings/test-the-skill-it-claims.json",
+      "record_sha256": "53559756ef7c1a148e4e01931593e1d4e1f1dbc8bbd1ab1ab0cb39c41059781a",
+      "statement": "The skill a lesson or item claims must be one its text affords and its task really demands at the stated depth, not recall or a neighbouring skill.",
+      "role": "criterion",
+      "facets": [
+        "alignment",
+        "demand"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3",
+        "research"
+      ],
+      "kind": "measured",
+      "status": "held",
+      "detail": "An integrity probe in the reading project extracted the expected conclusion of every inference-bearing item in three lessons and searched the lesson's own passage for a sentence stating it: of 18 items, 1 stated its conclusion outright and was fixed, and the reverse check found no retrieval item that secretly needed an unstated inference. The project's lesson rulings call a retrieval question dressed as an inference, or the reverse, a defect, not style. A gap analysis of its content-evaluation tools makes thinking-level alignment binding, coverage being false if an 'analyze' standard is assessed by 'identify', and a second-round review in July 2026 found a main-idea lesson serving an inference item. The depth asked can mean, for example, explaining a cause-and-effect link or weighing several causes. An identify task can't assess an analyze goal, and an inference whose conclusion the source states outright is retrieval however it is labelled.",
+      "against": "In the response to an earlier review, one cited mistag was judged defensible. The higher-order rule comes from a practical guidance paper, not a systematic study, and the AP judge can still pass a factually correct question that teaches the wrong skill. The external audit rated that check medium and the course judged it not serious (`grade3-reading/artifacts/feedback-inceptbench-2026-09-30/REGISTER.md`, line 61); the item-statistics review rated it minor, noting it was framed as a comprehension pause rather than a strict locating item (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/readiness-l5-2026-09-17/sim-review/lens-item-stats.md`, lines 245 and 258). No before-and-after measurement, and the difficulty finding paraphrases typical judge rationales rather than quoting one. These are adopted rules from writer prompts, untested one by one, and the synthesis rewrite is a single targeted repair. The gain was measured on the ten public items being patched, and a different sample then failed: \"third public n=10 was `10/10`, but runner sanity failed `1/2`\" (aptraining-local/den-of-ideation/to_main/2026-05-23T1808Z_DEN_REQUEST_validate_unit9_mcq_solver_v1.md, line 26).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 70,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "the-key-must-trace-to-the-source",
+      "path": "learnings/the-key-must-trace-to-the-source.json",
+      "record_sha256": "0dff700a72a0596fcf3e182dfd0944cf006a1601b0f21cbfe35b7bb67ea83001",
+      "statement": "Every claim in a keyed answer must trace to something the source says, but naming the category of what it describes is not an error.",
+      "role": "criterion",
+      "facets": [
+        "key",
+        "stimulus"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "For argument-conclusion items, an audit maps each claim in the correct option to a point the passage makes, and a correct option with an unmapped claim fails factual accuracy; appeals to synthesis don't rescue a genuine shift of domain, but naming the category of what the passage described is the skill the standard asks for (`icloud-work/inceptbench-main/src/inceptbench/prompts/question/ela_evaluation.txt`). The audit was narrowed after it over-flagged exactly those category-label summaries and failed good concluding-statement items (`icloud-work/inceptbench-main/tests/test_evaluator_prompt_rules_411_418.py`).",
+      "against": "The audit is written for argument conclusions, and applied strictly it misfired on legitimate synthesis until it was narrowed (`icloud-work/inceptbench-main/tests/test_evaluator_prompt_rules_411_418.py`, lines 17-19).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 3,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "two-tries-then-the-answer",
+      "path": "learnings/two-tries-then-the-answer.json",
+      "record_sha256": "4a5b1651ee7ab774f4037af0386b3022f32bfb50488bc6bbf94931b76d118b7c",
+      "statement": "Two tries, then the answer; otherwise a student who never gets it right can't finish.",
+      "role": "criterion",
+      "facets": [
+        "practice",
+        "feedback"
+      ],
+      "scope": "universal",
+      "domains": [
+        "g9"
+      ],
+      "kind": "adopted-rule",
+      "status": "contested",
+      "detail": "The rule comes from a 3D version of the lesson, and the engine uses it in its written checks, key words, evidence hunt\nand debate. Before the runtime passed the attempt count, the release never fired in sessions; after it, all four\nscripted readers finished a 15-block lesson (`g9/transformer/v02/QA.md`, \"Found and fixed in integration\" and\n\"Grade 3 quality\").",
+      "against": "a choice question never releases its answer; with three options, elimination ends it in\nthree picks (`g9/transformer/src/mechanics/quick-check.js`), and the playtest reports a guesser there as having no\nceiling (`g9/transformer/src/quality/playtest.js`). A later run found: the reading project never reveals a single-select item's answer after any number of tries, because a short option list lets a child eliminate their way to it and a reveal mid-reasoning stops the thinking the item exists to provoke, while every other gated type ends in a reveal (`grade3-reading/knowledge_bot/knowledge/kb-0183-copy-question-quality-rulings.qmd`). A later run found counter-evidence (`icloud-work/incept/incept-uae-api-website/bench.inceptapi.com/Incept Pedagogy & Learning Science Overview.md`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0192-g3-book-component-catalogue.qmd`). A later run found counter-evidence (`grade3-reading/artifacts/criteria-register.csv`). A later run found counter-evidence (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/readiness-l5-2026-09-17/sim-review/lens-item-stats.md`). A later run found counter-evidence (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/readiness-l5-2026-09-17/sim-review/lens-item-stats.md`). A later run found counter-evidence (`grade3-reading/artifacts/team-direction-2026-09-09/GATE-STANDARD-DRAFT.md`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0224-g3-dialogue-branches-pace-gate-roll-forward-2026-09-22-23.qmd`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0251-g9-prep-pack-index-manifests-leadership-playbook.qmd`). A later run found counter-evidence (`grade3-reading/knowledge_bot/knowledge/kb-0220-peter-pan-video-brief-and-screen-narratives.qmd`). A later run found counter-evidence (`downloads/5. Curriculum/Instruction/3.1 - Fantasy Classics - Lesson Designs/3.1 - 1. Aladdin and the Wonderful Lamp, Part 1 (FICTION, FIND) — v3 (order + MCQ QA).docx`). A later run found counter-evidence (`downloads/5. Curriculum/Instruction/3.1 - Fantasy Classics - Lesson Designs/3.1 - 2. Aladdin and the Wonderful Lamp, Part 2 (FICTION, INFER) — v3 (new INFER design).docx`). A later run found counter-evidence (`grade3-reading/ti-courseplans/courses/g3-reading/iteration-6/distilled/07-SCORING-FEEDBACK-XP.md`). A later run found: the lesson engine's export to an animated version sets three tries by default on its rubrics and one on a web word, and gives two only to its open check and debate (`g9/transformer/src/glue/animated.js`). A later run found: from reading the code, with no planted case, the session runtime counts tries for the whole block, right answers and answers set aside as aimed at the marker included, while the lesson page counts sure misses gap by gap, so in a session the first miss on a later gap could give the word at once; the runtime's own comment says the two agree (`g9/transformer/src/core/runtime.js`). A later run found: The 9 October audit of the lesson engine recommends that choice blocks never reveal their answer, because a reveal on a three-option item gives the key away by elimination. The engine's quick check already finishes only on the right pick. This adds a quoted Grade 9 source to the elimination point the record's against already makes about three-option items (`g9-transformer-audit/2026-10-09-best-of-everything.json`). A later run found counter-evidence (`g9/transformer/src/glue/animated.js`). A later run found counter-evidence (`g9/transformer/src/mechanics/film-check.js`). A later run found counter-evidence (`g9-transformer-audit/2026-10-09-best-of-everything.json`). A later run found counter-evidence (`g9-transformer-audit/2026-10-09-best-of-everything.json`). A later run found: A Grade 5 release gate takes the opposite line for a step whose response gates progress: a first wrong answer stays blocked, a distinct second wrong answer reveals support but stays blocked, and only a fresh learner-selected correct retest exposes Next, with support that never auto-fills or unlocks the answer (`grade3-reading/edullm-review-hub/docs/G5_STUDENT_EXPERIENCE_RELEASE_GATE.qmd`, line 81; `grade3-reading/edullm-review-hub/docs/GRADE_5_REVIEW_NOTES.qmd`, line 44). Its postmortem had found that an implementation could reveal the answer and advance without a genuine retest (lines 65-67 of the gate). It is an adopted rule; no learner outcome was measured (`grade3-reading/edullm-review-hub/docs/G5_STUDENT_EXPERIENCE_RELEASE_GATE.qmd`). A later run found: A reading course's rules never reveal a single-select answer: ruling options out is the thinking the item exists for, and a short closed list can't strand anyone, so its contract validator fails any single-select that authors a reveal after tries. Open answers and closed but combinatorial items (sequence, match, inline choice) keep a ceiling of tries that ends in the answer, and the course records the clash with its own earlier two-attempts rule as an open contradiction awaiting a ruling (`grade3-reading/course-renderer/docs/rules/questions-and-assessment.md`). A later run found: the Grade 9 library's copy of the reading engine's component catalogue records the validator-enforced contract that a single-select answer is never revealed, even after many tries, because exhausting a short option list finds it, and lists its clash with the two-attempts rule as an open contradiction not to be assumed resolved (`g9/library/collections/research-pack-2026-10-02/full-source-site/sources/engine/kb0192--kb-0192-g3-book-component-catalogue.qmd`). A later run found: A Grade 3 reading course put every backstop that picked the answer after a number of tries behind an opt-in offer: after four missed taps on a hunt or hint ladder, the lesson's guide offers help with one button the child must tap, and never marks the answer unprompted (`grade3-reading/ti-courseplans/courses/g3-reading/iteration-6/distilled/05-UI-UX-PRINCIPLES.md`). A later run found counter-evidence (`grade3-reading/visual-findings-2026-09-08/reviewer-annotations/independent-review-plan.md`). A later run found counter-evidence (`grade3-reading/visual-findings-2026-09-07/review-readiness/curriculum-alignment/rebuild/methodology/README.md`). A later run found counter-evidence (`grade3-reading/visual-findings-2026-09-07/review-readiness/curriculum-alignment/rebuild/unit9/unit-video-production.md`). A later run found counter-evidence (`grade3-reading/curriculum-gen/.agent/RESOURCES.md`). A later run found counter-evidence (`grade3-reading/ui-audit-2026-09-08/feedback-reconciliation/invariants.dom.txt`). A later run found counter-evidence (`grade3-reading/ui-audit-2026-09-08/round-5/peter-pan-evidence-repairs-2026-09-10/SHARED-DECISIONS.md`). A later run found counter-evidence (`grade3-reading/ui-audit-2026-09-08/round-5/peter-pan-evidence-repairs-2026-09-10/glossary/HINT-AND-MORPHOLOGY-TRIAGE.md`). A later run found counter-evidence (`grade3-reading/_archive/handovers/HANDOVER-2026-09-24.md`). A later run found counter-evidence (`grade3-reading/course-renderer/docs/rules/questions-and-assessment.md`). A later run found counter-evidence (`g9/player/content/archivist-checks.json`). A later run found counter-evidence (`g9/library/collections/research-pack-2026-10-02/full-source-site/sources/engine/kb0192--kb-0192-g3-book-component-catalogue.qmd`). A later run found counter-evidence (`othello-course-renderer-draft/repo/docs/rules/questions-and-assessment.md`). A later run found counter-evidence (`grade3-reading/artifacts/red-team-2026-09-23/PRE-BRIEF.md`). A later run found counter-evidence (`grade3-reading/artifacts/arc-audit/L7.md`). A later run found counter-evidence (`grade3-reading/ti-courseplans/courses/g3-reading/iteration-6/distilled/05-UI-UX-PRINCIPLES.md`).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 118,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    },
+    {
+      "id": "wrong-options-only-knowledge-can-reject",
+      "path": "learnings/wrong-options-only-knowledge-can-reject.json",
+      "record_sha256": "1d2642d92389d58a657293c8f44119f4023dc38443f79e44365cdd399896c777",
+      "statement": "Each wrong option must attract a student who misunderstood, and only the tested knowledge or the text may rule it out, never common sense or surface cues.",
+      "role": "criterion",
+      "facets": [
+        "distractors",
+        "integrity",
+        "demand"
+      ],
+      "scope": "universal",
+      "domains": [
+        "ap",
+        "g3"
+      ],
+      "kind": "adopted-rule",
+      "status": "held",
+      "detail": "An AP evaluator's rubric fails a question when a wrong option can be ruled out by general reasoning, test-taking instinct or surface cues without the content the item assesses, which turns it into a logic puzzle; it names absolutes that carry the claim, self-contradiction with the stem, claims false on their face and options off the stem's named topic, and a guard catches the right answer being the only option that repeats a distinctive word from the stem. Before the fix, a question whose wrong options were all implausible or giveaways still passed at ~0.91, because one zeroed score was averaged away; after it, the reproducer went from PASS@0.9143 to failing ~80% of runs, with distractor_quality=0.0 in 23-25/30. No wrong option may be rejectable by common sense, a sweeping absolute, a contradiction of the stem or of another option, being true of any text on the topic, or lying outside the question's topic, period or category, and none may be generic filler. Each wrong option should also attract a student who misunderstood.",
+      "against": "Keyed to surface words the rule over-fired: the model treated any absolute word as a giveaway and failed sound items, so it was narrowed to absolutes that carry the claim, and the rubric now warns that an option that is merely incorrect is not a giveaway. The code guard for negations fires only when every key follows the stem's direction and every wrong option opposes it (`icloud-work/inceptbench-main/src/inceptbench/evaluators/guards.py`, lines 962-974). The shares are among leaked items only; no rate for clean items is given (`grade3-reading/artifacts/alpha-read-packager/generator/g5/GENERATOR_REPAIR_KIT.md`, lines 13-15). A review accepted obviously wrong options in an end-of-lesson fill-in: \"For blank 3, `charged`/`marched` \"into the night\" are grammatical but clearly wrong, which is acceptable.\" (`shadow-content-eval/reports/G3-U1-L14-review.md`, line 100). The training report's claim that fill-in passes at twice the multiple-choice rate does not match its own table, which gives 30.7% against 23.2% and 17.9% (`icloud-work/incept/ML_TRAINING_INSIGHTS_REPORT.md`, lines 293-295 and 430). A first attempt at same-theme wrong options for one item regressed to 1 of 3 and was reverted, reason not given, and the report warns that such options must not become defensible alternate keys. The two misses were stopped by the solver's own scope check, not by a grader verdict: \"causing local rejection and then live IB timeout\" (icloud-work/aptraining/workspace/comms/from_den/2026-05-22T2050Z_DELIVERED_pipeline_solver_v7_supersedes_v6.md, line 51). A word-usage check may rightly test one register violation with every wrong option, and one review downgraded the same-misuse finding to minor for that reason (`grade3-reading/artifacts/peter-pan-standing-2026-09-11/readiness-l5-2026-09-17/sim-review/agent-B-D5-D6-D11-D13.md`, line 21).",
+      "conditions": {
+        "representation": "not structured in the public source record",
+        "detail_field": "detail",
+        "counterevidence_field": "against",
+        "binding_rule_inferred": false
+      },
+      "evidence_entries": 73,
+      "source_quote_verification": "Record evidence markers describe quote checking, not criterion or model accuracy."
+    }
+  ],
+  "meaning": "Verbatim selected record fields plus raw public record hashes. No independent labels, qualification or learner outcomes. Conditions remain source prose."
+}

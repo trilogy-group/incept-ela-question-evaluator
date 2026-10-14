@@ -8,6 +8,7 @@ import { getJudgeProfile, selectJudgeQuestions } from "./judge-profile.mjs";
 import { QUALIFICATION_POLICY, qualify, validateQualificationRegistry, validateTrustedReviewers } from "./qualification.mjs";
 import { runtimeSnapshot, sha } from "./replay.mjs";
 import { KNOWLEDGE_BASELINE } from "./knowledge-baseline.mjs";
+import { validateEmittedChecks, CRITERION_METADATA_PIN } from "./criterion-metadata.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -140,6 +141,12 @@ export function evaluate(context, qset, options = {}) {
 export function evaluateProjection(context, qset, options = {}) {
   return evaluateInput(context, qset, options, true);
 }
+function withCriterionSources(report) {
+  const rows = report.items.flatMap(item => item.checks.map(check => ({ check, kind: item.kind,
+    stage: check.method === "judge" ? "semantic" : check.method === "context" ? "context" : "field" })));
+  rows.push(...report.set.map(check => ({ check, stage: "set" })));
+  return { ...report, criterion_sources: { pins: CRITERION_METADATA_PIN, ...validateEmittedChecks("native", rows) } };
+}
 
 async function evaluateInput(context, qset, { provider = null, providerFactory = null, model = null, samples = 3, concurrency = 4, log = null, profile: profileId = null, mode = "qualified", qualification = null, trustedReviewers = null, configFile = path.join(ROOT, "config.json") } = {}, projected) {
   if (!["qualified", "development"].includes(mode)) throw new Error("unknown evaluation mode");
@@ -163,12 +170,12 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
   const issues = inputIssues(context, qset, { projected });
   const packet = packetProjection(context, qset);
   context = packet.context; qset = packet.set;
-  if (issues.length) return {
+  if (issues.length) return withCriterionSources({
     evaluator: { version: VERSION, qualification: "unqualified", judge: null, judge_profile: profile },
     input: packet.hashes, counts: { unsure: qset.items.length }, judge_agreement: null, set: [],
     input_issues: issues, status: "unverified", transport: { status: "rejected" },
     items: qset.items.map((it, i) => ({ id: it?.id ?? `invalid-item-${i + 1}`, input_position: i + 1, kind: it?.kind ?? null, order: it?.order ?? null, pointer: it?.pointer ?? null, status: "unsure", checks: [{ id: "input_contract", method: "code", required: true, verdict: "unavailable", evidence: { issues } }], judge: null }))
-  };
+  });
   const lesson = context.native, lq = context.lesson.learning_question;
   const keywords = Object.fromEntries((context.lesson.keywords || []).map((k) => typeof k === "string" ? [k, null] : [k?.word, k?.meaning ?? null]).filter(([word]) => typeof word === "string"));
   const play = norm(playLines(lesson).join(" "));
@@ -242,14 +249,14 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
     unsupported_items: items.filter((it) => it.checks.some((c) => c.id === "format_coverage")).length,
     meaning: "criterion coverage in development triage; not academic qualification or whole-item approval"
   };
-  return {
+  return withCriterionSources({
     evaluator: { version: VERSION, knowledge_baseline: KNOWLEDGE_BASELINE, qualification: "unqualified", mode, qualification_policy: QUALIFICATION_POLICY, qualification_registry_sha256: registry.sha256, trusted_reviewers_sha256: trust.sha256, independent_gold_labels: 0, judge_profile: profile, judge: provider ? { name: provider.name, model: provider.model, samples, gates: GATES, served_revision: null, revision_verified: false } : null, engine_source_commit: ENGINE_SNAPSHOT.git_commit },
     judge_coverage: coverage,
     input: packet.hashes, status: "unverified",
     counts, judge_agreement: stab.length ? { judgements: stab.length, unanimous: stab.filter((a) => a === 1).length, mean: Number((stab.reduce((s, a) => s + a, 0) / stab.length).toFixed(3)) } : null,
     transport: { status: "accepted", native_copies_match_pointer_targets: true },
     set: results.some((r) => r.checks.some((c) => c.id === "format_coverage")) ? [{ id: "set_scope_coverage", method: "context", required: false, verdict: "unavailable", evidence: { note: "one or more native operations lack a verified evaluator interpreter" } }] : [...setChecks(results), ...lessonChecks(context.lesson, results)], items,
-  };
+  });
 }
 
 /** A short report a person can read: the counts, then every item that fails or is unsure, then the flags. */

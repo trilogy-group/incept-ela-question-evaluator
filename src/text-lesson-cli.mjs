@@ -1,5 +1,6 @@
 // Finished text lesson packages; author fields join only after frozen blind model draws.
 import fs from "node:fs";
+import { validateEmittedChecks } from "./criterion-metadata.mjs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { spawn } from "node:child_process";
@@ -72,6 +73,9 @@ export async function runTextLessonCli({ root, configFile, config }) {
   const pkg = loadLessonPackage(path.resolve(arg("lesson-package")), { coursePin: arg("course-pin") });
   const audit = auditLessonAlignment(pkg.request, pkg.set, pkg.context), plan = prepareTextLesson(pkg);
   const out = privateOutput(root, arg("out", path.join(config.output_root, `lesson-${new Date().toISOString().replace(/[^0-9TZ]/g, "")}-${crypto.randomUUID().slice(0, 8)}`)));
+  const alignmentSources = validateEmittedChecks("text", audit.checks.map(check => ({ check, stage: "alignment" })));
+  write(out, "criterion-sources.json", { ...plan.criterion_sources, checked: plan.criterion_sources.checked + alignmentSources.checked,
+    annotations: [...plan.criterion_sources.annotations, ...alignmentSources.annotations] });
   write(out, "lesson-audit.json", { ...audit, input_hashes: pkg.hashes, external_course_pin_verified: pkg.external_course_pin_verified, fields: plan.fields, sequence_flags: plan.sequence_flags });
   write(out, "lesson.txt", textLessonReader(pkg, plan, audit));
   const review = textLessonReviewPacket(plan);
@@ -84,6 +88,7 @@ export async function runTextLessonCli({ root, configFile, config }) {
   const manifest = { version: 1, lesson_input_hashes: pkg.hashes, projected_hashes: plan.input,
     external_course_pin_verified: pkg.external_course_pin_verified, runtime, protocol_sha256: digest(protocolBytes),
     packet_sha256: digest(fs.readFileSync(path.join(out, "solver-packet.json"))), author_fields_sha256: digest(fs.readFileSync(path.join(out, "author-fields.json"))),
+    criterion_sources_sha256: digest(fs.readFileSync(path.join(out, "criterion-sources.json"))), criterion_metadata: plan.criterion_sources.pins,
     config: { samples: config.samples, repeats: config.repeats }, judge, side_judge: sideJudge,
     scope: plan.scope, mode: active ? "development" : "offline", qualified: false, independent_gold_labels: 0,
     source_key_status: "unvalidated author intent; not academic gold", pinned_served_revision_verified: false,

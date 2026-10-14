@@ -4,6 +4,7 @@ import { resolvePointer, packetProjection } from "./packet.mjs";
 import { noul } from "./engine.mjs";
 import { runTypedProbe } from "./corpus-study.mjs";
 import { digest } from "./lesson-package.mjs";
+import { validateEmittedChecks, CRITERION_METADATA_PIN } from "./criterion-metadata.mjs";
 
 const list = value => Array.isArray(value) ? value : [];
 const label = index => String.fromCharCode(65 + index);
@@ -92,7 +93,12 @@ export function prepareTextLesson(pkg) {
     fields.push({ id, original_item_id: item.id, checks });
   }
   const choiceKeys = expectations.filter(item => item.kind === "reading_mcq").map(item => item.key?.[0]);
+  const emitted = cases.flatMap(item => [
+    ...item.blind_questions.map(check => ({ check, stage: "blind", kind: item.kind })),
+    ...item.editorial_questions.map(check => ({ check, stage: "editorial", kind: item.kind })),
+    ...fields.find(row => row.id === item.id).checks.map(check => ({ check, stage: "field", kind: item.kind }))]);
   return { version: 1, input: projected.hashes, cases, expectations, fields, sequence_flags: choiceKeys.length > 1 && new Set(choiceKeys).size === 1 ? ["all_mcq_keys_use_one_position"] : [],
+    criterion_sources: { pins: CRITERION_METADATA_PIN, ...validateEmittedChecks("text", emitted) },
     scope: "Declared passive text preview and finished task fields; no served UI or runtime marking qualification.", qualification: false };
 }
 

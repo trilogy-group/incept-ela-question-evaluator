@@ -18,6 +18,8 @@ Run these commands from this repository. The evaluator also works from another d
 
 Each run creates a separate private directory under `.local/runs/`. It stores the input packet with producer identity removed, hashes of the code and configuration, the Node version, two runs in fresh processes, journals, a report and repeat statistics. Earlier runs cannot be overwritten. Producer metadata is excluded from model inputs and packet hashes. A valid packet can still contain an operation the evaluator cannot assess.
 
+Reports for the original native reference and text or native0.2 lessons link emitted checks to [route metadata](criteria/route-checks.json) and exact frozen learning records, including their limits and counterevidence. Transport integrity and coverage instrumentation stay distinct from quality judgments. Text and native0.2 preparation also save `criterion-sources.json`. Missing assessment purpose or unresolved applicability remains undetermined; source links do not qualify a judge.
+
 For another finished public packet:
 
 ```sh

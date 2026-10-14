@@ -4,6 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { resolvePointer } from "./packet.mjs";
 import { digest } from "./lesson-package.mjs";
+import { validateEmittedChecks, CRITERION_METADATA_PIN } from "./criterion-metadata.mjs";
 
 const object = value => value && typeof value === "object" && !Array.isArray(value);
 const list = value => Array.isArray(value) ? value : [];
@@ -164,15 +165,18 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
       status: checks.every(row => row.verdict === "pass") ? "checked_fields_only" : "field_fault_or_unsupported_interpreter" });
   }
   assert(set.items.every((item, index) => item.order === index + 1), "activity order is not a complete sequence");
+  const criterionSources = { pins: CRITERION_METADATA_PIN, ...validateEmittedChecks("native0.2", observations.flatMap(item => item.checks.map(check => ({ check, family: item.family, stage: "field" })))) };
   assert(!fs.existsSync(output), "output already exists"); fs.mkdirSync(output, { recursive: true, mode: 0o700 });
   const write = (name, value) => fs.writeFileSync(path.join(output, name), Buffer.isBuffer(value) ? value : JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
   write("lesson-context.json", contextFile.bytes); write("question-set.json", setFile.bytes);
   write("review-packet.json", { version: 1, stage: "independent_response_before_author_key", items: cases, labels: "pending", qualification: false });
   write("author-fields.json", { version: 1, items: authors, status: "author proposals; not gold labels" });
   write("field-observations.json", observations);
-  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
+  write("criterion-sources.json", criterionSources);
+  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json", "criterion-sources.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
   const receipt = { version: 1, at: new Date().toISOString(), source, input_hashes: { context: contextFile.sha256, set: setFile.sha256 }, files: hashes,
-    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
+    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs", "criterion-metadata.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
+    criterion_metadata: CRITERION_METADATA_PIN,
     activities: cases.length, kinds: [...new Set(cases.map(row => row.kind))], code_checks: observations.reduce((n, row) => n + row.checks.length, 0),
     code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, 0),
     external_source_pin_verified: Boolean(sourcePin), review_stage: "prepared; quality evaluation deferred", model_calls: 0, independent_gold_labels: 0, qualified: false };
