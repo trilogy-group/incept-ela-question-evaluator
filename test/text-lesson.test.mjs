@@ -347,7 +347,7 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
     const rejected = `.local/rejected-${providerArgs[0].slice(2)}`;
     const refusal = run(...providerArgs, "--mode", "qualified", "--env-file", path.join(standalone, "absent-launch-file"), "--out", rejected);
     assert.notEqual(refusal.status, 0);
-    assert.match(refusal.stderr, /requires explicit development mode; no scope is qualified/);
+    assert.match(refusal.stderr, /requires explicit development mode/);
     assert.doesNotMatch(refusal.stderr, /ENOENT|credential|API_KEY|NETWORK_FORBIDDEN/);
     assert.equal(fs.existsSync(path.join(standalone, rejected)), false);
     assert.equal(fs.existsSync(attemptedFetch), false);

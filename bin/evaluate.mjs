@@ -3,20 +3,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { evaluateProjection, markdown } from "../src/evaluate.mjs";
-import { packetProjection, inputIssues } from "../src/packet.mjs";
-import { judgeFromEnv } from "../src/engine.mjs";
-import { runtimeSnapshot, compareDraws, sha } from "../src/replay.mjs";
-import { getJudgeProfile } from "../src/judge-profile.mjs";
-import { loadQualification, loadTrustedReviewers } from "../src/qualification.mjs";
-import { loadLaunchEnv, childLaunchEnv } from "../src/launch-env.mjs";
-import { maatGeminiFromEnv } from "../src/maat-gemini.mjs";
-import { reviewSideProjection, compareSide } from "../src/side-review.mjs";
-import { reviewStrictProjection } from "../src/strict-review.mjs";
+import { parseCliOptions, CLI_HELP } from "../src/cli-options.mjs";
 
-const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ? process.argv[i + 1] : d; };
+const options = parseCliOptions(process.argv.slice(2));
+if (options.help) { console.log(CLI_HELP); process.exit(0); }
+const arg = (key, fallback) => options.flags[key] ?? fallback;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 if (arg("native-package")) {
   const { runNativeIntakeCli } = await import("../src/native-intake.mjs");
@@ -49,6 +43,16 @@ if (arg("review")) {
   console.log(JSON.stringify(result));
   process.exit(0);
 }
+const { evaluateProjection, markdown } = await import("../src/evaluate.mjs");
+const { packetProjection, inputIssues } = await import("../src/packet.mjs");
+const { judgeFromEnv } = await import("../src/engine.mjs");
+const { runtimeSnapshot, compareDraws, sha } = await import("../src/replay.mjs");
+const { getJudgeProfile } = await import("../src/judge-profile.mjs");
+const { loadQualification, loadTrustedReviewers } = await import("../src/qualification.mjs");
+const { loadLaunchEnv, childLaunchEnv } = await import("../src/launch-env.mjs");
+const { maatGeminiFromEnv } = await import("../src/maat-gemini.mjs");
+const { reviewSideProjection, compareSide } = await import("../src/side-review.mjs");
+const { reviewStrictProjection } = await import("../src/strict-review.mjs");
 const judge = arg("judge", "none");
 if (!["none", "jev"].includes(judge)) throw new Error("unsupported judge adapter");
 const sideJudge = arg("side-judge", "none");
@@ -61,7 +65,25 @@ if ((mode === "qualified") !== (profile.id === "jev-qualified-v1")) throw new Er
 const runtime = runtimeSnapshot(root, configFile);
 const strictSamples = arg("strict-samples") === "true";
 const write = (dir, name, value) => fs.writeFileSync(path.join(dir, name), typeof value === "string" ? value : JSON.stringify(value, null, 1) + "\n", { mode: 0o600, flag: "wx" });
-const makeDir = (out) => { fs.mkdirSync(path.dirname(out), { recursive: true, mode: 0o700 }); fs.mkdirSync(out, { mode: 0o700 }); };
+const makeDir = out => {
+  if (out === root || out.startsWith(root + path.sep) && !out.startsWith(path.join(root, ".local") + path.sep))
+    throw new Error("evaluation output must be private");
+  const trustedTemp = path.resolve(os.tmpdir());
+  let cursor = path.parse(out).root;
+  for (const part of out.slice(cursor.length).split(path.sep)) {
+    cursor = path.join(cursor, part);
+    if (fs.existsSync(cursor) && fs.lstatSync(cursor).isSymbolicLink()
+      && cursor !== trustedTemp && !trustedTemp.startsWith(cursor + path.sep)) throw new Error("evaluation output symlinks are unsupported");
+  }
+  let ancestor = out;
+  const missing = [];
+  while (!fs.existsSync(ancestor)) { missing.unshift(path.basename(ancestor)); ancestor = path.dirname(ancestor); }
+  const canonicalOut = path.join(fs.realpathSync(ancestor), ...missing), canonicalRoot = fs.realpathSync(root);
+  if (canonicalOut === canonicalRoot || canonicalOut.startsWith(canonicalRoot + path.sep)
+    && !canonicalOut.startsWith(path.join(canonicalRoot, ".local") + path.sep)) throw new Error("evaluation output must be private");
+  fs.mkdirSync(path.dirname(out), { recursive: true, mode: 0o700 });
+  fs.mkdirSync(out, { mode: 0o700 });
+};
 
 if (arg("worker-draw")) {
   const packetFile = path.resolve(arg("frozen-packet"));
