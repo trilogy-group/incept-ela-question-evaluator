@@ -22,22 +22,44 @@ For another finished public packet:
 node bin/evaluate.mjs --context /path/lesson-context.json --set /path/question-set.json
 ```
 
-For an authorized live run, provide `TYPESAFE_API_KEY` in the launch environment:
+For Jev, provide `TYPESAFE_API_KEY` in the launch environment:
 
 ```sh
 node bin/evaluate.mjs --judge jev
 ```
 
-This uses [criteria/jev-profile.json](criteria/jev-profile.json), a partial development profile:
+This considers every supported criterion and calls Jev only where the [99% qualification policy](criteria/jev-qualification.json) clears. **No real scope qualifies yet, so this command currently makes zero model calls.** Model probabilities and repeated development answers do not count as accuracy.
+
+Qualification requires independent held-out human labels, zero observed misses or abstentions, and a 99% lower accuracy bound for both sound and defective cases, at 95% joint confidence. With zero misses, this needs at least 368 distinct cases in each group; repeats do not increase the sample. The [exact binomial method](https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm) assumes the reviewed sampling units are independent.
+
+Private signed studies and trusted academic reviewer public keys are selected in `config.json`. The gate binds the exact reviewed packet, build, sample settings, fixed model and verified serving revision. Changed or unseen packets cannot inherit qualification. A conflicting model verdict is discarded. This verifies reviewed packets; it does not promise perfect judgment on future questions. Gold-linked reports stay within the evaluator lane.
+
+For explicit development testing:
+
+```sh
+node bin/evaluate.mjs --judge jev --mode development
+```
+
+This uses [criteria/jev-profile.json](criteria/jev-profile.json)'s partial profile:
 
 - **Classification:** does the keyed placement fit, and could another offered placement also fit?
 - **Open checks:** do the model answer and accepted examples meet each explicit rubric criterion?
 
-Every other semantic check remains visible as `unavailable`: MCQ key meaning, evidence selection, feedback, hints, readiness and lesson alignment. Code checks still run. Reports count selected, requested and unavailable criteria; no whole question earns approval. Hidden classification meanings and unassessed hints are excluded from the partial judge packet.
+This selects **125 of 543 criterion checks (23%) across 13 of the 40 reference units**. MCQ semantics, evidence selection, feedback, hints, readiness, difficulty and lesson alignment remain outside this partial route. Other semantic checks stay visible as `unavailable`. Code checks still run. Hidden classification meanings and unassessed hints are excluded from the partial packet. Neither development agreement nor absence of detected defects approves a whole question.
 
-The launch defaults to `jev-latest`; `TYPESAFE_MODEL` selects another advertised model. The partial profile accepts only the reported model ID exercised in the development trial, currently `jev-1.13.0`. A changed or missing ID, incomplete samples or uncertain answers cannot pass. That ID is a service observation, not an independently verified immutable revision. The credential is never saved; offline execution ignores it.
+Development launch defaults to `jev-latest`; `TYPESAFE_MODEL` can select another advertised model. The partial profile accepts the reported development-trial ID, currently `jev-1.13.0`; changed or missing IDs, incomplete samples and uncertainty cannot pass. Qualified use requires a fixed model and reviewed serving revision. Credentials are excluded from run artifacts.
 
-`--profile jev-full-experimental` retains the earlier all-criterion probe for explicit experiments. Its scope has not been qualified. The partial profile draws on 16 source-derived development cases; the broader stress controls and three reference repeats do not establish accuracy outside those cases. Independent academic labels are still needed.
+Add `--profile jev-full-experimental` in development mode to probe all supported criteria. The partial profile draws on 16 source-derived development cases; the broader stress controls and three reference repeats do not establish accuracy outside those cases.
+
+For a separate Gemini Flash side review:
+
+```sh
+node bin/evaluate.mjs --judge jev --side-judge gemini-flash
+```
+
+Supply `MAAT_API_TOKEN` or a `TFY_API_KEY` at launch. MAAT resolves an existing active personal or development VAT; it does not create, rotate or enable keys. The default route is `gemini-group/gemini-3.8-flash` on TFY-EU. `GEMINI_FLASH_MODEL` may select the approved primary alias. For an explicitly authorized env file, add `--env-file /path/authorized.env`; only approved launch settings are read, without executing values or saving credentials.
+
+The side judge covers all supported semantic checks and receives the finished packet and criteria without Jev's answers or human labels. Child processes receive only the requested adapters' launch settings and portable runtime settings. Separate journals and repeat statistics preserve disagreements and abstentions. Any categorical unsure draw stays unsure. Side answers are signals with unmeasured accuracy; agreement never changes the primary verdict or qualifies either model.
 
 For a private development casebook, run `node scripts/test-jev.mjs --cases .local/path/to/cases.json`. This freezes an offline plan with zero calls. Add `--live --draws 5` for an authorized model run. Labels are stored separately from model inputs; reports include wrong approvals, wrong rejections, abstentions and variation between full runs. Cases and results stay under `.local/` and must not be passed to generator work.
 
@@ -50,9 +72,9 @@ The reference contains **40 units** from the authored Othello 1.1 lesson at sour
 ## Stages
 
 - **Stage 0:** shared formats, the reference example, rules and a passing check.
-- **Stage 1:** run the evaluator on the reference, optionally using partial Jev review, and produce a valid question set in the generator. Structure checks and development observations are available; neither half claims quality.
+- **Stage 1:** run the evaluator on the reference, optionally collecting explicit Jev/Gemini development signals, and produce a valid question set in the generator. Structure checks and observations are available; neither half claims quality.
 - **Stage 2, next:** add model generation and qualify the evaluator against independent human labels. Each half needs a different owner.
 
-Qualification needs complete learner packets, independent labels, an agreed scope and acceptance thresholds for each format, and repeated full runs on a fixed model version. Repeated code results do not establish correctness.
+Qualification needs complete learner packets, independent reviewed labels and repeated runs on a fixed version. The 99% gate applies to criteria, while whole-item academic approval remains open.
 
 The repository checker detects literal home paths and credential-shaped values. To check a list of personal names, supply an external JSON file with `--name-list`; otherwise that check is unavailable.

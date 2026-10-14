@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { evaluate, evaluateProjection, markdown } from "../src/evaluate.mjs";
+import { evaluate as evaluateDevelopment, evaluateProjection as replayDevelopment, markdown } from "../src/evaluate.mjs";
+const evaluate = (context, set, options = {}) => evaluateDevelopment(context, set, { mode: "development", ...options });
+const evaluateProjection = (context, set, options = {}) => replayDevelopment(context, set, { mode: "development", ...options });
 import { inputIssues, packetProjection, resolvePointer } from "../src/packet.mjs";
 import { seenBefore, playLines } from "../src/seen.mjs";
 import { createFakeProvider } from "../src/engine.mjs";

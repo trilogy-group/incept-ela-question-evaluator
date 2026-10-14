@@ -5,7 +5,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { evaluate } from "../src/evaluate.mjs";
+import { evaluate as evaluateDevelopment } from "../src/evaluate.mjs";
+const evaluate = (context, set, options = {}) => evaluateDevelopment(context, set, { mode: "development", ...options });
 import { createFakeProvider } from "../src/engine.mjs";
 
 const EX = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../fixtures/reference");

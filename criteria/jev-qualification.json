@@ -1,0 +1,20 @@
+{
+ "schema_version": 1,
+ "id": "jev-qualification-v1",
+ "target_accuracy": 0.99,
+ "joint_confidence": 0.95,
+ "strata": ["pass", "fail"],
+ "multiplicity_method": "Bonferroni",
+ "alpha_per_stratum": 0.025,
+ "zero_observed_misses": true,
+ "review_signature_algorithm": "ed25519",
+ "exact_judge_packet_required": true,
+ "exact_packet_human_label_required": true,
+ "interval_method": "one-sided exact binomial lower bound (Clopper-Pearson)",
+ "minimum_draws_per_case": 2,
+ "case_success_rule": "Every repeated draw must equal the independent human label. Any wrong, unsure, unavailable or error draw makes the case a miss.",
+ "sample_size_rule": "Count distinct reviewed input fingerprints and independence groups, never repeated draws.",
+ "evidence_requirement": "Independent held-out human labels, predeclared scope and reviewed independence, bound by receipt and holdout hashes to the declared build, profile, samples, gates, fixed model and verified serving revision. Each signed case binds its exact judge packet fingerprint to its reviewed human verdict. The complete certificate requires an authentic Ed25519 review signature checked against trusted reviewer public keys configured outside the registry.",
+ "scope_limit": "One signed study can cover its many reviewed packets. Eligibility applies only to the matching operation, criterion family and context, with the requested exact packet's independently reviewed human verdict present among the signed cases. A changed question or state absent from those cases requires newly signed reviewed evidence and its own human verdict. It is not whole-item approval or a measured learner outcome. Statistical lower bounds and zero observed misses do not establish absolute correctness on future inputs.",
+ "provenance_limit": "Self-attested flags, hashes or self-supplied public keys do not establish trust. A valid signature authenticates a claim by a configured reviewer key; human identity, independent labelling and review quality still require external review."
+}

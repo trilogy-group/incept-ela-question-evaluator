@@ -5,7 +5,8 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { evaluate } from "../src/evaluate.mjs";
+import { evaluate as evaluateDevelopment } from "../src/evaluate.mjs";
+const evaluate = (context, set, options = {}) => evaluateDevelopment(context, set, { mode: "development", ...options });
 import { createFakeProvider, judgeFromEnv } from "../src/engine.mjs";
 import { createJevProvider } from "../src/typed/jev.mjs";
 import { compareDraws } from "../src/replay.mjs";
@@ -114,11 +115,11 @@ test("equal verdicts with different serving or sample failure causes are not rep
   assert.equal(rep.identical_checks, false);
 });
 
-test("standalone default stays offline outside the checkout and freezes its partial profile across fresh processes", () => {
+test("standalone development mode stays offline outside the checkout and freezes its partial profile across fresh processes", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "partial-jev-run-"));
   try {
     const out = path.join(tmp, "run");
-    const child = spawnSync(process.execPath, [path.join(root, "bin/evaluate.mjs"), "--out", out], { cwd: tmp, encoding: "utf8" });
+    const child = spawnSync(process.execPath, [path.join(root, "bin/evaluate.mjs"), "--mode", "development", "--out", out], { cwd: tmp, encoding: "utf8" });
     assert.equal(child.status, 0, child.stderr);
     const printed = JSON.parse(child.stdout.trim());
     assert.equal(printed.model_calls, 0); assert.equal(printed.logical_sample_calls, 0);

@@ -6,7 +6,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { judgeFromEnv, decide, noul } from '../src/engine.mjs';
-import { evaluate } from '../src/evaluate.mjs';
+import { evaluate as evaluateDevelopment } from '../src/evaluate.mjs';
+const evaluate = (context, set, options = {}) => evaluateDevelopment(context, set, { mode: 'development', ...options });
 import { runtimeSnapshot } from '../src/replay.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');

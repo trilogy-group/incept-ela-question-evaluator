@@ -19,12 +19,15 @@ const KEYS = ["schema_version", "id", "version", "status", "qualification", "obs
 
 export function validateJudgeProfile(input) {
   if (!record(input) || Object.keys(input).some((k) => ![...KEYS, "sha256"].includes(k)) || KEYS.some((k) => !Object.hasOwn(input, k))) invalid();
-  if (input.schema_version !== 1 || input.version !== 1 || !["jev-partial-v1", "jev-full-experimental"].includes(input.id)
-    || input.status !== "development-only" || input.qualification !== false) invalid();
-  if (!Array.isArray(input.observed_model_ids) || !input.observed_model_ids.length || !input.observed_model_ids.every((id) => typeof id === "string" && /^jev-[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id))
+  const qualified = input.id === "jev-qualified-v1";
+  if (input.schema_version !== 1 || input.version !== 1 || !["jev-partial-v1", "jev-full-experimental", "jev-qualified-v1"].includes(input.id)
+    || input.status !== (qualified ? "evidence-gated" : "development-only") || input.qualification !== false) invalid();
+  if (!Array.isArray(input.observed_model_ids) || (!qualified && !input.observed_model_ids.length) || !input.observed_model_ids.every((id) => typeof id === "string" && /^jev-[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id))
     || new Set(input.observed_model_ids).size !== input.observed_model_ids.length || input.observed_models_scope !== "reported service identity; not immutable revision") invalid();
   const source = input.source;
-  if (!record(source) || source.registry_id !== "B0998" || source.kind !== "development-trials" || source.labelled_development_cases !== 16 || source.stress_controls !== 6
+  if (qualified) {
+    if (!record(source) || source.registry_id !== "B1000" || source.kind !== "qualification-policy" || source.independent_gold_labels !== 0 || !text(source.meaning)) invalid();
+  } else if (!record(source) || source.registry_id !== "B0998" || source.kind !== "development-trials" || source.labelled_development_cases !== 16 || source.stress_controls !== 6
     || source.independent_gold_labels !== 0 || !record(source.full_reference) || source.full_reference.units !== 40 || source.full_reference.judge_criteria !== 543
     || source.full_reference.labelled_for_accuracy !== false || !text(source.meaning)) invalid();
   if (!text(input.exclusions) || !Array.isArray(input.limitations) || !input.limitations.length || !input.limitations.every(text)) invalid();
@@ -45,7 +48,7 @@ export function getJudgeProfile(id = "jev-partial-v1") {
   if (!profiles) {
     const file = JSON.parse(fs.readFileSync(new URL("../criteria/jev-profile.json", import.meta.url), "utf8"));
     if (!record(file) || file.schema_version !== 1 || file.default_profile !== "jev-partial-v1" || !Array.isArray(file.profiles)
-      || !sameSet(file.profiles.map((p) => p?.id), ["jev-partial-v1", "jev-full-experimental"])) invalid();
+      || !sameSet(file.profiles.map((p) => p?.id), ["jev-partial-v1", "jev-full-experimental", "jev-qualified-v1"])) invalid();
     profiles = new Map(file.profiles.map((p) => { const profile = validateJudgeProfile(p); return [profile.id, profile]; }));
   }
   if (!profiles.has(id)) throw new TypeError("unknown judge profile");
