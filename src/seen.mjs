@@ -65,7 +65,11 @@ export function seenBefore(lesson, item, setItems = []) {
     if (t.length) parts.push({ page: p.id, text: t.join("\n") });
   }
   const node = lesson.pages[pi].nodes[Number(item.pointer.split("/")[4])];
-  const here = [];
+  // Passive text earlier on this page precedes a task in a later node. Conditional task
+  // feedback and teacher-only fields remain excluded from this authoring preview.
+  const passive = new Set(["reading", "instruction", "worked_instruction", "key_term", "learning_question", "intro_film", "shelf"]);
+  const here = lesson.pages[pi].nodes.slice(0, Number(item.pointer.split("/")[4]))
+    .filter(prior => passive.has(prior.type)).flatMap(prior => studentText(instruction(prior)));
   if (node.type === "unit_film") {
     const seg = Number(item.pointer.split("/")[6]);
     node.segments.forEach((s, si) => {

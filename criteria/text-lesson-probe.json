@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "id": "text-lesson-development-v1",
+  "qualification": false,
+  "primary_reported_models": ["jev-1.13.0"],
+  "side_reported_models": ["gemini-3.8-flash"],
+  "scope": "Declared passive text preview; MCQ, evidence selection, classification and open responses. Served UI, child difficulty and runtime marking are unqualified.",
+  "review": "Solve without author keys first. Review candidate feedback, source relations and rubrics in separate stateless calls. Preserve all samples; any uncertainty, unavailable sample or contradiction vetoes a decisive criterion.",
+  "repetition": "Fresh child processes with identical frozen packets, code and config. Report observed variation; model aliases do not establish an immutable serving revision."
+}

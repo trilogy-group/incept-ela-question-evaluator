@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "execution": "offline-only",
+  "output_root": ".local/runs",
+  "samples": 3,
+  "repeats": 3
+}

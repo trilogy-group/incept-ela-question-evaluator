@@ -34,7 +34,8 @@ export function probeQuestions(state, protocol) {
 }
 
 function boundedUsage(input) {
-  return Object.fromEntries(Object.entries(input ?? {}).filter(([key, value]) => /^(?:prompt_tokens|completion_tokens|total_tokens|input_tokens|output_tokens)$/.test(key) && Number.isSafeInteger(value) && value >= 0));
+  return Object.fromEntries(Object.entries(input ?? {}).filter(([key, value]) => key === "costInUSD" ? typeof value === "number" && Number.isFinite(value) && value >= 0
+    : /^(?:prompt_tokens|completion_tokens|total_tokens|input_tokens|output_tokens)$/.test(key) && Number.isSafeInteger(value) && value >= 0));
 }
 const revision = value => typeof value === "string" && value.length <= 128 && /^[A-Za-z0-9._:/-]+$/.test(value)
   && !/^(?:apk_|apikey_|sk-)/.test(value) ? value : null;
@@ -70,9 +71,7 @@ export function summarizeProbe(checks, positionMap, control = null) {
     whole_item_status: "unverified", accuracy: "unmeasured" };
 }
 
-export async function runProbe(candidate, { provider, protocol, draw, samples, control = null } = {}) {
-  const { state, position_map } = blindState(candidate.solver_context, draw, control);
-  const questions = probeQuestions(state, protocol);
+export async function runTypedProbe(state, questions, { provider, protocol, samples } = {}) {
   const allowedModels = provider.name === "jev" ? protocol.primary_reported_models : protocol.side_reported_models;
   const observations = await Promise.all(Array.from({ length: samples }, async (_, sample) => {
     const started = Date.now();
@@ -98,6 +97,13 @@ export async function runProbe(candidate, { provider, protocol, draw, samples, c
     }
   }));
   const checks = summarizeProbeSamples(observations, questions, samples);
+  return { provider: provider.name, requested_model: provider.model, checks, observations, logical_sample_calls: observations.length };
+}
+
+export async function runProbe(candidate, { provider, protocol, draw, samples, control = null } = {}) {
+  const { state, position_map } = blindState(candidate.solver_context, draw, control);
+  const questions = probeQuestions(state, protocol);
+  const { checks, observations } = await runTypedProbe(state, questions, { provider, protocol, samples });
   return { id: candidate.id, control, provider: provider.name, requested_model: provider.model, draw,
     solver_packet_sha256: corpusHash({ state, questions }), position_map, checks, observations,
     ...summarizeProbe(checks, position_map, control), logical_sample_calls: observations.length,

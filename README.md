@@ -65,6 +65,18 @@ The side judge covers all supported semantic checks and receives the finished pa
 
 For a private development casebook, run `node scripts/test-jev.mjs --cases .local/path/to/cases.json`. This freezes an offline plan with zero calls. Add `--live --draws 5` for an authorized model run. Labels are stored separately from model inputs; reports include wrong approvals, wrong rejections, abstentions and variation between full runs. Cases and results stay under `.local/` and must not be passed to generator work.
 
+## Complete lesson packages
+
+The same runner accepts a finished text-lesson directory containing `course-request.json`, `course-source-packet.json`, `lesson-context.json` and `question-set.json`:
+
+```sh
+node bin/evaluate.mjs --lesson-package /path/finished --config config.lesson.json --course-pin <course-request-sha256>
+```
+
+It checks placement, planned knowledge coverage and source bindings, then writes `lesson.txt`, a structured audit and two blank blind review forms. The supported preview has passive `nodes` followed by `question_slots`; it covers MCQ, evidence selection, classification and open responses. It does not certify a served player or runtime marker.
+
+For authorized model trials, add `--mode development --judge jev --side-judge gemini-flash`. Three samples are repeated in three fresh processes with frozen inputs. Blind solving excludes intended keys, mappings, feedback and rubrics. Separate stateless calls review candidate feedback and rubrics. Any uncertain, failed or conflicting sample prevents a decisive criterion. Author-key comparisons join afterward. A Google writer and Gemini side reviewer share a model family. Reports include observed variation and any gateway-reported USD; independent academic accuracy remains unmeasured. Outputs stay private.
+
 ## Collected examples
 
 Use the same runner for the private collection produced by the knowledge repository:

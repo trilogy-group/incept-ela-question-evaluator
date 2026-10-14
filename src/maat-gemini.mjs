@@ -57,6 +57,7 @@ function safeUsage(usage) {
   for (const key of ["prompt_tokens", "completion_tokens", "total_tokens", "input_tokens", "output_tokens"]) {
     if (Number.isSafeInteger(usage[key]) && usage[key] >= 0) out[key] = usage[key];
   }
+  if (typeof usage.costInUSD === "number" && Number.isFinite(usage.costInUSD) && usage.costInUSD >= 0) out.costInUSD = usage.costInUSD;
   return Object.keys(out).length ? out : null;
 }
 

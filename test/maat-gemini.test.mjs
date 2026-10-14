@@ -41,7 +41,7 @@ test("MAAT Gemini uses the approved gateway and preserves exact categorical outc
     return completion({ supported: "yes", contradicted: "no", uncertain: "unsure", extra: "yes" }, {
       model: "gemini-group/gemini-3.8-flash",
       served_revision: "gemini-flash-revision-1",
-      usage: { prompt_tokens: 123, completion_tokens: 12, total_tokens: 135, private_detail: key },
+      usage: { prompt_tokens: 123, completion_tokens: 12, total_tokens: 135, costInUSD: 0.0123, private_detail: key },
     });
   } });
   assert.equal(provider.name, "maat-gemini-flash");
@@ -51,7 +51,7 @@ test("MAAT Gemini uses the approved gateway and preserves exact categorical outc
   assert.deepEqual(result.answers, { supported: { noul: 1 }, contradicted: { noul: 0 }, uncertain: { noul: 0.5 } });
   assert.equal(result.model, "gemini-group/gemini-3.8-flash");
   assert.equal(result.served_revision, "gemini-flash-revision-1");
-  assert.deepEqual(result.usage, { prompt_tokens: 123, completion_tokens: 12, total_tokens: 135 });
+  assert.deepEqual(result.usage, { prompt_tokens: 123, completion_tokens: 12, total_tokens: 135, costInUSD: 0.0123 });
   assert.equal(result.probability_kind, "categorical encoding; not calibrated confidence");
   assert.equal(provider.probability_kind, result.probability_kind);
   assert.equal(JSON.stringify(result).includes(key), false);
@@ -59,7 +59,7 @@ test("MAAT Gemini uses the approved gateway and preserves exact categorical outc
 
 test("missing and malformed answers remain unavailable; absent served model is not inferred", async () => {
   const provider = createMaatGeminiProvider({ apiKey: key, fetchImpl: async () => completion({ supported: "yes", contradicted: "YES", uncertain: { noul: 1 } }, {
-    usage: { prompt_tokens: -1, completion_tokens: "12", total_tokens: 3.5 },
+    usage: { prompt_tokens: -1, completion_tokens: "12", total_tokens: 3.5, costInUSD: -1 },
   }) });
   const result = await provider.ask({}, questions);
   assert.deepEqual(result.answers, { supported: { noul: 1 } });
