@@ -11,6 +11,7 @@ import { judgeFromEnv } from "./engine.mjs";
 import { maatGeminiFromEnv } from "./maat-gemini.mjs";
 import { loadLaunchEnv, childLaunchEnv } from "./launch-env.mjs";
 import { prepareQuoteDiagnostics } from "./quote-diagnostics.mjs";
+import { inspectSourceAssets } from "./source-assets.mjs";
 
 const arg = (name, fallback) => { const index = process.argv.indexOf(`--${name}`); return index > 0 ? process.argv[index + 1] : fallback; };
 const write = (directory, name, value) => fs.writeFileSync(path.join(directory, name), typeof value === "string" ? value : JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
@@ -79,6 +80,8 @@ export async function runTextLessonCli({ root, configFile, config }) {
     annotations: [...plan.criterion_sources.annotations, ...alignmentSources.annotations] });
   write(out, "lesson-audit.json", { ...audit, input_hashes: pkg.hashes, external_course_pin_verified: pkg.external_course_pin_verified, fields: plan.fields, sequence_flags: plan.sequence_flags });
   write(out, "quote-diagnostics.json", prepareQuoteDiagnostics(pkg, plan));
+  const sourceAssets = { ...inspectSourceAssets(pkg.request, pkg.source), input_package_sha256: pkg.hashes };
+  write(out, "source-assets.json", sourceAssets);
   write(out, "lesson.txt", textLessonReader(pkg, plan, audit));
   const review = textLessonReviewPacket(plan);
   write(out, "review-packet.json", review);
@@ -92,6 +95,8 @@ export async function runTextLessonCli({ root, configFile, config }) {
     packet_sha256: digest(fs.readFileSync(path.join(out, "solver-packet.json"))), author_fields_sha256: digest(fs.readFileSync(path.join(out, "author-fields.json"))),
     criterion_sources_sha256: digest(fs.readFileSync(path.join(out, "criterion-sources.json"))), criterion_metadata: plan.criterion_sources.pins,
     quote_diagnostics_sha256: digest(fs.readFileSync(path.join(out, "quote-diagnostics.json"))),
+    source_assets_sha256: digest(fs.readFileSync(path.join(out, "source-assets.json"))),
+    source_asset_observations: sourceAssets.observation_counts,
     config: { samples: config.samples, repeats: config.repeats }, judge, side_judge: sideJudge,
     scope: plan.scope, mode: active ? "development" : "offline", qualified: false, independent_gold_labels: 0,
     response_profile: plan.response_profile,
@@ -101,7 +106,8 @@ export async function runTextLessonCli({ root, configFile, config }) {
   write(out, "manifest.json", manifest);
   if (!active) {
     write(out, "report.json", { ...manifest, items: plan.cases.length, model_calls: 0, alignment_status: audit.status, sequence_flags: plan.sequence_flags });
-    return { out: path.relative(root, out), items: plan.cases.length, model_calls: 0, alignment_status: audit.status, sequence_flags: plan.sequence_flags, qualified: false };
+    return { out: path.relative(root, out), items: plan.cases.length, model_calls: 0, alignment_status: audit.status,
+      source_asset_observations: sourceAssets.observation_counts, sequence_flags: plan.sequence_flags, qualified: false };
   }
   const launch = loadLaunchEnv(arg("env-file")), env = childLaunchEnv(launch, { judge, sideJudge }), draws = [];
   for (let draw = 1; draw <= config.repeats; draw++) {

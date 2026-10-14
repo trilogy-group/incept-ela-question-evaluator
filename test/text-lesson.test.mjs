@@ -304,6 +304,12 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   assert.equal(read("quote-diagnostics.json").qualification, false);
   assert.deepEqual(read("quote-diagnostics.json").provenance.package_file_sha256, hashes);
   assert.equal(read("quote-diagnostics.json").counts.unavailable_source_fields, 0);
+  assert.equal(digest(fs.readFileSync(path.join(out, "source-assets.json"))), manifest.source_assets_sha256);
+  assert.deepEqual(read("source-assets.json").input_package_sha256, hashes);
+  assert.equal(read("source-assets.json").external_source_verified, false);
+  assert.equal(read("source-assets.json").academic_approval, false);
+  assert.equal(read("source-assets.json").observation_counts.fail, 0);
+  assert.ok(read("source-assets.json").observation_counts.undetermined > 0);
   assert.equal(result.items, 4);
   assert.equal(result.model_calls, 0);
   assert.equal(result.qualified, false);
