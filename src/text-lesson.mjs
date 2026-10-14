@@ -48,6 +48,11 @@ export function prepareTextLesson(pkg) {
       if (kind === "evidence_select") check("evidence_exact_in_visible_text", options.every(option => seen.includes(option)), {});
     } else if (kind === "classify") {
       if (!Array.isArray(view.entries) || !Array.isArray(view.categories) || !view.mapping) throw new Error("unsupported text classification view");
+      check("entries_present", view.entries.length > 0, {});
+      check("categories_present", view.categories.length > 0, {});
+      if (!view.entries.every(entry => entry && words(entry.id) && words(entry.text))
+        || !view.categories.every(category => category && words(category.id) && words(category.label) && words(category.description))
+        || typeof view.mapping !== "object" || Array.isArray(view.mapping)) throw new Error("unsupported text classification fields");
       blind.entries = Object.fromEntries(view.entries.map((entry, i) => [`E${i + 1}`, entry.text]));
       blind.categories = Object.fromEntries(view.categories.map((category, i) => [label(i), { label: category.label, description: category.description }]));
       for (let e = 0; e < view.entries.length; e++) for (let c = 0; c < view.categories.length; c++) add(`entry_${e + 1}_${label(c)}`, `Does entry E${e + 1} defensibly fit category ${label(c)}, including its visible description, in the task's stated context? Do not infer a teacher mapping.`);
@@ -60,7 +65,7 @@ export function prepareTextLesson(pkg) {
     } else if (["open_check", "open_prompt"].includes(kind)) {
       add("answerable", "Could a learner write a defensible response to this task using the supplied text and instruction, without an absent model answer or source?");
       expected = {};
-      check("rubric_requirements_present", list(view.rubric?.criteria).length > 0 && view.rubric.criteria.every(criterion => words(criterion.requirement)), {});
+      check("rubric_requirements_present", list(view.rubric?.criteria).length > 0 && view.rubric.criteria.every(criterion => criterion && words(criterion.requirement)), {});
       check("sample_response_present", Boolean(words(view.sample_answer)), {});
     } else throw new Error("unsupported text transport question kind");
     add("clear", "Does the question make clear the response being requested, even if evidence sufficiency would be a separate issue?");
@@ -154,16 +159,17 @@ export function summarizeTextLesson(draws, plan) {
       if (!observations.length) continue;
       const outcomes = observations.map(observation => {
         const checks = observation.blind.checks, decisive = checks.every(check => ["yes", "no"].includes(check.verdict));
+        const fieldsValid = plan.fields.find(row => row.id === expected.id)?.checks.every(check => check.verdict === "pass") === true;
         let selected = [], sourceKeyMatch = null;
         if (expected.key) {
           selected = checks.filter(check => check.id.startsWith("option_") && check.verdict === "yes").map(check => check.id.slice(7).charCodeAt(0) - 65);
-          if (decisive) sourceKeyMatch = JSON.stringify(selected) === JSON.stringify(expected.key);
+          if (decisive && fieldsValid) sourceKeyMatch = JSON.stringify(selected) === JSON.stringify(expected.key);
         }
         if (expected.mapping) {
           selected = expected.mapping.map((_, e) => checks.filter(check => check.id.startsWith(`entry_${e + 1}_`) && check.verdict === "yes").map(check => check.id.split("_").at(-1).charCodeAt(0) - 65));
-          if (decisive) sourceKeyMatch = selected.every((categories, i) => categories.length === 1 && categories[0] === expected.mapping[i]);
+          if (decisive && fieldsValid) sourceKeyMatch = selected.every((categories, i) => categories.length === 1 && categories[0] === expected.mapping[i]);
         }
-        return { decisive_blind_checks: decisive, selected, author_key_agreement: sourceKeyMatch,
+        return { decisive_blind_checks: decisive, code_fields_valid: fieldsValid, selected, author_key_agreement: sourceKeyMatch,
           blind_checks: checks.map(check => ({ id: check.id, verdict: check.verdict })),
           editorial_checks: observation.editorial.checks.map(check => ({ id: check.id, verdict: check.verdict })) };
       });

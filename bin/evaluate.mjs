@@ -18,6 +18,11 @@ import { reviewStrictProjection } from "../src/strict-review.mjs";
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ? process.argv[i + 1] : d; };
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+if (arg("golden-reference") || arg("golden-check")) {
+  const { runGoldenCli } = await import("../src/golden-cli.mjs");
+  console.log(JSON.stringify(runGoldenCli({ root })));
+  process.exit(0);
+}
 const configFile = path.resolve(root, arg("config", "config.json"));
 const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
 if (config.version !== 1 || config.execution !== "offline-only") throw new Error("unsupported config");

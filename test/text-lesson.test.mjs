@@ -11,6 +11,22 @@ import { courseSeen, prepareTextLesson, runTextLessonDraw, summarizeTextLesson, 
 
 const protocol = JSON.parse(fs.readFileSync(new URL("../criteria/corpus-choice-probe.json", import.meta.url)));
 
+test("an empty classification fails structural checks and cannot agree vacuously with its author key", () => {
+  const pkg = fixture(), item = pkg.set.items[2];
+  item.view.entries = []; item.view.categories = []; item.view.mapping = {}; item.view.entry_feedback = {};
+  pkg.context.native.pages[1].question_slots[2] = { id: "author-slot-3", type: "classify", ...structuredClone(item.view) };
+  item.native = structuredClone(pkg.context.native.pages[1].question_slots[2]);
+  assert.deepEqual(inputIssues(pkg.context, pkg.set), []);
+  const plan = prepareTextLesson(pkg), row = plan.fields.find(row => row.original_item_id === item.id), id = row.id;
+  assert.equal(row.checks.find(check => check.id === "entries_present").verdict, "fail");
+  assert.equal(row.checks.find(check => check.id === "categories_present").verdict, "fail");
+  const draw = { results: [{ id, providers: { primary: { blind: { checks: [{ id: "answerable", verdict: "yes" }, { id: "clear", verdict: "yes" }] }, editorial: { checks: [] } } } }] };
+  const summary = summarizeTextLesson([draw, draw], plan), result = summary.items.find(row => row.item_id === item.id);
+  assert.equal(result.models.primary.outcomes[0].code_fields_valid, false);
+  assert.equal(result.models.primary.outcomes[0].author_key_agreement, null);
+  assert.equal(result.academic_approval, false);
+});
+
 // Arbitrary public transport data; these are integration checks, not academic labels.
 function fixture() {
   const river = "The fox crossed the river.";

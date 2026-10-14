@@ -69,6 +69,15 @@ For a private development casebook, run `node scripts/test-jev.mjs --cases .loca
 
 ## Complete lesson packages
 
+The current authored collection is the default golden positive reference. Prepare its exact questions, context, field observations, controlled fault variants and pending quality assessments with the same runner:
+
+```sh
+node bin/evaluate.mjs --golden-reference /path/current-capture --out .local/golden/current
+node bin/evaluate.mjs --golden-check .local/golden/current
+```
+
+Add `--assessment /path/report.json --assessment-kind model-development --assessment-relation historical` to the check command to preserve an existing assessment. Other kinds are `source-review`, `integration-test`, `human-review`, `generator-context-coverage` and `manual-notes`. Records are appended and hash-linked; retain the returned manifest and journal hashes separately. Historical and candidate observations do not become current reference verdicts. Quality evaluation remains pending. Preparation and checks use zero model calls. Private assessment records and fault variants stay in this evaluator; the generator consumes the original course/source reference.
+
 The same runner accepts a finished text-lesson directory containing `course-request.json`, `course-source-packet.json`, `lesson-context.json` and `question-set.json`:
 
 ```sh
