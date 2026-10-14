@@ -4,8 +4,9 @@ import { decide, GATES, ENGINE_SNAPSHOT } from "./engine.mjs";
 import { seenBefore, asText, playLines, studentText } from "./seen.mjs";
 import { codeChecks, judgeQuestions, judgeItem, isChoice, norm } from "./checks.mjs";
 import { packetProjection, inputIssues, viewIssues, layoutIssues } from "./packet.mjs";
+import { getJudgeProfile, selectJudgeQuestions } from "./judge-profile.mjs";
 
-export const VERSION = "question-evaluator 0.2-development";
+export const VERSION = "question-evaluator 0.3-development";
 const MAX_SEEN = 60000;   // characters of what came before; the oldest pages give way first, the item's own page never
 
 function trimSeen(parts) {
@@ -19,6 +20,25 @@ function judgeVerdict(ans, expect, required) {
   if (!ans || ans.unavailable) return "unavailable";
   if (!ans.pass) return "unsure";
   return (ans.value >= 0.5) === expect ? "pass" : required ? "fail" : "flag";
+}
+
+function judgeState(it, seen, learningQuestion, keywords, profile) {
+  const item = judgeItem(it);
+  if (profile.id === "jev-full-experimental") return { learning_question: learningQuestion, keywords, seen_before: seen, item };
+  // Unassessed feedback must not tell the judge which option its author intended to be right.
+  if (isChoice(it)) return { seen_before: seen, item: { question: item.question, options: item.options } };
+  if (it.kind === "open_check") { delete item.nudges; delete item.misreadings; }
+  return { seen_before: seen, item };
+}
+
+function servingIssues(meta, provider, profile) {
+  const observations = meta.serving_observations || [];
+  const models = [...new Set(observations.filter((o) => !o.unavailable).map((o) => o.model))];
+  const issues = [];
+  if (observations.some((o) => !o.unavailable && !o.model)) issues.push("reported_model_missing");
+  if (models.length > 1) issues.push("reported_model_changed_within_call");
+  if (provider.name === "jev" && profile.id === "jev-partial-v1" && models.some((m) => !profile.observed_model_ids.includes(m))) issues.push("reported_model_outside_development_trial");
+  return issues;
 }
 
 function status(checks) {
@@ -60,15 +80,28 @@ function lessonChecks(lesson, items) {
   return out;
 }
 
-export async function evaluate(context, qset, { provider = null, samples = 3, concurrency = 4, log = null } = {}) {
-  const issues = inputIssues(context, qset);
+export function evaluate(context, qset, options = {}) {
+  return evaluateInput(context, qset, options, false);
+}
+
+// Internal replay entry point: the CLI has validated public provenance before freezing this stripped packet.
+// All remaining transport and interpreter checks still run; this does not confer quality qualification.
+export function evaluateProjection(context, qset, options = {}) {
+  return evaluateInput(context, qset, options, true);
+}
+
+async function evaluateInput(context, qset, { provider = null, samples = 3, concurrency = 4, log = null, profile: profileId = "jev-partial-v1" } = {}, projected) {
+  const profile = getJudgeProfile(profileId);
+  if (!Number.isInteger(samples) || samples < 1 || samples > 16) throw new Error("samples must be an integer from 1 to 16");
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 16) throw new Error("concurrency must be an integer from 1 to 16");
+  const issues = inputIssues(context, qset, { projected });
   const packet = packetProjection(context, qset);
   context = packet.context; qset = packet.set;
   if (issues.length) return {
-    evaluator: { version: VERSION, qualification: "unqualified", judge: null },
+    evaluator: { version: VERSION, qualification: "unqualified", judge: null, judge_profile: profile },
     input: packet.hashes, counts: { unsure: qset.items.length }, judge_agreement: null, set: [],
-    input_issues: issues, status: "unverified",
-    items: qset.items.map((it) => ({ id: it.id, kind: it.kind, order: it.order, pointer: it.pointer, status: "unsure", checks: [{ id: "input_contract", method: "code", required: true, verdict: "unavailable", evidence: { issues } }], judge: null }))
+    input_issues: issues, status: "unverified", transport: { status: "rejected" },
+    items: qset.items.map((it, i) => ({ id: it?.id ?? `invalid-item-${i + 1}`, input_position: i + 1, kind: it?.kind ?? null, order: it?.order ?? null, pointer: it?.pointer ?? null, status: "unsure", checks: [{ id: "input_contract", method: "code", required: true, verdict: "unavailable", evidence: { issues } }], judge: null }))
   };
   const lesson = context.native, lq = context.lesson.learning_question;
   const keywords = Object.fromEntries((context.lesson.keywords || []).map((k) => typeof k === "string" ? [k, null] : [k?.word, k?.meaning ?? null]).filter(([word]) => typeof word === "string"));
@@ -85,18 +118,26 @@ export async function evaluate(context, qset, { provider = null, samples = 3, co
     // authenticated learner exposure packet. Triage is useful, but it cannot establish context-complete quality.
     checks.push({ id: "learner_exposure_complete", method: "context", required: true, verdict: "unavailable", evidence: { note: "native lesson reconstruction; exact served view, conditional feedback and runtime marking are not verified", dropped_pages: seen.dropped } });
     const qs = judgeQuestions(it);
+    const { selected, excluded } = selectJudgeQuestions(profile, it.kind, qs);
+    const excludedIds = new Set(excluded.map((x) => x.criterion_id));
     let meta = null;
-    if (!provider) for (const q of qs) checks.push({ id: q.q.id, method: "judge", required: q.required, verdict: "unavailable", evidence: { note: "no judge was called" } });
-    if (provider && qs.length) {
-      const state = { learning_question: lq, keywords, seen_before: seen.text, item: judgeItem(it) };
-      const r = await decide(state, qs.map((x) => x.q), { provider, samples, tag: it.id, log });
-      meta = { model: r.meta.model, serving_observations: r.meta.serving_observations, served_revision: null, revision_verified: false, ms: r.meta.ms, retried: r.meta.retried };
-      for (const x of qs) {
+    for (const x of qs) if (excludedIds.has(x.q.id) || !provider) checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", verdict: "unavailable", scope: excludedIds.has(x.q.id) ? "outside_profile" : "selected", requested: false, evidence: { note: excludedIds.has(x.q.id) ? "criterion is outside the selected development profile" : "no judge was called" } });
+    if (provider && selected.length) {
+      const state = judgeState(it, seen.text, lq, keywords, profile);
+      const r = await decide(state, selected.map((x) => x.q), { provider, samples, tag: it.id, log });
+      const serving = servingIssues(r.meta, provider, profile);
+      meta = { model: r.meta.model, serving_observations: r.meta.serving_observations, serving_issues: serving, served_revision: null, revision_verified: false, ms: r.meta.ms, retried: r.meta.retried };
+      for (const x of selected) {
         const a = r.answers[x.q.id];
-        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", verdict: judgeVerdict(a, x.expect, x.required),
-          p_yes: a?.unavailable ? null : Number(a.value.toFixed(3)), agreement: a?.agreement ?? null, valid: a?.valid ?? 0, gate: a?.gate_reasons ?? [] });
+        const gate = [...(a?.gate_reasons || []), ...serving];
+        if (a?.valid !== samples) gate.push("incomplete_sample_set");
+        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", scope: "selected", requested: true, verdict: serving.length || a?.valid !== samples ? "unavailable" : judgeVerdict(a, x.expect, x.required),
+          p_yes: a?.unavailable ? null : Number(a.value.toFixed(3)), agreement: a?.agreement ?? null, valid: a?.valid ?? 0, gate });
       }
     }
+    // Keep the criterion order identical in offline, partial and experimental reports.
+    const order = new Map(qs.map((q, i) => [q.q.id, i]));
+    checks.sort((a, b) => (order.has(a.id) ? order.get(a.id) : -1) - (order.has(b.id) ? order.get(b.id) : -1));
     results.push({ item: it, checks, seen_pages: parts.map((p) => p.page), seen_dropped: seen.dropped, judge: meta });
   };
   const queue = [...qset.items];
@@ -106,8 +147,19 @@ export async function evaluate(context, qset, { provider = null, samples = 3, co
     seen_pages: r.seen_pages, seen_dropped: r.seen_dropped, judge: r.judge }));
   const counts = items.reduce((m, x) => ({ ...m, [x.status]: (m[x.status] || 0) + 1 }), {});
   const stab = items.flatMap((x) => x.checks.filter((c) => c.method === "judge" && c.agreement != null).map((c) => c.agreement));
+  const semantics = items.flatMap((x) => x.checks.filter((c) => c.method === "judge"));
+  const coverage = {
+    total_criteria: semantics.length, selected_by_profile: semantics.filter((c) => c.scope === "selected").length,
+    outside_profile: semantics.filter((c) => c.scope === "outside_profile").length,
+    requested_criteria: semantics.filter((c) => c.requested).length,
+    returned_usable_criteria: semantics.filter((c) => c.requested && c.verdict !== "unavailable").length,
+    unavailable_criteria: semantics.filter((c) => c.verdict === "unavailable").length,
+    unsupported_items: items.filter((it) => it.checks.some((c) => c.id === "format_coverage")).length,
+    meaning: "criterion coverage in development triage; not academic qualification or whole-item approval"
+  };
   return {
-    evaluator: { version: VERSION, qualification: "unqualified", independent_gold_labels: 0, judge: provider ? { name: provider.name, model: provider.model, samples, gates: GATES, served_revision: null, revision_verified: false } : null, engine_source_commit: ENGINE_SNAPSHOT.git_commit },
+    evaluator: { version: VERSION, qualification: "unqualified", independent_gold_labels: 0, judge_profile: profile, judge: provider ? { name: provider.name, model: provider.model, samples, gates: GATES, served_revision: null, revision_verified: false } : null, engine_source_commit: ENGINE_SNAPSHOT.git_commit },
+    judge_coverage: coverage,
     input: packet.hashes, status: "unverified",
     counts, judge_agreement: stab.length ? { judgements: stab.length, unanimous: stab.filter((a) => a === 1).length, mean: Number((stab.reduce((s, a) => s + a, 0) / stab.length).toFixed(3)) } : null,
     transport: { status: "accepted", native_copies_match_pointer_targets: true },
@@ -120,6 +172,7 @@ export function markdown(rep) {
   const L = [`# Question set review`, "", "Development triage only. No independently qualified good-question verdict is available.", "",
     `${rep.evaluator.version}; judge ${rep.evaluator.judge ? `${rep.evaluator.judge.name} ${rep.evaluator.judge.model}, ${rep.evaluator.judge.samples} samples each` : "none (code checks only)"}.`, ""];
   L.push(`Items: ${Object.entries(rep.counts).map(([k, v]) => `${v} ${k}`).join(", ")}.`);
+  if (rep.judge_coverage) L.push(`Judge profile: ${rep.evaluator.judge_profile.id}. ${rep.judge_coverage.requested_criteria} of ${rep.judge_coverage.total_criteria} criteria requested; ${rep.judge_coverage.outside_profile} outside scope; ${rep.judge_coverage.unavailable_criteria} unavailable. Coverage is not quality qualification.`);
   if (rep.judge_agreement) L.push(`Within-call sample agreement: ${rep.judge_agreement.unanimous} of ${rep.judge_agreement.judgements} judgements were unanimous. This is not independent repeatability or accuracy.`);
   if (rep.input_issues?.length) L.push(`Input unavailable: ${rep.input_issues.join("; ")}.`);
   L.push("", "| item | kind | status | failing or unsure checks | flags |", "|---|---|---|---|---|");

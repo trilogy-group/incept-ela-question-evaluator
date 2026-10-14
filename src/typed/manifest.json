@@ -25,7 +25,7 @@
    "source_path": "src/decide/providers/jev.js",
    "source_sha256": "fd94a07ef701631e7b02fbe94a1033c8b430c94926fad29a5d0b6d821e7b96bf",
    "path": "src/typed/jev.mjs",
-   "sha256": "ac2b4d2cee5becab7aa045a06e90d3d365cd2f86498117a847dd91955b8b14db"
+   "sha256": "c7d525550641bbf4cd39f5d951200635e5a5b197cf125f343ed38ca5650bd47f"
   },
   {
    "source_path": "src/decide/retry.js",
@@ -37,6 +37,7 @@
  "meaning": "frozen development transport, aggregation and gates; not academic qualification",
  "transformations": [
   "local module paths and extensions",
-  "record serving observations and logical sample call counts"
+  "record serving observations and logical sample call counts",
+  "preserve missing reported model identity instead of substituting the requested alias"
  ]
 }

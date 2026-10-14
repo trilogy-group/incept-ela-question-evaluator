@@ -12,5 +12,9 @@ export const ENGINE_SNAPSHOT = JSON.parse(fs.readFileSync(path.join(ENGINE_DIR, 
 export async function judgeFromEnv(env = process.env) {
   if (!env.TYPESAFE_API_KEY) throw new Error("explicit Jev execution requires a launch credential");
   const { createJevProvider } = await import("./typed/jev.mjs");
-  return createJevProvider({ apiKey: env.TYPESAFE_API_KEY });
+  const provider = createJevProvider({ apiKey: env.TYPESAFE_API_KEY, model: env.TYPESAFE_MODEL || "jev-latest" });
+  return { ...provider, async ask(...args) {
+    try { return await provider.ask(...args); }
+    catch { throw new Error("Jev request unavailable; provider details suppressed"); }
+  } };
 }

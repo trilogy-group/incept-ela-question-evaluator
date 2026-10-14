@@ -57,11 +57,11 @@ test("a word pinned to a box its character lacks fails", async () => {
 test("the judge's verdicts follow its answers: unsure never passes, a confident wrong answer fails the item", async () => {
   const sure = (p) => createFakeProvider(() => ({ noul: p }));
   const q = one("reading-1/mcq-1", () => {});
-  const yes = await evaluate(context, q, { provider: sure(0.95), samples: 2 });
+  const yes = await evaluate(context, q, { provider: sure(0.95), samples: 2, profile: "jev-full-experimental" });
   assert.equal(verdict(yes, "reading-1/mcq-1", "key_correct"), "pass");
   assert.equal(verdict(yes, "reading-1/mcq-1", "option_A_correct"), "fail");   // the fake says yes to every option
   assert.equal(yes.items[0].status, "fails");
-  const unsure = await evaluate(context, q, { provider: sure(0.52), samples: 2 });
+  const unsure = await evaluate(context, q, { provider: sure(0.52), samples: 2, profile: "jev-full-experimental" });
   assert.equal(verdict(unsure, "reading-1/mcq-1", "key_correct"), "unsure");
   assert.equal(unsure.items[0].status, "unsure");
 });

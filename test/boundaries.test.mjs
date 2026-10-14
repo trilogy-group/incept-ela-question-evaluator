@@ -63,7 +63,7 @@ test("producer metadata and item identities do not reach hashes, reports or judg
   ctx.source = { generator: identity }; ctx.native.metadata = { generator: identity };
   resolvePointer(ctx.native, other.items[0].pointer).target.metadata = { generator: identity };
   assert.deepEqual(packetProjection(context, q).hashes, packetProjection(ctx, other).hashes);
-  const log = [], rep = await evaluate(ctx, other, { provider: createFakeProvider(() => ({ noul: 0.5 })), log });
+  const log = [], rep = await evaluate(ctx, other, { provider: createFakeProvider(() => ({ noul: 0.5 })), log, profile: "jev-full-experimental" });
   assert.ok(log.length > 0);
   assert.equal(JSON.stringify({ rep, log, markdown: markdown(rep) }).includes(identity), false);
 });
@@ -78,7 +78,7 @@ test("disabled optional pages and later native feedback are omitted from earlier
 });
 
 test("serving revision absence is explicit and sample agreement is not labelled accuracy", async () => {
-  const rep = await evaluate(context, one("word_web"), { provider: createFakeProvider(() => ({ noul: 0.95 })), samples: 3 });
+  const rep = await evaluate(context, one("open_check"), { provider: createFakeProvider(() => ({ noul: 0.95 })), samples: 3 });
   assert.equal(rep.items[0].judge.served_revision, null); assert.equal(rep.items[0].judge.revision_verified, false);
   assert.match(markdown(rep), /not independent repeatability or accuracy/);
   assert.equal(rep.items[0].status, "unsure"); // Exact exposure remains unverified, even unanimous judgments.

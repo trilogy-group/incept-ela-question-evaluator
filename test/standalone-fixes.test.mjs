@@ -26,9 +26,15 @@ test('optional Jev route imports locally and typed decisions use only the inject
     const log = [];
     const answer = await decide({ fixture_kind: 'simulated; not a model evaluation' }, [noul('wire_check', 'Fixture plumbing only.')], { provider, samples: 1, log });
     assert.equal(requests.length, 1); assert.equal(answer.answers.wire_check.pass, true);
+    assert.equal(requests[0].body.model, 'jev-latest');
     assert.equal(log[0].model, 'simulated-wire-fixture');
     assert.equal(JSON.stringify(log).includes('synthetic-test-credential'), false);
   } finally { globalThis.fetch = savedFetch; }
+});
+
+test('the live launch model can be selected without treating its alias as a fixed revision', async () => {
+  const provider = await judgeFromEnv({ TYPESAFE_API_KEY: 'synthetic-test-credential', TYPESAFE_MODEL: 'jev-preview' });
+  assert.equal(provider.model, 'jev-preview');
 });
 
 test('malformed nested rubric arrays abstain without repair or judge calls', async () => {

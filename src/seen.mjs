@@ -1,5 +1,7 @@
 // What a student reads or hears, and what they have met before each item. The key set is the contract's: a string under
 // one of these keys is shown to the student (scripts/extract_authored.py in the contract repository).
+import { layoutIssues } from "./packet.mjs";
+
 export const STUDENT = new Set(["q", "stem", "options", "text", "why", "yes", "after", "feedback", "line", "lines", "task", "question",
   "nudge", "second_nudge", "third_nudge", "reveal", "reply", "meaning", "goal", "mission", "answer", "close", "candidates", "decoys",
   "strong", "quotes", "stems", "checklist", "help", "narration", "title", "label", "words", "w", "lead", "hint", "ask", "repeat", "note",
@@ -33,11 +35,11 @@ export function playLines(lesson) {
   const walk = (x) => {
     if (!x || typeof x !== "object") return;
     if (Array.isArray(x)) { x.forEach(walk); return; }
-    if (x.kind === "script" && Array.isArray(x.lines)) for (const l of x.lines) if (typeof l.line === "string") lines.push(l.line);
+    if (x.kind === "script" && Array.isArray(x.lines)) for (const l of x.lines) if (l && typeof l.line === "string") lines.push(l.line);
     if (Array.isArray(x.scene)) for (const l of x.scene) if (l && typeof l.line === "string") lines.push(l.line);
     for (const v of Object.values(x)) walk(v);
   };
-  walk(lesson.pages);
+  walk(lesson?.pages);
   return lines;
 }
 
@@ -45,7 +47,7 @@ const pageIndex = (pointer) => Number(pointer.split("/")[2]);
 
 /** What the student has met before an item: earlier pages, then what comes before it on its own page. */
 export function seenBefore(lesson, item, setItems = []) {
-  if (!Array.isArray(lesson?.pages) || !/^\/pages\/\d+\/nodes\/\d+(?:\/|$)/.test(item.pointer || "")) return [];
+  if (layoutIssues({ native: lesson }, item).length) return [];
   const pi = pageIndex(item.pointer);
   if (!lesson.pages[pi]?.nodes?.[Number(item.pointer.split("/")[4])]) return [];
   const parts = [];
@@ -55,7 +57,7 @@ export function seenBefore(lesson, item, setItems = []) {
   const instruction = (x) => Array.isArray(x) ? x.map(instruction) : x && typeof x === "object"
     ? Object.fromEntries(Object.entries(x).filter(([k]) => !skip.has(k)).map(([k, v]) => [k, instruction(v)])) : x;
   const priorQuestions = (page) => setItems.filter((q) => q.page === page && q.order < item.order).sort((a, b) => a.order - b.order)
-    .flatMap((q) => [q.view?.stem, q.view?.prompt, ...(q.view?.options || [])]).filter((x) => typeof x === "string");
+    .flatMap((q) => [q.view?.stem, q.view?.prompt, ...(Array.isArray(q.view?.options) ? q.view.options : [])]).filter((x) => typeof x === "string");
   for (let i = 0; i < pi; i++) {
     const p = lesson.pages[i];
     if (p.extra && lesson.extras?.[p.extra] !== true) continue;

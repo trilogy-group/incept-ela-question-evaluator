@@ -1,0 +1,64 @@
+{
+ "schema_version": 1,
+ "default_profile": "jev-partial-v1",
+ "profiles": [
+  {
+   "schema_version": 1,
+   "id": "jev-partial-v1",
+   "version": 1,
+   "status": "development-only",
+   "qualification": false,
+   "observed_model_ids": ["jev-1.13.0"],
+   "observed_models_scope": "reported service identity; not immutable revision",
+   "source": {
+    "registry_id": "B0998",
+    "kind": "development-trials",
+    "labelled_development_cases": 16,
+    "stress_controls": 6,
+    "independent_gold_labels": 0,
+    "full_reference": {"units": 40, "judge_criteria": 543, "labelled_for_accuracy": false},
+    "meaning": "The labelled development cases and stress controls support bounded development observations. The full-reference run supplies unlabelled execution coverage, not measured correctness of its criteria."
+   },
+   "selection": {
+    "mode": "allowlist",
+    "operations": {
+     "classify": ["^word_[1-9][0-9]*_fits$", "^word_[1-9][0-9]*_[A-Za-z][A-Za-z0-9_]*_also_fits$"],
+     "open_check": ["^reveal_meets_[1-9][0-9]*$", "^accepted_[1-9][0-9]*_[1-9][0-9]*_meets$"]
+    }
+   },
+   "exclusions": "All other criteria are outside this profile: all choice operations, evidence_select, misreading checks, general answerability, answer_in_seen, feedback truth or guidance, hints, prompt clarity, and serves_the_lesson. The response-to-rubric evidence does not qualify evidence-selection labels, and the small authored choice controls do not establish the reference choice route. Exclusion is unavailable coverage, not a passed or inapplicable check.",
+   "limitations": [
+    "Criterion-family selection is a development decision, not validation of every selected criterion, operation, or future item.",
+    "Reported model identity and sample agreement do not establish an immutable serving revision or correctness.",
+    "Learner exposure, academic approval and learner outcomes remain unverified."
+   ]
+  },
+  {
+   "schema_version": 1,
+   "id": "jev-full-experimental",
+   "version": 1,
+   "status": "development-only",
+   "qualification": false,
+   "observed_model_ids": ["jev-1.13.0"],
+   "observed_models_scope": "reported service identity; not immutable revision",
+   "source": {
+    "registry_id": "B0998",
+    "kind": "development-trials",
+    "labelled_development_cases": 16,
+    "stress_controls": 6,
+    "independent_gold_labels": 0,
+    "full_reference": {"units": 40, "judge_criteria": 543, "labelled_for_accuracy": false},
+    "meaning": "This explicit experimental route preserves preexisting full judge coverage. Its full-reference execution is unlabelled coverage, not an accuracy qualification."
+   },
+   "selection": {
+    "mode": "all",
+    "operations": ["film_mcq", "reading_mcq", "key_term_mcq", "rebuild_choice", "open_check", "open_prompt", "word_web", "evidence_select", "say_back", "classify"]
+   },
+   "exclusions": "Unknown operations remain excluded. Selection of all supplied judge criteria within known operations is experimental coverage only.",
+   "limitations": [
+    "Requires explicit selection; it is not the default partial integration.",
+    "No independently qualified good-question verdict, calibrated accuracy, or verified serving revision is available."
+   ]
+  }
+ ]
+}

@@ -35,7 +35,7 @@ export function createJevProvider({ apiKey, model = "jev-1.13.0", baseUrl = "htt
           if (!res.ok) throw new HttpError(res.status, await res.text().catch(() => ""), retryAfterMs(res.headers));
           const json = await res.json();
           if (!json || typeof json.answers !== "object") throw new Error("jev invalid envelope");
-          return { answers: json.answers, model: json.model ?? model, served_revision: typeof json.served_revision === "string" ? json.served_revision : null, usage: json.usage ?? null };
+          return { answers: json.answers, model: typeof json.model === "string" && json.model.trim() ? json.model : null, served_revision: typeof json.served_revision === "string" ? json.served_revision : null, usage: json.usage ?? null };
         } finally {
           clearTimeout(t);
         }

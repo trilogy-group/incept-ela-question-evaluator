@@ -16,18 +16,22 @@ export function runtimeSnapshot(root, configFile) {
   const node_runtime = { version: process.version, versions: process.versions, platform: process.platform, arch: process.arch, executable_sha256: sha(fs.readFileSync(process.execPath)) };
   return { files: records, config, node_runtime, sha256: sha(JSON.stringify({ files: records, config, node_runtime })) };
 }
-const signature = (rep) => JSON.stringify({ input: rep.input, items: rep.items.map((i) => ({ id: i.id, status: i.status, checks: i.checks.map((c) => ({ id: c.id, required: c.required, verdict: c.verdict, evidence: c.evidence, p_yes: c.p_yes })) })), set: rep.set });
+const signature = (rep) => JSON.stringify({ input: rep.input, judge_profile: rep.evaluator?.judge_profile?.sha256 ?? null, items: rep.items.map((i) => ({ id: i.id, status: i.status, checks: i.checks })), set: rep.set });
 export function compareDraws(draws, packetHash, runtimeHash, execution) {
   if (draws.length < 2) throw new Error("full-run repeat study needs at least two draws");
   const ids = new Set(), pids = new Set();
+  const profileDeclared = draws.some((d) => Object.hasOwn(d.evaluator || {}, "judge_profile") || Object.hasOwn(d.execution || {}, "profile_sha256"));
+  const profileHash = draws[0].evaluator?.judge_profile?.sha256 ?? null;
+  if (profileDeclared && (typeof profileHash !== "string" || !profileHash)) throw new Error("draw judge profile missing");
   for (const draw of draws) {
     const e = draw.execution;
     if (!e || e.packet_sha256 !== packetHash || e.runtime_sha256 !== runtimeHash) throw new Error("draw packet or runtime mismatch");
+    if (profileDeclared && (draw.evaluator?.judge_profile?.sha256 !== profileHash || e.profile_sha256 !== profileHash)) throw new Error("draw judge profile mismatch");
     if (!e.invocation_id || ids.has(e.invocation_id) || !e.pid || pids.has(e.pid)) throw new Error("copied draw or reused local process record");
     ids.add(e.invocation_id); pids.add(e.pid);
   }
   const sigs = draws.map(signature);
-  return { execution, draws: draws.length, completed: draws.length, frozen_packet_sha256: packetHash, runtime_sha256: runtimeHash,
+  return { execution, draws: draws.length, completed: draws.length, frozen_packet_sha256: packetHash, runtime_sha256: runtimeHash, judge_profile_sha256: profileHash,
     separate_local_process_records: true, identical_checks: sigs.every((x) => x === sigs[0]), check_variation: repeatStatistics(draws),
     model_calls: execution === "offline-only" ? 0 : null,
     logical_sample_calls: draws.reduce((n, d) => n + d.execution.logical_sample_calls, 0),
