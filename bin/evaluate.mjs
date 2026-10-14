@@ -22,6 +22,11 @@ const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
 if (config.version !== 1 || config.execution !== "offline-only") throw new Error("unsupported config");
 for (const k of ["samples", "repeats"]) if (!Number.isInteger(config[k]) || config[k] < 1 || config[k] > 16) throw new Error(`invalid ${k} setting`);
 if (config.repeats < 2) throw new Error("at least two full repeats are required");
+if (arg("corpus") || arg("corpus-worker")) {
+  const { runCorpusCli } = await import("../src/corpus-cli.mjs");
+  console.log(JSON.stringify(await runCorpusCli({ root, configFile, config })));
+  process.exit(0);
+}
 if (arg("review")) {
   const { runReviewCli } = await import("../src/review-cli.mjs");
   const result = await runReviewCli({ root, configFile, config });

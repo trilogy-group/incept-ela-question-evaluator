@@ -2,6 +2,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs";
+import { safeFailureCode } from "./typed/client.mjs";
 export { decide } from "./typed/client.mjs";
 export { noul, choice, GATES } from "./typed/questions.mjs";
 export { createFakeProvider } from "./typed/fake.mjs";
@@ -15,6 +16,10 @@ export async function judgeFromEnv(env = process.env) {
   const provider = createJevProvider({ apiKey: env.TYPESAFE_API_KEY, model: env.TYPESAFE_MODEL || "jev-latest" });
   return { ...provider, async ask(...args) {
     try { return await provider.ask(...args); }
-    catch { throw new Error("Jev request unavailable; provider details suppressed"); }
+    catch (error) {
+      const sanitized = new Error("Jev request unavailable; provider details suppressed");
+      sanitized.code = safeFailureCode(error);
+      throw sanitized;
+    }
   } };
 }

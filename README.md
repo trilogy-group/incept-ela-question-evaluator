@@ -65,6 +65,18 @@ The side judge covers all supported semantic checks and receives the finished pa
 
 For a private development casebook, run `node scripts/test-jev.mjs --cases .local/path/to/cases.json`. This freezes an offline plan with zero calls. Add `--live --draws 5` for an authorized model run. Labels are stored separately from model inputs; reports include wrong approvals, wrong rejections, abstentions and variation between full runs. Cases and results stay under `.local/` and must not be passed to generator work.
 
+## Collected examples
+
+Use the same runner for the private collection produced by the knowledge repository:
+
+```sh
+node bin/evaluate.mjs --corpus /path/question-examples --catalog-sha256 <catalog-sha256>
+```
+
+This verifies retained-file hashes, checks authored answer fields across every row and selects a passage-choice pilot. Unsupported operations, absent media and missing antecedents stay excluded with reasons. Original fields and source versions are preserved; the derived choice packet is not a native lesson evaluation. Outputs stay private, under `.local/` by default.
+
+Add `--mode development --judge jev --side-judge gemini-flash` for explicitly authorized model testing. `config.json` sets samples and fresh-process draws. The first two draws use identical inputs; later draws rotate choice order. Every sample is retained. Any missing, unsure or conflicting sample prevents a decisive verdict. Models receive passage, question, choices and necessary learner instructions; authored keys, feedback, rubrics and producer identity are withheld. Source-key comparisons are added after the draws. Duplicate-choice and removed-passage controls are reported separately. Neither agreement nor repeatability establishes academic accuracy. When using `--env-file`, put `--` between `node` and `bin/evaluate.mjs` so Node leaves the launch file to the evaluator's filtered loader.
+
 ## Reference results and cases
 
 The reference contains **40 units** from the authored Othello 1.1 lesson at source commit `3ed708e`; [the fixture manifest](fixtures/reference/manifest.json) records the hashes. Code-only execution returns **40 unsure, unverified**, with identical code checks across two complete repeats. Without a model, required checks of meaning are unavailable. The exact content and conditional feedback seen by a learner have not been verified.
