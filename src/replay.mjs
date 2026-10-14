@@ -12,6 +12,7 @@ export function runtimeSnapshot(root, configFile) {
   for (const dir of ["src", "criteria", "contracts"]) visit(dir);
   files.push("bin/evaluate.mjs");
   files.push("fixtures/knowledge-baseline.json");
+  files.push("fixtures/criterion-source-records.json");
   const records = [...new Set(files)].sort().map((rel) => ({ path: rel, sha256: sha(fs.readFileSync(path.join(root, rel))) }));
   const config = { sha256: sha(fs.readFileSync(configFile)) };
   const node_runtime = { version: process.version, versions: process.versions, platform: process.platform, arch: process.arch, executable_sha256: sha(fs.readFileSync(process.execPath)) };

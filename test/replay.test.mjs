@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { compareDraws } from "../src/replay.mjs";
+import { compareDraws, runtimeSnapshot } from "../src/replay.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const fixture = (id, pid) => ({ execution: { invocation_id: id, pid, packet_sha256: "packet", runtime_sha256: "runtime", logical_sample_calls: 0 }, input: {}, items: [], set: [] });
@@ -18,6 +18,25 @@ test("repeat comparison rejects copied records and changed packet or runtime", (
   assert.throws(() => compareDraws([a, b], "packet", "runtime", "offline-only"), /mismatch/);
   b.execution.packet_sha256 = "packet"; b.execution.runtime_sha256 = "changed";
   assert.throws(() => compareDraws([a, b], "packet", "runtime", "offline-only"), /mismatch/);
+});
+
+test("changing frozen learning-record bytes invalidates the recorded runtime", t => {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "runtime-learning-records-"));
+  t.after(() => fs.rmSync(temporary, { recursive: true, force: true }));
+  for (const directory of ["src", "criteria", "contracts", "bin", "fixtures"]) fs.mkdirSync(path.join(temporary, directory));
+  fs.writeFileSync(path.join(temporary, "bin/evaluate.mjs"), "// isolated runtime-fingerprint fixture\n");
+  fs.copyFileSync(path.join(root, "fixtures/knowledge-baseline.json"), path.join(temporary, "fixtures/knowledge-baseline.json"));
+  const sourceRecords = path.join(temporary, "fixtures/criterion-source-records.json");
+  fs.copyFileSync(path.join(root, "fixtures/criterion-source-records.json"), sourceRecords);
+  const config = path.join(temporary, "config.json"); fs.writeFileSync(config, "{}\n");
+  const before = runtimeSnapshot(temporary, config);
+  fs.appendFileSync(sourceRecords, "\n");
+  const after = runtimeSnapshot(temporary, config);
+  assert.notEqual(before.sha256, after.sha256);
+  assert.notEqual(before.files.find(row => row.path === "fixtures/criterion-source-records.json").sha256,
+    after.files.find(row => row.path === "fixtures/criterion-source-records.json").sha256);
+  assert.deepEqual(before.config, after.config);
+  assert.deepEqual(before.node_runtime, after.node_runtime);
 });
 
 test("standalone default repeats in separate processes from another cwd without external engine or judge", () => {
