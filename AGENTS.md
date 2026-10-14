@@ -2,6 +2,8 @@
 
 Read README.md, criteria/criteria.json, cases/reference-review.json and the fixture manifests first. Stages 0 and 1 are implemented; quality qualification belongs to stage 2.
 
+The canonical repository-local orientation is [incept-ela-evaluator](.agents/skills/incept-ela-evaluator/SKILL.md).
+
 ## Blind boundaries
 
 - Read only this repository, the public contract/library in incept-ela-learning-truths, and finished public lesson-context/question-set packets.

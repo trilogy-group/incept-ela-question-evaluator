@@ -24,6 +24,8 @@ For another finished public packet:
 node bin/evaluate.mjs --context /path/lesson-context.json --set /path/question-set.json
 ```
 
+The [evaluator skill](.agents/skills/incept-ela-evaluator/SKILL.md) provides repository orientation and optional academic source lookup guidance.
+
 For Jev, provide `TYPESAFE_API_KEY` in the launch environment:
 
 ```sh
