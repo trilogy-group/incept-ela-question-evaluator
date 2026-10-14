@@ -63,6 +63,10 @@ test("classification emptiness, invalid inline keys and correctness-graded confi
   assert.ok(failures({ family: "inline_choice", view: { prompt: "Choose.", blanks: [{ id: "B1", options: ["A", "B"], key: 2 }] } }).includes("blank_keys_valid"));
   assert.ok(failures({ family: "self_report", view: { prompt: "How confident?", scale: ["No", "Yes"], scoring: "correctness" } }).includes("report_is_not_correctness_grade"));
   assert.ok(failures({ family: "uninterpreted", view: { prompt: "New task." } }).includes("family_field_interpreter_available"));
+  assert.ok(failures({ family: "shared_cloze", view: { prompt: "Fill the blanks.", bank: [{ id: "B1", text: "Fox" }], blanks: [{ id: "A1", key: "B1" }, { id: "A2", key: "B1" }], reuse_policy: "single-use" } }).includes("shared_bank_reuse_obeys_rule"));
+  assert.ok(failures({ family: "matching", view: { prompt: "Match.", entries: [{ id: "E1", text: "Fox" }], options: [{ id: "O1", text: "Crossed" }], mapping: { E1: "ABSENT" } } }).includes("matching_mapping_valid"));
+  assert.ok(failures({ family: "sequence", view: { prompt: "Order.", entries: [{ id: "E1", text: "First" }, { id: "E2", text: "Second" }], key: ["E1", "E1"], ordering_rule: "Event order", tie_policy: "No ties" } }).includes("sequence_key_is_permutation"));
+  assert.ok(failures({ family: "nonresponse", view: { instruction: "Worked teaching.", key: [0] } }).includes("instruction_has_no_response_key"));
 });
 test("native identity, declared alignment and source bindings cannot be detached from their native task", () => {
   for (const [mutate, message] of [
@@ -93,4 +97,16 @@ test("source and media metadata cannot inject teacher-key objects into a blind r
       const out = path.join(f.root, "review"); assert.throws(() => prepareNativeIntake(f.input, out), /invalid/); assert.equal(fs.existsSync(out), false);
     } finally { f.dispose(); }
   }
+});
+test("a selected task sequence retains source phase order without confusing it with local item order", () => {
+  const f = fixture(); try {
+    for (const phase of f.context.native.course_context.lesson_plan.phases) { phase.exposure_order += 10; phase.role = "broader instruction phase"; delete phase.support; }
+    delete f.context.native.course_context.source_assets[0].kind; f.save();
+    const out = path.join(f.root, "review"), receipt = prepareNativeIntake(f.input, out);
+    assert.equal(receipt.code_failures, 0);
+    const cases = JSON.parse(fs.readFileSync(path.join(out, "review-packet.json"))).items;
+    assert.equal(cases[0].declared_phase_role, "broader instruction phase"); assert.equal(cases[0].declared_role, "question");
+    f.context.native.course_context.lesson_plan.phases.reverse(); f.save();
+    assert.throws(() => prepareNativeIntake(f.input, path.join(f.root, "bad-order")), /exposure order/);
+  } finally { f.dispose(); }
 });

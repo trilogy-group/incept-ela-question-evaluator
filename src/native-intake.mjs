@@ -26,6 +26,15 @@ function learnerView(item) {
     Object.assign(task, pick(view, ["surrounding_text"]));
     task.blanks = list(view.blanks).map(row => ({ ...pick(row, ["id"]), options: strings(row?.options) }));
   }
+  if (item.family === "shared_cloze") {
+    Object.assign(task, pick(view, ["surrounding_text", "reuse_policy"]));
+    task.bank = list(view.bank).map(row => pick(row, ["id", "text"]));
+    task.blanks = list(view.blanks).map(row => pick(row, ["id"]));
+  }
+  if (["matching", "sequence"].includes(item.family)) task.entries = list(view.entries).map(row => pick(row, ["id", "text"]));
+  if (item.family === "matching") task.options = list(view.options).map(row => pick(row, ["id", "text"]));
+  if (item.family === "sequence") Object.assign(task, pick(view, ["ordering_rule", "tie_policy"]));
+  if (item.family === "nonresponse") Object.assign(task, pick(view, ["instruction"]));
   if (item.family === "word_web") Object.assign(task, pick(view, ["centre", "link_rule"]));
   if (item.family === "say_back") Object.assign(task, pick(view, ["statement"]));
   if (item.family === "self_report") task.scale = strings(view.scale);
@@ -39,7 +48,7 @@ function read(directory, name) {
 }
 export function nativeFieldChecks(item) {
   const view = item.view, checks = [], add = (id, valid) => checks.push({ id, verdict: valid ? "pass" : "fail" });
-  add("prompt_present", text(view.prompt));
+  add(item.family === "nonresponse" ? "instruction_present" : "prompt_present", text(item.family === "nonresponse" ? view.instruction : view.prompt));
   if (["single_choice", "multiple_select", "evidence_selection", "word_selection"].includes(item.family)) {
     add("options_present", list(view.options).length >= 2 && view.options.every(text));
     add("options_distinct", Array.isArray(view.options) && new Set(view.options).size === view.options.length);
@@ -57,6 +66,24 @@ export function nativeFieldChecks(item) {
     add("blanks_present", list(view.blanks).length > 0);
     add("blank_keys_valid", list(view.blanks).length > 0 && view.blanks.every(row => object(row) && text(row.id) && list(row.options).length >= 2
       && row.options.every(text) && Number.isInteger(row.key) && row.key >= 0 && row.key < row.options.length));
+  } else if (item.family === "shared_cloze") {
+    const bank = list(view.bank), blanks = list(view.blanks), ids = new Set(bank.map(row => row?.id));
+    add("bank_entries_present", bank.length > 0 && bank.every(row => object(row) && text(row.id) && text(row.text)) && ids.size === bank.length);
+    add("shared_blank_keys_valid", blanks.length > 0 && blanks.every(row => object(row) && text(row.id) && ids.has(row.key)) && new Set(blanks.map(row => row.id)).size === blanks.length);
+    add("shared_bank_reuse_obeys_rule", ["single-use", "reusable"].includes(view.reuse_policy) && (view.reuse_policy !== "single-use" || new Set(blanks.map(row => row.key)).size === blanks.length));
+  } else if (["matching", "sequence"].includes(item.family)) {
+    const entries = list(view.entries), ids = new Set(entries.map(row => row?.id));
+    add("response_entries_present", entries.length > 0 && entries.every(row => object(row) && text(row.id) && text(row.text)) && ids.size === entries.length);
+    if (item.family === "matching") {
+      const options = list(view.options), destinations = new Set(options.map(row => row?.id));
+      add("matching_options_present", options.length > 0 && options.every(row => object(row) && text(row.id) && text(row.text)) && destinations.size === options.length);
+      add("matching_mapping_valid", object(view.mapping) && entries.length > 0 && entries.every(row => destinations.has(view.mapping[row.id])));
+    } else {
+      add("sequence_key_is_permutation", Array.isArray(view.key) && view.key.length === entries.length && new Set(view.key).size === entries.length && view.key.every(id => ids.has(id)));
+      add("ordering_rule_and_tie_policy_present", text(view.ordering_rule) && text(view.tie_policy));
+    }
+  } else if (item.family === "nonresponse") {
+    add("instruction_has_no_response_key", !["key", "mapping", "rubric", "sample_answer"].some(field => Object.hasOwn(view, field)));
   } else if (item.family === "say_back") {
     add("recall_statement_present", text(view.statement));
     add("recall_is_not_reasoning_grade", view.scoring === "unscored-recall");
@@ -78,7 +105,7 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
   const course = context.native.course_context;
   assert(object(course) && Array.isArray(course.source_assets) && Array.isArray(course.core_knowledge) && Array.isArray(course.lesson_plan?.phases), "course inputs missing");
   for (const asset of course.source_assets) {
-    assert(object(asset) && text(asset.id) && text(asset.kind) && (asset.text == null || typeof asset.text === "string"), "invalid visible source fields");
+    assert(object(asset) && text(asset.id) && (asset.kind == null || text(asset.kind)) && (asset.text == null || typeof asset.text === "string"), "invalid visible source fields");
     assert(asset.media_ref == null || typeof asset.media_ref === "string", "invalid visible media reference");
     assert(asset.time_range == null || (Array.isArray(asset.time_range) && asset.time_range.length === 2 && asset.time_range.every(value => Number.isFinite(value) && value >= 0)
       && asset.time_range[0] <= asset.time_range[1]), "invalid visible media time range");
@@ -89,6 +116,7 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
   const targets = new Set(course.core_knowledge.map(row => row.id)), contentKeys = new Set(list(course.content_keys).map(row => row.id)), pairs = new Set(list(course.pairing_map).map(row => row.id));
   assert(list(set.items).length > 0, "empty activity set");
   const identities = new Set(), orders = new Set(), cases = [], authors = [], observations = [];
+  let previousPhasePosition = -1;
   for (const item of set.items) {
     assert(object(item) && text(item.id) && !identities.has(item.id) && Number.isInteger(item.order) && item.order > 0 && !orders.has(item.order), "invalid or duplicated activity identity");
     const precedingIds = new Set(identities); identities.add(item.id); orders.add(item.order);
@@ -97,12 +125,15 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
     assert(target.found && equal(target.target, item.native) && equal(item.view, item.native.view) && item.id === item.native.id && item.kind === item.native.kind && item.family === item.native.family
       && page && target.ancestors.includes(page), "activity differs from its native pointer");
     const phase = phases.get(item.alignment?.phase_ref);
-    assert(phase && phase.exposure_order === item.order, "phase or exposure order differs");
+    const phasePosition = course.lesson_plan.phases.indexOf(phase);
+    assert(phase && phasePosition >= previousPhasePosition && (phase.exposure_order === undefined || Number.isInteger(phase.exposure_order) && phase.exposure_order > 0), "phase or exposure order differs");
+    previousPhasePosition = phasePosition;
     const declared = item.native.source_context, alignment = item.alignment;
     assert(object(declared) && object(alignment) && declared.id === item.id && declared.native_kind === item.kind && declared.family === item.family
       && declared.page_ref === item.page && declared.phase_ref === alignment.phase_ref, "native source context differs");
-    assert(text(phase.role) && text(phase.support) && alignment.role === phase.role && alignment.role === declared.role
-      && alignment.support === phase.support && alignment.support === declared.support, "role or support differs from declared context");
+    assert(text(alignment.role) && alignment.role === declared.role && text(alignment.support) && alignment.support === declared.support
+      && (phase.role === undefined || text(phase.role)) && (phase.support === undefined || text(phase.support) && phase.support === alignment.support),
+      "role or support differs from declared context");
     for (const [field, allowed] of [["target_refs", targets], ["content_key_refs", contentKeys], ["pair_refs", pairs]]) {
       assert(Array.isArray(alignment[field]) && equal(alignment[field], declared[field]) && alignment[field].every(ref => text(ref) && allowed.has(ref)), `unknown or differing ${field}`);
     }
@@ -112,7 +143,7 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
     assert(Array.isArray(item.source_bindings) && equal(item.source_bindings, item.native.source_bindings), "native source bindings differ");
     assert(Array.isArray(phase.source_refs) && phase.source_refs.every(ref => assets.has(ref)), "phase names an absent source");
     const id = `native-${digest({ kind: item.kind, order: item.order, view: item.view }).slice(0, 24)}`;
-    const visibleSources = phase.source_refs.map(ref => ({ id: ref, kind: assets.get(ref).kind, text: assets.get(ref).text ?? null,
+    const visibleSources = phase.source_refs.map(ref => ({ id: ref, kind: assets.get(ref).kind ?? null, text: assets.get(ref).text ?? null,
       time_range: assets.get(ref).time_range ?? null, media_ref: assets.get(ref).media_ref ?? null, source_status: assets.get(ref).source_status ?? null }));
     const checks = nativeFieldChecks(item);
     for (const [index, binding] of list(item.source_bindings).entries()) {
@@ -121,7 +152,8 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
         && text(binding.quote) && String(assets.get(binding.source_ref)?.text ?? "").includes(binding.quote) ? "pass" : "fail" });
     }
     const task = learnerView(item), role = item.alignment.role;
-    cases.push({ id, kind: item.kind, family: item.family, order: item.order, declared_role: role, declared_support: phase.support,
+    cases.push({ id, kind: item.kind, family: item.family, order: item.order, declared_role: role, declared_phase_role: phase.role ?? null,
+      phase_to_task_role_relation: "not verified; phase labels and assessment purpose are separate declarations", declared_support: alignment.support,
       learner_view: task, visible_sources: visibleSources, earlier_activity_ids: cases.map(row => row.id),
       exposure: "Declared source availability and prior task order only; learner response, conditional feedback and served UI are not verified.",
       review: { intended_use: null, answerable: null, clarity: null, independently_expected_response: null, scoring_requirements: null,
