@@ -44,6 +44,16 @@ test("changed references and an incorrect external bundle pin fail integrity ver
     assert.throws(() => checkGolden(f.bundle), /immutable reference artifact/);
   } finally { f.dispose(); }
 });
+test("a secondary source stays below the default positive reference and does not inherit its designation", () => {
+  const f = fixture(); try {
+    const result = runGoldenCli({ root: f.root, argv: ["--golden-reference", f.capture, "--reference-tier", "secondary", "--out", ".local/golden/secondary"] });
+    const manifest = JSON.parse(fs.readFileSync(path.join(result.root, "manifest.json")));
+    assert.equal(result.tier, "secondary"); assert.equal(manifest.priority, 2);
+    assert.match(manifest.designation, /not a default positive/);
+    assert.ok(JSON.parse(fs.readFileSync(path.join(result.root, "assessment-plan.json"))).every(row => row.expected_baseline === "secondary reference candidate; no quality verdict"));
+    assert.throws(() => runGoldenCli({ root: f.root, argv: ["--golden-check", result.root, "--reference-tier", "primary"] }), /do not use/);
+  } finally { f.dispose(); }
+});
 test("assessment imports preserve original bytes, chain records and never promote a claimed approval", () => {
   const f = fixture(); try {
     const result = prepareGolden(f.capture, f.bundle), file = path.join(f.root, "run.json"), content = '{"qualified":true,"counts":{"pass":999}}\n'; fs.writeFileSync(file, content);

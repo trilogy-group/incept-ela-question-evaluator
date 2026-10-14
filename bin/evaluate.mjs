@@ -18,6 +18,11 @@ import { reviewStrictProjection } from "../src/strict-review.mjs";
 
 const arg = (k, d) => { const i = process.argv.indexOf(`--${k}`); return i > 0 ? process.argv[i + 1] : d; };
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+if (arg("native-package")) {
+  const { runNativeIntakeCli } = await import("../src/native-intake.mjs");
+  console.log(JSON.stringify(runNativeIntakeCli({ root })));
+  process.exit(0);
+}
 if (arg("golden-reference") || arg("golden-check")) {
   const { runGoldenCli } = await import("../src/golden-cli.mjs");
   console.log(JSON.stringify(runGoldenCli({ root })));

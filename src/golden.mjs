@@ -52,11 +52,14 @@ export function sourceFieldChecks(row) {
   return { checks, status: checks.some(check => check.verdict === "fail") ? "field_fault" : checks.length ? "checked_fields_only" : "no_interpreted_field_checks",
     quality: "not evaluated", qualified: false };
 }
-function assessmentPlan(row) {
+function assessmentPlan(row, tier) {
   const confidence = row.kind === "confidence_self_report";
+  const input = row.kind === "source_text_with_learning_question";
   return { reference_id: row.reference_id, kind: row.kind, role: row.role,
-    expected_baseline: "positive by user designation; no independent per-criterion label",
-    dimensions: (confidence ? ["response_collection_contract"] : ["source_and_context_integrity", "target_knowledge_and_role", "wording_and_access", "answer_or_scoring_contract", "cueing_and_allowed_support", "feedback_grounding", "sequence_fit"])
+    unit_type: input ? "source_input" : "authored_activity",
+    expected_baseline: tier === "primary" ? "positive by user designation; no independent per-criterion label" : "secondary reference candidate; no quality verdict",
+    prerequisites: input ? ["finished question or task", "intended answer or scoring contract", "declared learner exposure"] : [],
+    dimensions: (input ? ["source_and_context_integrity", "target_knowledge_and_intended_use", "content_suitability_and_access"] : confidence ? ["response_collection_contract"] : ["source_and_context_integrity", "target_knowledge_and_role", "wording_and_access", "answer_or_scoring_contract", "cueing_and_allowed_support", "feedback_grounding", "sequence_fit"])
       .map(dimension => ({ id: dimension, status: "not_run", verdict: null, applicability: "confirm against this task's role and supplied context before scoring" })),
     independent_human_label: null, whole_item_approval: false };
 }
@@ -79,7 +82,8 @@ function controlledVariants(references) {
     add(parent, "empty_marking_criteria", "rubric", { ...parent.view.rubric, criteria: [] }, "rubric_criteria_present");
   return variants;
 }
-export function prepareGolden(captureDirectory, outputDirectory) {
+export function prepareGolden(captureDirectory, outputDirectory, { tier = "primary" } = {}) {
+  assert(["primary", "secondary"].includes(tier), "invalid reference tier");
   const capture = fs.realpathSync(captureDirectory), output = path.resolve(outputDirectory);
   const manifestBytes = read(safePath(capture, "positive-reference/manifest.json")), sourceManifest = JSON.parse(manifestBytes);
   const questionBytes = read(safePath(capture, sourceManifest.questions)), contextBytes = read(safePath(capture, sourceManifest.lesson_context));
@@ -101,15 +105,19 @@ export function prepareGolden(captureDirectory, outputDirectory) {
   write(output, "source/manifest.json", manifestBytes); write(output, "source/questions.jsonl", questionBytes); write(output, "source/lesson.json", contextBytes);
   write(output, "references.json", references);
   const variants = controlledVariants(references);
-  write(output, "controlled-variants.json", variants); write(output, "assessment-plan.json", references.map(assessmentPlan));
+  write(output, "controlled-variants.json", variants); write(output, "assessment-plan.json", references.map(row => assessmentPlan(row, tier)));
   write(output, "field-observations.json", references.map(row => ({ reference_id: row.reference_id, ...sourceFieldChecks(row) })));
   write(output, "assessments/journal.jsonl", "");
   const files = Object.fromEntries(["source/manifest.json", "source/questions.jsonl", "source/lesson.json", "references.json", "controlled-variants.json", "assessment-plan.json", "field-observations.json"]
     .map(file => [file, digest(read(path.join(output, file)))]));
   const manifest = { version: 1, id: "current-golden-reference", source: sourceManifest.source, source_sha256: sourceManifest.source.sha256, files,
+    capture_kind: sourceManifest.finished_capture === false ? "source_inputs" : "authored_activities",
+    finished_assessment_units: sourceManifest.finished_assessment_units ?? null,
     references: references.length, kinds: [...new Set(references.map(row => row.kind))], controlled_variants: variants.length,
     roles: Object.fromEntries([...new Set(references.map(row => row.role))].map(role => [role, references.filter(row => row.role === role).length])),
-    designation: "user-designated default golden positive reference", independent_human_quality_labels: 0, qualification: false,
+    tier, priority: tier === "primary" ? 1 : 2,
+    designation: tier === "primary" ? "user-designated default golden positive reference" : "lower-priority reference candidate; not a default positive quality label",
+    independent_human_quality_labels: 0, qualification: false,
     evaluation_stage: "prepared; quality evaluation deferred", variant_scope: "Normalized candidate-view field controls; native UI behavior and pedagogical quality unmeasured." };
   write(output, "manifest.json", manifest);
   return checkGolden(output);
@@ -117,6 +125,7 @@ export function prepareGolden(captureDirectory, outputDirectory) {
 export function checkGolden(directory, expectedManifestHash) {
   const root = fs.realpathSync(directory), manifestBytes = read(path.join(root, "manifest.json")), manifest = JSON.parse(manifestBytes);
   assert(manifest.version === 1 && manifest.id === "current-golden-reference" && manifest.qualification === false, "invalid bundle manifest");
+  assert(manifest.tier === undefined || ["primary", "secondary"].includes(manifest.tier), "invalid reference tier");
   if (expectedManifestHash) assert(digest(manifestBytes) === expectedManifestHash, "external bundle pin differs");
   for (const [file, hash] of Object.entries(manifest.files)) assert(digest(read(safePath(root, file))) === hash, "immutable reference artifact changed");
   const journalBytes = read(safePath(root, "assessments/journal.jsonl"));
@@ -129,7 +138,7 @@ export function checkGolden(directory, expectedManifestHash) {
     assert(digest(read(safePath(root, row.receipt))) === row.receipt_sha256 && envelope.assessment_id === row.assessment_id, "assessment receipt changed");
     previous = digest(JSON.stringify(row));
   }
-  return { root, manifest_sha256: digest(manifestBytes), references: manifest.references, kinds: manifest.kinds.length,
+  return { root, tier: manifest.tier ?? "primary", manifest_sha256: digest(manifestBytes), references: manifest.references, kinds: manifest.kinds.length,
     controlled_variants: manifest.controlled_variants, assessment_records: records.length, assessment_journal_sha256: digest(journalBytes),
     integrity: "checked against recorded hashes; retain the returned journal pin separately to detect truncation", independent_human_quality_labels: 0, qualified: false, model_calls: 0 };
 }

@@ -76,6 +76,16 @@ node bin/evaluate.mjs --golden-reference /path/current-capture --out .local/gold
 node bin/evaluate.mjs --golden-check .local/golden/current
 ```
 
+For an additional lower-priority source, prepare a separate bundle with `--reference-tier secondary`. It remains a reference candidate, without inheriting the primary source's positive designation. Source hashes and assessment histories stay separate.
+
+For a finished `native-activity-transport/0.2` package, prepare key-blind review tasks, separate author proposals and field observations:
+
+```sh
+node bin/evaluate.mjs --native-package /path/finished-native --native-source-pin <original-source-sha256>
+```
+
+This intake preserves native activity types and declared source availability. It prepares review for all current types; semantic judgment, actual learner exposure and quality remain pending. Unsupported family field interpreters remain explicit failures. It does not route native extensions through the older reference adapter.
+
 Add `--assessment /path/report.json --assessment-kind model-development --assessment-relation historical` to the check command to preserve an existing assessment. Other kinds are `source-review`, `integration-test`, `human-review`, `generator-context-coverage` and `manual-notes`. Records are appended and hash-linked; retain the returned manifest and journal hashes separately. Historical and candidate observations do not become current reference verdicts. Quality evaluation remains pending. Preparation and checks use zero model calls. Private assessment records and fault variants stay in this evaluator; the generator consumes the original course/source reference.
 
 The same runner accepts a finished text-lesson directory containing `course-request.json`, `course-source-packet.json`, `lesson-context.json` and `question-set.json`:
