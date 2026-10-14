@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "release": "knowledge-v1",
+  "source_commit": "dacbde58d6754e0c18702ec26594dd71f077a25e",
+  "record_count": 1279,
+  "records_sha256": "8adc5f0e5026741866a01fb1978d3333f55a616e6fdabf14afd51db858df5b55",
+  "status_counts": {
+    "contested": 61,
+    "held": 1121,
+    "open": 97
+  },
+  "registered_source_count": 33,
+  "source_registry_sha256": "4cb1498ed8a13ade6f7830b70ae78843b95a723be52c0655a7e290aeba8cd5a5",
+  "public_files": [
+    {
+      "path": "contract/examples/othello-1-1/lesson-context.json",
+      "sha256": "1f8c93a0671675ab7947493053ca18da4775102419bd6fa4aa193a868213065e"
+    },
+    {
+      "path": "contract/examples/othello-1-1/question-set.json",
+      "sha256": "0d7b2508ecbf0eb128391c1d6c5da5edd4df4bd4f14a50fdd4aafb12494760a5"
+    },
+    {
+      "path": "contract/manifest.json",
+      "sha256": "6e696dbdc47c23df6372a9e9a6a451ebf697fe1b3e182da294b97d84b8f717e5"
+    },
+    {
+      "path": "contract/schema/lesson-context.schema.json",
+      "sha256": "5041b411f04e9385a2a8dde1c67062a9d90d765c1331b61e50ff8fd223141689"
+    },
+    {
+      "path": "contract/schema/question-set.schema.json",
+      "sha256": "585fb5923ddf060f17718639fac6e7d1d8a13f06f50bce6ae062b8f9ae0c06af"
+    },
+    {
+      "path": "public/examples/generator-request.json",
+      "sha256": "3547fc2dc498e20c1d5ae5e3d5fcafb3bc8c13f2abe7ff0b239723a880689b00"
+    },
+    {
+      "path": "public/examples/generator-response.json",
+      "sha256": "6e10e30bca9b24d799271223bfec69537b50c7d01581cefebe8d107afcd33d71"
+    },
+    {
+      "path": "public/formats.json",
+      "sha256": "dce64dab974709a9dbc725978a59df7ccd0aff9a44ae1a4aa92d09ae19fbf6cd"
+    },
+    {
+      "path": "public/generation-standard.json",
+      "sha256": "f3b651f7f362d04f672921db91334b9c8e8114bb672f03b22620e9be2c310d09"
+    },
+    {
+      "path": "public/generator-request.schema.json",
+      "sha256": "99595b4648ac1afc016e12df0b9be75073ccbe84cbd761c569735cbf6d4d9ec2"
+    },
+    {
+      "path": "public/generator-response.schema.json",
+      "sha256": "efbd8d1a0e9d219157e12fcdc3352f23d2b44be2073a4fec5761974c92a2f57e"
+    }
+  ],
+  "academic_qualification": "not-qualified",
+  "meaning": "Held, contested and open preserve the library's research judgments. This pin does not establish academic agreement, model accuracy, universal applicability or learner outcomes.",
+  "maintenance": "Record a specific correction, evidence or dated ruling. Retain this baseline and declare a new release when pinning later knowledge."
+}

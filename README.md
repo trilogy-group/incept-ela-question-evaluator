@@ -4,6 +4,8 @@ This starter checks a lesson's question sequence. Code checks structure and answ
 
 Teaching knowledge and shared formats come from [incept-ela-learning-truths](https://github.com/trilogy-group/incept-ela-learning-truths) and its [contract](https://github.com/trilogy-group/incept-ela-learning-truths/tree/main/contract). This public repository contains the implementation and development cases. Generator work must not inspect or consume them. Independent gold labels and held-out tests belong outside this public repository. The evaluator reads finished lesson-context/question-set packets, without access to the generator's code, prompts, drafts or selection logs.
 
+The shared input is pinned to [knowledge-v1](https://github.com/trilogy-group/incept-ela-learning-truths/tree/knowledge-v1). Runs record its digest from [fixtures/knowledge-baseline.json](fixtures/knowledge-baseline.json).
+
 ## Run: Node 18 or later, no installation
 
 ```sh
@@ -76,5 +78,23 @@ The reference contains **40 units** from the authored Othello 1.1 lesson at sour
 - **Stage 2, next:** add model generation and qualify the evaluator against independent human labels. Each half needs a different owner.
 
 Qualification needs complete learner packets, independent reviewed labels and repeated runs on a fixed version. The 99% gate applies to criteria, while whole-item academic approval remains open.
+
+## Human review pilot
+
+Prepare two blank, independent review sheets with the same runner:
+
+```sh
+node bin/evaluate.mjs --review prepare --out .local/pilot
+```
+
+The pilot contains 125 checks across 13 public reference units: classification and explicit open-response rubrics. Each reviewer fills their own alias, independence declaration, `verdict` (`yes`, `no` or `unsure`) and rationale. Source observations and expected polarity stay in a separate private file. Blank, disputed and unsure judgments remain pending. Reviewer identity and independence require external confirmation.
+
+```sh
+node bin/evaluate.mjs --review reconcile --bundle .local/pilot/bundle.json --review-a .local/pilot/review-a.json --review-b .local/pilot/review-b.json --out .local/pilot-labels
+node bin/evaluate.mjs --mode development --out .local/pilot-run
+node bin/evaluate.mjs --review score --bundle .local/pilot/bundle.json --labels .local/pilot-labels/labels.json --draws .local/pilot-run/draw-1/report.json,.local/pilot-run/draw-2/report.json
+```
+
+These commands make zero model calls. Scoring binds the input, build, profile, baseline and labels. Without reviewed labels and model answers, accuracy is unmeasured. For a declared Jev development study, prepare with both `--review-model <requested-model>` and `--reported-model <served-model>`, then run with `--judge jev --mode development`. Changed serving identities cannot be scored against the declared model. All pilot outputs stay private and unqualified. These correlated, previously public cases are not a fresh sealed holdout.
 
 The repository checker detects literal home paths and credential-shaped values. To check a list of personal names, supply an external JSON file with `--name-list`; otherwise that check is unavailable.

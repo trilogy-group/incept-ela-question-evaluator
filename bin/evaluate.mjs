@@ -22,6 +22,12 @@ const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
 if (config.version !== 1 || config.execution !== "offline-only") throw new Error("unsupported config");
 for (const k of ["samples", "repeats"]) if (!Number.isInteger(config[k]) || config[k] < 1 || config[k] > 16) throw new Error(`invalid ${k} setting`);
 if (config.repeats < 2) throw new Error("at least two full repeats are required");
+if (arg("review")) {
+  const { runReviewCli } = await import("../src/review-cli.mjs");
+  const result = await runReviewCli({ root, configFile, config });
+  console.log(JSON.stringify(result));
+  process.exit(0);
+}
 const judge = arg("judge", "none");
 if (!["none", "jev"].includes(judge)) throw new Error("unsupported judge adapter");
 const sideJudge = arg("side-judge", "none");

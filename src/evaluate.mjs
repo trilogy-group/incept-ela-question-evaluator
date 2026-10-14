@@ -7,10 +7,11 @@ import { packetProjection, inputIssues, viewIssues, layoutIssues } from "./packe
 import { getJudgeProfile, selectJudgeQuestions } from "./judge-profile.mjs";
 import { QUALIFICATION_POLICY, qualify, validateQualificationRegistry, validateTrustedReviewers } from "./qualification.mjs";
 import { runtimeSnapshot, sha } from "./replay.mjs";
+import { KNOWLEDGE_BASELINE } from "./knowledge-baseline.mjs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-export const VERSION = "question-evaluator 0.4-development";
+export const VERSION = "question-evaluator 0.5-development";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MAX_SEEN = 60000;   // characters of what came before; the oldest pages give way first, the item's own page never
 
@@ -51,6 +52,30 @@ function judgeState(it, seen, learningQuestion, keywords, profile, criterionId =
 
 export function criterionPacket(item, seen, learningQuestion, keywords, question) {
   return { state: judgeState(item, seen, learningQuestion, keywords, getJudgeProfile("jev-qualified-v1"), question.id), questions: [question] };
+}
+
+// Review the same criterion/context snapshots used by evaluation, without inferred human labels.
+export function collectCriterionPackets(context, qset, { profile: profileId = "jev-partial-v1", projected = false } = {}) {
+  const issues = inputIssues(context, qset, { projected });
+  if (issues.length) throw new Error("invalid public review packet");
+  const projectedPacket = packetProjection(context, qset), profile = getJudgeProfile(profileId);
+  if (profile.id !== "jev-partial-v1") throw new Error("review pilot supports only the partial criterion profile");
+  context = projectedPacket.context; qset = projectedPacket.set;
+  const lesson = context.native, learningQuestion = context.lesson.learning_question;
+  const keywords = Object.fromEntries((context.lesson.keywords || []).map((k) => typeof k === "string" ? [k, null] : [k?.word, k?.meaning ?? null]).filter(([word]) => typeof word === "string"));
+  const entries = [], unsupported = [];
+  for (const item of qset.items) {
+    const missing = [...layoutIssues(context, item), ...viewIssues(item)];
+    if (missing.length) { unsupported.push({ item_id: item.id, issues: missing }); continue; }
+    const seen = trimSeen(seenBefore(lesson, item, qset.items));
+    for (const check of selectJudgeQuestions(profile, item.kind, judgeQuestions(item)).selected) {
+      const packet = criterionPacket(item, seen.text, learningQuestion, keywords, check.q);
+      entries.push({ item_id: item.id, kind: item.kind, criterion_id: check.q.id, expect: check.expect,
+        required: check.required, packet, judge_packet_sha256: sha(JSON.stringify(packet)),
+        learner_exposure: "unverified native reconstruction", dropped_pages: seen.dropped });
+    }
+  }
+  return { input: projectedPacket.hashes, profile, entries, unsupported };
 }
 const publicQualification = (qualification) => {
   const { verified_expected_verdict, ...result } = qualification;
@@ -161,14 +186,14 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
     const qs = judgeQuestions(it);
     const { selected, excluded } = selectJudgeQuestions(profile, it.kind, qs);
     const excludedIds = new Set(excluded.map((x) => x.criterion_id));
-    const packets = new Map(selected.map((x) => [x.q.id, mode === "qualified" ? criterionPacket(it, seen.text, lq, keywords, x.q) : null]));
+    const packets = new Map(qs.map((x) => [x.q.id, criterionPacket(it, seen.text, lq, keywords, x.q)]));
     const qualifications = new Map(selected.map((x) => [x.q.id, mode === "qualified" ? qualify(registry, { ...decisionBuild, now: new Date().toISOString(), context_sha256: packet.hashes.context_projection_sha256, judge_packet_sha256: sha(JSON.stringify(packets.get(x.q.id))) }, { kind: it.kind, criterion_id: x.q.id }, trust) : { eligible: false, reasons: ["explicit_development_mode"] }]));
     const eligible = selected.filter((x) => mode === "development" || qualifications.get(x.q.id).eligible);
     const eligibleIds = new Set(eligible.map((x) => x.q.id));
     const activeProvider = eligible.length ? await getProvider() : null;
     if (activeProvider && mode === "qualified" && (activeProvider.name !== "jev" || activeProvider.model !== requestedModel)) throw new Error("qualified Jev route requires the declared Jev provider and fixed model");
     let meta = null;
-    for (const x of qs) if (!eligibleIds.has(x.q.id) || !activeProvider) checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", verdict: "unavailable", scope: excludedIds.has(x.q.id) ? "outside_profile" : "selected", requested: false, accuracy_qualification: publicQualification(qualifications.get(x.q.id) || { eligible: false, reasons: ["criterion_outside_profile"] }), evidence: { note: excludedIds.has(x.q.id) ? "criterion is outside the selected profile" : !eligibleIds.has(x.q.id) ? "99 percent qualification gate has not cleared for this scope" : "no judge was called" } });
+    for (const x of qs) if (!eligibleIds.has(x.q.id) || !activeProvider) checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", criterion_packet_sha256: sha(JSON.stringify(packets.get(x.q.id))), request_packet_sha256: null, verdict: "unavailable", scope: excludedIds.has(x.q.id) ? "outside_profile" : "selected", requested: false, accuracy_qualification: publicQualification(qualifications.get(x.q.id) || { eligible: false, reasons: ["criterion_outside_profile"] }), evidence: { note: excludedIds.has(x.q.id) ? "criterion is outside the selected profile" : !eligibleIds.has(x.q.id) ? "99 percent qualification gate has not cleared for this scope" : "no judge was called" } });
     if (activeProvider && eligible.length) {
       const calls = mode === "qualified" ? await Promise.all(eligible.map((x) => {
         const input = packets.get(x.q.id);
@@ -187,7 +212,8 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
         const observed = judgeVerdict(a, x.expect, x.required);
         if (mode === "qualified" && (observed === "flag" ? "fail" : observed) !== accuracy.verified_expected_verdict) gate.push("verdict_disagrees_with_verified_label");
         if (a?.valid !== samples) gate.push("incomplete_sample_set");
-        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", scope: "selected", requested: true, accuracy_qualification: publicQualification(accuracy), verdict: serving.length || gate.some((reason) => ["serving_identity_does_not_match_certificate", "qualification_expired_during_request", "verdict_disagrees_with_verified_label"].includes(reason)) || a?.valid !== samples ? "unavailable" : observed,
+        const actualPacket = mode === "qualified" ? packets.get(x.q.id) : { state: judgeState(it, seen.text, lq, keywords, profile), questions: eligible.map((entry) => entry.q) };
+        checks.push({ id: x.q.id, method: "judge", required: x.required, expect: x.expect ? "yes" : "no", criterion_packet_sha256: sha(JSON.stringify(packets.get(x.q.id))), request_packet_sha256: sha(JSON.stringify(actualPacket)), scope: "selected", requested: true, accuracy_qualification: publicQualification(accuracy), verdict: serving.length || gate.some((reason) => ["serving_identity_does_not_match_certificate", "qualification_expired_during_request", "verdict_disagrees_with_verified_label"].includes(reason)) || a?.valid !== samples ? "unavailable" : observed,
           p_yes: a?.unavailable ? null : Number(a.value.toFixed(3)), agreement: a?.agreement ?? null, valid: a?.valid ?? 0, gate });
       }
     }
@@ -215,7 +241,7 @@ async function evaluateInput(context, qset, { provider = null, providerFactory =
     meaning: "criterion coverage in development triage; not academic qualification or whole-item approval"
   };
   return {
-    evaluator: { version: VERSION, qualification: "unqualified", mode, qualification_policy: QUALIFICATION_POLICY, qualification_registry_sha256: registry.sha256, trusted_reviewers_sha256: trust.sha256, independent_gold_labels: 0, judge_profile: profile, judge: provider ? { name: provider.name, model: provider.model, samples, gates: GATES, served_revision: null, revision_verified: false } : null, engine_source_commit: ENGINE_SNAPSHOT.git_commit },
+    evaluator: { version: VERSION, knowledge_baseline: KNOWLEDGE_BASELINE, qualification: "unqualified", mode, qualification_policy: QUALIFICATION_POLICY, qualification_registry_sha256: registry.sha256, trusted_reviewers_sha256: trust.sha256, independent_gold_labels: 0, judge_profile: profile, judge: provider ? { name: provider.name, model: provider.model, samples, gates: GATES, served_revision: null, revision_verified: false } : null, engine_source_commit: ENGINE_SNAPSHOT.git_commit },
     judge_coverage: coverage,
     input: packet.hashes, status: "unverified",
     counts, judge_agreement: stab.length ? { judgements: stab.length, unanimous: stab.filter((a) => a === 1).length, mean: Number((stab.reduce((s, a) => s + a, 0) / stab.length).toFixed(3)) } : null,
