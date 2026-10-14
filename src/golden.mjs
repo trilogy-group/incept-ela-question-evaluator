@@ -24,6 +24,11 @@ function assertSourceView(row, ancestors) {
     const answer = native.answer ?? native.correct;
     same("key", [typeof answer === "string" ? options.indexOf(answer) : answer]);
     if (row.kind !== "rebuild_choice") same("stem", native.stem ?? native.q ?? native.task);
+    if (row.kind === "film_mcq") same("option_feedback", native.feedback);
+    if (["reading_mcq", "key_term_mcq"].includes(row.kind)) {
+      same("option_feedback", list(native.options).map(option => object(option) ? option.why ?? null : null));
+      same("correct_feedback", native.yes ?? null);
+    }
   }
   if (row.kind === "classify") {
     same("prompt", native.goal); same("boxes", native.boxes);

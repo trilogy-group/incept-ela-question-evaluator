@@ -91,6 +91,7 @@ export async function runTextLessonCli({ root, configFile, config }) {
     criterion_sources_sha256: digest(fs.readFileSync(path.join(out, "criterion-sources.json"))), criterion_metadata: plan.criterion_sources.pins,
     config: { samples: config.samples, repeats: config.repeats }, judge, side_judge: sideJudge,
     scope: plan.scope, mode: active ? "development" : "offline", qualified: false, independent_gold_labels: 0,
+    response_profile: plan.response_profile,
     source_key_status: "unvalidated author intent; not academic gold", pinned_served_revision_verified: false,
     side_independence: "Flash is a separate stateless review; a Google writer and Google reviewer share a model family.",
     privacy: "Finished source/task transport only; no writer code, prompts, draft logs or selection internals read." };

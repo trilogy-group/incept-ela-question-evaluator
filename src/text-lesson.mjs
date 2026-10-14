@@ -36,6 +36,8 @@ export function prepareTextLesson(pkg) {
     const checks = [], check = (key, ok, evidence) => checks.push({ id: key, verdict: ok ? "pass" : "fail", evidence });
     let kind = item.kind, expected;
     if (["reading_mcq", "evidence_select"].includes(kind)) {
+      if (Array.isArray(view.key) && view.key.length > 1 || view.response_rule !== undefined && view.response_rule !== "single-best")
+        throw new Error("unsupported text response rule; this profile requires single-best selection");
       const options = kind === "reading_mcq" ? view.options : view.candidates;
       if (!Array.isArray(options) || options.length < 2 || !options.every(words)) throw new Error("unsupported text choice view");
       blind.options = Object.fromEntries(options.map((option, i) => [label(i), option]));
@@ -48,6 +50,8 @@ export function prepareTextLesson(pkg) {
       check("feedback_bound_to_options", list(view.option_feedback).length === options.length && view.option_feedback.every(words), {});
       if (kind === "evidence_select") check("evidence_exact_in_visible_text", options.every(option => seen.includes(option)), {});
     } else if (kind === "classify") {
+      if (view.response_rule !== undefined && view.response_rule !== "unique-category" || view.mapping && Object.values(view.mapping).some(Array.isArray))
+        throw new Error("unsupported text response rule; this profile requires one category per entry");
       if (!Array.isArray(view.entries) || !Array.isArray(view.categories) || !view.mapping) throw new Error("unsupported text classification view");
       check("entries_present", view.entries.length > 0, {});
       check("categories_present", view.categories.length > 0, {});
@@ -98,6 +102,7 @@ export function prepareTextLesson(pkg) {
     ...item.editorial_questions.map(check => ({ check, stage: "editorial", kind: item.kind })),
     ...fields.find(row => row.id === item.id).checks.map(check => ({ check, stage: "field", kind: item.kind }))]);
   return { version: 1, input: projected.hashes, cases, expectations, fields, sequence_flags: choiceKeys.length > 1 && new Set(choiceKeys).size === 1 ? ["all_mcq_keys_use_one_position"] : [],
+    response_profile: { choice: "single-best", classification: "unique-category", meaning: "This route is a narrow operation profile; other valid response rules require another interpreter." },
     criterion_sources: { pins: CRITERION_METADATA_PIN, ...validateEmittedChecks("text", emitted) },
     scope: "Declared passive text preview and finished task fields; no served UI or runtime marking qualification.", qualification: false };
 }

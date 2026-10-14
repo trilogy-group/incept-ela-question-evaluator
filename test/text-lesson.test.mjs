@@ -26,6 +26,14 @@ test("an empty classification fails structural checks and cannot agree vacuously
   assert.equal(result.models.primary.outcomes[0].author_key_agreement, null);
   assert.equal(result.academic_approval, false);
 });
+test("the narrow text profile does not reinterpret multiple-answer tasks as defective single-answer items", () => {
+  const choices = fixture(); choices.set.items[1].view.key = [0, 1]; choices.set.items[1].view.response_rule = "choose-all";
+  assert.throws(() => prepareTextLesson(choices), /unsupported text response rule/);
+  const categories = fixture(); categories.set.items[2].view.response_rule = "multiple-categories";
+  categories.set.items[2].view.mapping.PRIVATE_ENTRY_FOX = ["PRIVATE_CATEGORY_CROSSER", "PRIVATE_CATEGORY_COMMENTATOR"];
+  assert.throws(() => prepareTextLesson(categories), /unsupported text response rule/);
+  const single = prepareTextLesson(fixture()); assert.equal(single.response_profile.choice, "single-best"); assert.equal(single.qualification, false);
+});
 
 // Arbitrary public transport data; these are integration checks, not academic labels.
 function fixture() {
