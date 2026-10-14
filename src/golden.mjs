@@ -14,6 +14,26 @@ const text = value => typeof value === "string" && value.trim().length > 0;
 const choiceKinds = new Set(["film_mcq", "key_term_mcq", "reading_mcq", "rebuild_choice"]);
 const kinds = new Set(["integration-test", "source-review", "model-development", "human-review", "generator-context-coverage", "manual-notes"]);
 const json = file => JSON.parse(fs.readFileSync(file, "utf8"));
+function assertSourceView(row, ancestors) {
+  const native = row.native, view = row.view;
+  if (!object(view)) return;
+  const same = (field, expected) => assert(canonical(view[field]) === canonical(expected), `normalized ${field} differs from source native`);
+  if (choiceKinds.has(row.kind)) {
+    const options = list(native.options).map(option => typeof option === "string" ? option : option?.text);
+    same("options", options);
+    const answer = native.answer ?? native.correct;
+    same("key", [typeof answer === "string" ? options.indexOf(answer) : answer]);
+    if (row.kind !== "rebuild_choice") same("stem", native.stem ?? native.q ?? native.task);
+  }
+  if (row.kind === "classify") {
+    same("prompt", native.goal); same("boxes", native.boxes);
+    same("items", list(native.words).map(word => ({ word: word.w, to: word.to, kind: word.kind, meaning: word.meaning })));
+  }
+  if (row.kind === "open_check") {
+    const prompts = [native.question, ...ancestors.filter(object).flatMap(value => [value.task, value.line, value.verdict_task, value.prompt])].filter(text);
+    assert(prompts.includes(view.prompt), "normalized prompt differs from source native/context"); same("rubric", native);
+  }
+}
 const write = (directory, name, value) => fs.writeFileSync(path.join(directory, name), typeof value === "string" || Buffer.isBuffer(value) ? value : JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
 const assert = (condition, message) => { if (!condition) throw new Error(`golden: ${message}`); };
 function safePath(root, relative) {
@@ -94,6 +114,7 @@ export function prepareGolden(captureDirectory, outputDirectory, { tier = "prima
     assert(text(row.kind) && text(row.role) && text(row.pointer) && Number.isInteger(row.extraction_order), "reference identity incomplete");
     const resolved = resolvePointer(context, row.pointer);
     assert(resolved.found && canonical(resolved.target) === canonical(row.native), "reference native differs from pinned context");
+    assertSourceView(row, resolved.ancestors);
     assert(row.source_commit === sourceManifest.source.commit && row.source_sha256 === sourceManifest.source.sha256, "reference source pin differs");
     return { ...row, reference_id: `reference-${digest({ source: row.source_sha256, pointer: row.pointer, operation: row.operation, native: row.native }).slice(0, 24)}` };
   });
@@ -136,6 +157,11 @@ export function checkGolden(directory, expectedManifestHash) {
     assert(digest(read(safePath(root, row.artifact))) === row.artifact_sha256, "assessment artifact changed");
     const envelope = json(safePath(root, row.receipt));
     assert(digest(read(safePath(root, row.receipt))) === row.receipt_sha256 && envelope.assessment_id === row.assessment_id, "assessment receipt changed");
+    assert(envelope.golden_manifest_sha256 === digest(manifestBytes) && envelope.artifact === row.artifact && envelope.artifact_sha256 === row.artifact_sha256,
+      "assessment receipt belongs to another bundle or artifact");
+    assert(kinds.has(envelope.kind) && ["same-reference", "related-diagnostic", "historical", "generated-candidate"].includes(envelope.relation)
+      && envelope.independent_labels_admitted === 0 && envelope.quality_approval === false && envelope.qualification === false, "invalid assessment admission receipt");
+    if (envelope.relation === "same-reference") assert(json(safePath(root, row.artifact)).golden_manifest_sha256 === digest(manifestBytes), "same-reference artifact pin differs");
     previous = digest(JSON.stringify(row));
   }
   return { root, tier: manifest.tier ?? "primary", manifest_sha256: digest(manifestBytes), references: manifest.references, kinds: manifest.kinds.length,

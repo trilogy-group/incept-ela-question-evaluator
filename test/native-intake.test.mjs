@@ -15,13 +15,16 @@ function fixture() {
   ];
   const items = views.map((row, index) => {
     const native = { ...row, id: `N${index + 1}` };
+    native.source_context = { id: native.id, native_kind: native.kind, family: native.family, page_ref: "READ", phase_ref: `F${index + 1}`,
+      role: index === 1 ? "recall_task" : "question", target_refs: ["K1"], content_key_refs: [], pair_refs: [], depends_on: [], support: "Visible passage." };
+    native.source_bindings = [{ source_ref: "S1", field_ref: "/view/prompt", quote: "Fox crossed", relation: "Authored assertion; review needed." }];
     return { ...native, order: index + 1, page: "READ", pointer: `/pages/0/question_slots/${index}`, native,
-      alignment: { phase_ref: `F${index + 1}`, role: index === 1 ? "recall_task" : "question", target_refs: ["K1"] },
-      source_bindings: [{ source_ref: "S1", field_ref: "/view/prompt", quote: "Fox crossed", relation: "Authored assertion; review needed." }] };
+      alignment: { phase_ref: `F${index + 1}`, role: native.source_context.role, target_refs: ["K1"], content_key_refs: [], pair_refs: [], depends_on: [], support: "Visible passage." },
+      source_bindings: native.source_bindings };
   });
   const context = { contract: "lesson-context 0.1", adapter_extension: "native-activity-transport/0.2", lesson: { id: "L1" },
     source: { lesson_source: source, producer: "Never include this producer in review." }, native: { course_context: { source_assets: [{ id: "S1", kind: "passage", text: "Fox crossed the river." }, { id: "FUTURE", kind: "passage", text: "A future-only answer must stay absent." }],
-      core_knowledge: [{ id: "K1", claim: "Identify the action in the passage." }], lesson_plan: { phases: items.map(item => ({ id: item.alignment.phase_ref, exposure_order: item.order, source_refs: ["S1"], support: "Visible passage." })) } },
+      core_knowledge: [{ id: "K1", claim: "Identify the action in the passage." }], lesson_plan: { phases: items.map(item => ({ id: item.alignment.phase_ref, exposure_order: item.order, source_refs: ["S1"], target_refs: ["K1"], role: item.alignment.role, support: "Visible passage." })) } },
       pages: [{ id: "READ", nodes: [], question_slots: items.map(item => item.native) }] } };
   const set = { contract: "question-set native 0.2", adapter_extension: context.adapter_extension, lesson: "L1", source: { lesson_source: source }, items };
   const save = () => { fs.writeFileSync(path.join(input, "lesson-context.json"), JSON.stringify(context)); fs.writeFileSync(path.join(input, "question-set.json"), JSON.stringify(set)); };
@@ -61,10 +64,33 @@ test("classification emptiness, invalid inline keys and correctness-graded confi
   assert.ok(failures({ family: "self_report", view: { prompt: "How confident?", scale: ["No", "Yes"], scoring: "correctness" } }).includes("report_is_not_correctness_grade"));
   assert.ok(failures({ family: "uninterpreted", view: { prompt: "New task." } }).includes("family_field_interpreter_available"));
 });
+test("native identity, declared alignment and source bindings cannot be detached from their native task", () => {
+  for (const [mutate, message] of [
+    [f => { f.set.items[0].id = "DETACHED"; }, /native pointer/],
+    [f => { f.set.items[0].alignment.role = "self_report"; }, /role or support/],
+    [f => { f.set.items[0].alignment.target_refs = ["ABSENT"]; }, /target_refs/],
+    [f => { f.set.items[0].alignment.depends_on = ["N3"]; }, /dependency/],
+    [f => { f.set.items[0].source_bindings = []; }, /source bindings/],
+    [f => { f.context.native.course_context.lesson_plan.phases[0].support = { teacher_key: [0] }; }, /role or support/]
+  ]) {
+    const f = fixture(); try {
+      mutate(f); f.save(); const out = path.join(f.root, "review");
+      assert.throws(() => prepareNativeIntake(f.input, out), message); assert.equal(fs.existsSync(out), false);
+    } finally { f.dispose(); }
+  }
+});
 test("native intake uses private outputs and cannot silently launch a judge", () => {
   const f = fixture(); try {
     assert.throws(() => runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--out", "public"] }), /private/);
     assert.throws(() => runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--judge", "jev"] }), /unsupported/);
     assert.equal(runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--native-source-pin", f.pin, "--out", ".local/review"] }).model_calls, 0);
   } finally { f.dispose(); }
+});
+test("source and media metadata cannot inject teacher-key objects into a blind review packet", () => {
+  for (const field of ["kind", "text", "media_ref", "time_range", "source_status"]) {
+    const f = fixture(); try {
+      f.context.native.course_context.source_assets[0][field] = { teacher_key: [0], teacher_feedback: "The author answer." }; f.save();
+      const out = path.join(f.root, "review"); assert.throws(() => prepareNativeIntake(f.input, out), /invalid/); assert.equal(fs.existsSync(out), false);
+    } finally { f.dispose(); }
+  }
 });

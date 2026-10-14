@@ -14,7 +14,7 @@ function fixture() {
     { words: [{ w: "Fox", to: "crosser" }], boxes: { crosser: {}, commentator: {} } },
     { criteria: [{ requirement: "Name the crossing animal and its action." }], question: "What happened?" }];
   const context = { pages: [{ id: "READ", nodes: natives }] }, bytes = JSON.stringify(context), sourceHash = digest(bytes), commit = "a".repeat(40);
-  const views = [{ stem: natives[0].stem, options: natives[0].options, key: [0] }, { items: natives[1].words, boxes: natives[1].boxes }, { rubric: natives[2] }];
+  const views = [{ stem: natives[0].stem, options: natives[0].options, key: [0] }, { items: natives[1].words.map(row => ({ word: row.w, to: row.to })), boxes: natives[1].boxes }, { prompt: natives[2].question, rubric: natives[2] }];
   const rows = natives.map((native, i) => ({ kind: ["reading_mcq", "classify", "open_check"][i], role: "question", pointer: `/pages/0/nodes/${i}`,
     native, view: views[i], operation: `example-${i}`, extraction_order: i + 1, source_commit: commit, source_sha256: sourceHash }));
   const questions = rows.map(row => JSON.stringify(row)).join("\n") + "\n";
@@ -66,6 +66,26 @@ test("assessment imports preserve original bytes, chain records and never promot
     fs.appendFileSync(path.join(f.bundle, a.artifact), " ");
     assert.throws(() => checkGolden(f.bundle), /assessment artifact changed/);
     assert.equal(result.qualified, false);
+  } finally { f.dispose(); }
+});
+test("source-native preservation cannot hide a replaced normalized stem or swapped in-range key", () => {
+  const f = fixture(); try {
+    const file = path.join(f.capture, "positive-reference/questions.jsonl"), manifestFile = path.join(f.capture, "positive-reference/manifest.json");
+    const rows = fs.readFileSync(file, "utf8").trim().split("\n").map(line => JSON.parse(line));
+    rows[0].view.stem = "A replacement question that was never authored."; rows[0].view.key = [1];
+    const bytes = rows.map(row => JSON.stringify(row)).join("\n") + "\n"; fs.writeFileSync(file, bytes);
+    const manifest = JSON.parse(fs.readFileSync(manifestFile)); manifest.questions_sha256 = digest(bytes); fs.writeFileSync(manifestFile, JSON.stringify(manifest));
+    assert.throws(() => prepareGolden(f.capture, f.bundle), /normalized key/);
+    assert.equal(fs.existsSync(f.bundle), false);
+  } finally { f.dispose(); }
+});
+test("a genuine assessment receipt from another bundle cannot be transplanted under the primary manifest pin", () => {
+  const f = fixture(); try {
+    const primary = prepareGolden(f.capture, f.bundle), second = path.join(f.root, "second"); prepareGolden(f.capture, second, { tier: "secondary" });
+    const file = path.join(f.root, "run.json"), secondCheck = checkGolden(second); fs.writeFileSync(file, JSON.stringify({ golden_manifest_sha256: secondCheck.manifest_sha256 }));
+    const receipt = attachAssessment(second, file, { kind: "integration-test", relation: "same-reference" });
+    for (const name of [receipt.artifact, `assessments/${receipt.assessment_id}.receipt.json`, "assessments/journal.jsonl"]) fs.copyFileSync(path.join(second, name), path.join(f.bundle, name));
+    assert.throws(() => checkGolden(f.bundle, primary.manifest_sha256), /another bundle/);
   } finally { f.dispose(); }
 });
 test("same-reference claims require the exact bundle pin and unsafe artifacts cannot enter the journal", () => {

@@ -77,23 +77,43 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
   if (sourcePin) assert(source.sha256 === sourcePin, "external source pin differs");
   const course = context.native.course_context;
   assert(object(course) && Array.isArray(course.source_assets) && Array.isArray(course.core_knowledge) && Array.isArray(course.lesson_plan?.phases), "course inputs missing");
+  for (const asset of course.source_assets) {
+    assert(object(asset) && text(asset.id) && text(asset.kind) && (asset.text == null || typeof asset.text === "string"), "invalid visible source fields");
+    assert(asset.media_ref == null || typeof asset.media_ref === "string", "invalid visible media reference");
+    assert(asset.time_range == null || (Array.isArray(asset.time_range) && asset.time_range.length === 2 && asset.time_range.every(value => Number.isFinite(value) && value >= 0)
+      && asset.time_range[0] <= asset.time_range[1]), "invalid visible media time range");
+    assert(asset.source_status == null || typeof asset.source_status === "string", "invalid source status");
+  }
   const assets = new Map(course.source_assets.map(row => [row.id, row])), phases = new Map(course.lesson_plan.phases.map(row => [row.id, row]));
   assert(assets.size === course.source_assets.length && phases.size === course.lesson_plan.phases.length, "duplicate course source or phase ids");
+  const targets = new Set(course.core_knowledge.map(row => row.id)), contentKeys = new Set(list(course.content_keys).map(row => row.id)), pairs = new Set(list(course.pairing_map).map(row => row.id));
   assert(list(set.items).length > 0, "empty activity set");
   const identities = new Set(), orders = new Set(), cases = [], authors = [], observations = [];
   for (const item of set.items) {
     assert(object(item) && text(item.id) && !identities.has(item.id) && Number.isInteger(item.order) && item.order > 0 && !orders.has(item.order), "invalid or duplicated activity identity");
-    identities.add(item.id); orders.add(item.order);
+    const precedingIds = new Set(identities); identities.add(item.id); orders.add(item.order);
     assert(text(item.kind) && text(item.family) && object(item.view) && object(item.native), "activity fields missing");
     const target = resolvePointer(context.native, item.pointer), page = list(context.native.pages).find(row => row.id === item.page);
-    assert(target.found && equal(target.target, item.native) && equal(item.view, item.native.view) && item.kind === item.native.kind && item.family === item.native.family
+    assert(target.found && equal(target.target, item.native) && equal(item.view, item.native.view) && item.id === item.native.id && item.kind === item.native.kind && item.family === item.native.family
       && page && target.ancestors.includes(page), "activity differs from its native pointer");
     const phase = phases.get(item.alignment?.phase_ref);
     assert(phase && phase.exposure_order === item.order, "phase or exposure order differs");
+    const declared = item.native.source_context, alignment = item.alignment;
+    assert(object(declared) && object(alignment) && declared.id === item.id && declared.native_kind === item.kind && declared.family === item.family
+      && declared.page_ref === item.page && declared.phase_ref === alignment.phase_ref, "native source context differs");
+    assert(text(phase.role) && text(phase.support) && alignment.role === phase.role && alignment.role === declared.role
+      && alignment.support === phase.support && alignment.support === declared.support, "role or support differs from declared context");
+    for (const [field, allowed] of [["target_refs", targets], ["content_key_refs", contentKeys], ["pair_refs", pairs]]) {
+      assert(Array.isArray(alignment[field]) && equal(alignment[field], declared[field]) && alignment[field].every(ref => text(ref) && allowed.has(ref)), `unknown or differing ${field}`);
+    }
+    assert(equal(alignment.target_refs, phase.target_refs), "phase targets differ");
+    assert(Array.isArray(alignment.depends_on) && equal(alignment.depends_on, declared.depends_on)
+      && alignment.depends_on.every(ref => precedingIds.has(ref)), "absent, forward or differing dependency");
+    assert(Array.isArray(item.source_bindings) && equal(item.source_bindings, item.native.source_bindings), "native source bindings differ");
     assert(Array.isArray(phase.source_refs) && phase.source_refs.every(ref => assets.has(ref)), "phase names an absent source");
     const id = `native-${digest({ kind: item.kind, order: item.order, view: item.view }).slice(0, 24)}`;
     const visibleSources = phase.source_refs.map(ref => ({ id: ref, kind: assets.get(ref).kind, text: assets.get(ref).text ?? null,
-      time_range: assets.get(ref).time_range ?? null, media_ref: assets.get(ref).media_ref ?? null }));
+      time_range: assets.get(ref).time_range ?? null, media_ref: assets.get(ref).media_ref ?? null, source_status: assets.get(ref).source_status ?? null }));
     const checks = nativeFieldChecks(item);
     for (const [index, binding] of list(item.source_bindings).entries()) {
       const field = typeof binding.field_ref === "string" && binding.field_ref.startsWith("/view/") ? resolvePointer(item, binding.field_ref) : { found: false };
@@ -120,6 +140,7 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
   write("field-observations.json", observations);
   const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
   const receipt = { version: 1, at: new Date().toISOString(), source, input_hashes: { context: contextFile.sha256, set: setFile.sha256 }, files: hashes,
+    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
     activities: cases.length, kinds: [...new Set(cases.map(row => row.kind))], code_checks: observations.reduce((n, row) => n + row.checks.length, 0),
     code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, 0),
     external_source_pin_verified: Boolean(sourcePin), review_stage: "prepared; quality evaluation deferred", model_calls: 0, independent_gold_labels: 0, qualified: false };
