@@ -187,7 +187,11 @@ test("legacy native preparations retain unknown purposes and invalid supplied pl
 test("native replay cannot detach its sequence packet or receipt from prepared evidence", () => {
   const f = fixture(); try {
     const out = path.join(f.root, "pinned"), receipt = prepareNativeIntake(f.input, out);
-    assert.equal(verifyNativePreparation(out, receipt).files_verified, 8);
+    assert.equal(verifyNativePreparation(out, receipt).files_verified, Object.keys(receipt.files).length);
+    const assessmentFile = path.join(out, "assessment-review.json"), assessmentOriginal = fs.readFileSync(assessmentFile);
+    fs.writeFileSync(assessmentFile, JSON.stringify({ qualified: true }));
+    assert.throws(() => verifyNativePreparation(out, receipt), /prepared artifact hash differs/);
+    fs.writeFileSync(assessmentFile, assessmentOriginal);
     const sequenceFile = path.join(out, "sequence-review-packet.json"), original = fs.readFileSync(sequenceFile);
     const altered = JSON.parse(original); altered.state.author_status = "Altered after preparation.";
     fs.writeFileSync(sequenceFile, JSON.stringify(altered));

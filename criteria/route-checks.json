@@ -2384,7 +2384,7 @@
       "records": [
         "one-answer-the-text-settles"
       ],
-      "operationalization": "Independently evaluates each option against the exact prompt, alternatives and best qualifier; this route is single-best.",
+      "operationalization": "Independently evaluates each option against the exact prompt, alternatives and best qualifier; supports single-best or an explicit select-n response with a required selection count. Count agreement is not semantic qualification.",
       "applicability": {
         "decision_source": "explicit declaration only; source prose is not executable policy",
         "conditions": [

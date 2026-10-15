@@ -9,6 +9,7 @@ import { declaredCourseConstraints } from "./course-constraints.mjs";
 import { resolveInstructionalContext } from "./instructional-context.mjs";
 import { learnerReviewContext, prepareSequenceReview, runSequenceReview, summarizeSequenceReview } from "./sequence-review.mjs";
 import { inspectSequenceReturn } from "./sequence-return.mjs";
+import { auditAssessmentTrace, attachAssessmentTrace } from "./assessment-trace.mjs";
 
 const list = value => Array.isArray(value) ? value : [];
 const label = index => String.fromCharCode(65 + index);
@@ -34,6 +35,10 @@ export function prepareTextLesson(pkg) {
   const instructional = resolveInstructionalContext({ request, context, set });
   const returnedSequence = inspectSequenceReturn(pkg);
   const sequenceReview = prepareSequenceReview(instructional, { returnedSequence });
+  const assessmentTrace = auditAssessmentTrace({ policy: instructional.whole_lesson.assessment_policy?.policy,
+    trace: pkg.runtimeEvidence?.value, contextSha256: pkg.hashes?.["lesson-context.json"] ?? digest(JSON.stringify(context)),
+    setSha256: pkg.hashes?.["question-set.json"] ?? digest(JSON.stringify(set)), items: set.items });
+  attachAssessmentTrace(sequenceReview, assessmentTrace);
   const cases = [], expectations = [], fields = [];
   for (const [index, item] of set.items.entries()) {
     const view = item.view, id = projected.set.items[index].id;
@@ -46,16 +51,23 @@ export function prepareTextLesson(pkg) {
     const checks = [], check = (key, ok, evidence) => checks.push({ id: key, verdict: ok ? "pass" : "fail", evidence });
     let kind = item.kind, expected;
     if (["reading_mcq", "evidence_select"].includes(kind)) {
-      if (Array.isArray(view.key) && view.key.length > 1 || view.response_rule !== undefined && view.response_rule !== "single-best")
-        throw new Error("unsupported text response rule; this profile requires single-best selection");
+      const responseRule = view.response_rule ?? "single-best";
+      if (!["single-best", "select-n"].includes(responseRule) || responseRule === "single-best" && Array.isArray(view.key) && view.key.length > 1)
+        throw new Error("unsupported text response rule; this profile requires single-best or explicit select-n selection");
       const options = kind === "reading_mcq" ? view.options : view.candidates;
       if (!Array.isArray(options) || options.length < 2 || !options.every(words)) throw new Error("unsupported text choice view");
+      const selectionCount = responseRule === "select-n" ? view.selection_count : 1;
+      if (!Number.isInteger(selectionCount) || selectionCount < 1 || selectionCount > options.length
+        || responseRule === "single-best" && view.selection_count !== undefined && view.selection_count !== 1)
+        throw new Error("unsupported text selection count; select-n requires an explicit positive integer within the offered options");
       blind.options = Object.fromEntries(options.map((option, i) => [label(i), option]));
+      blind.response_rule = responseRule; blind.selection_count = selectionCount;
       if (kind === "evidence_select") blind.selection_rule = view.selection_rule;
       for (let i = 0; i < options.length; i++) add(`option_${label(i)}`, `Is option ${label(i)} a defensible correct response to question EXACTLY as written? Consider all alternatives and any most-direct/best qualifier. For evidence selection judge the actual prompt, not a broader metadata claim.`);
-      add("answerable", "Is exactly ONE selectable option label supported as correct by the supplied learner material? Identical correct twins are two selectable options. Missing evidence or multiple defensible labels cannot count as yes.");
-      expected = { key: view.key };
-      check("key_valid", Array.isArray(view.key) && view.key.length === 1 && Number.isInteger(view.key[0]) && view.key[0] >= 0 && view.key[0] < options.length, { key: view.key, choices: options.length });
+      add("answerable", `Are exactly ${selectionCount} selectable option label(s) supported as correct by the supplied learner material under the declared ${responseRule} rule? Identical correct twins are two selectable options. Missing evidence or a different number of defensible labels cannot count as yes.`);
+      expected = { key: view.key, response_rule: responseRule, selection_count: selectionCount };
+      check("key_valid", Array.isArray(view.key) && view.key.length === selectionCount && new Set(view.key).size === view.key.length
+        && view.key.every(key => Number.isInteger(key) && key >= 0 && key < options.length), { key: view.key, choices: options.length, selection_count: selectionCount });
       check("options_distinct", new Set(options).size === options.length, {});
       check("feedback_bound_to_options", list(view.option_feedback).length === options.length && view.option_feedback.every(words), {});
       if (kind === "evidence_select") check("evidence_exact_in_visible_text", options.every(option => seen.includes(option)), {});
@@ -112,7 +124,9 @@ export function prepareTextLesson(pkg) {
   }
   const choiceKeys = expectations.filter(item => item.kind === "reading_mcq").map(item => item.key?.[0]);
   const emitted = cases.flatMap(item => [
-    ...item.blind_questions.map(check => ({ check, stage: "blind", kind: item.kind, purpose: item.assessment_purpose.purpose })),
+    ...item.blind_questions.map(check => ({ check, stage: "blind", kind: item.kind, purpose: item.assessment_purpose.purpose,
+      ...(item.blind.response_rule === "select-n" ? { applicabilityDecision: { state: "undetermined",
+        reason: "single_best_source_scope_not_established_for_select_n" } } : {}) })),
     ...item.editorial_questions.map(check => ({ check, stage: "editorial", kind: item.kind, purpose: item.assessment_purpose.purpose })),
     ...fields.find(row => row.id === item.id).checks.map(check => ({ check, stage: "field", kind: item.kind, purpose: item.assessment_purpose.purpose }))]);
   emitted.push(...returnedSequence.checks.map(check => ({ check, stage: "sequence-field", purpose: instructional.whole_lesson.purpose.purpose })));
@@ -121,8 +135,10 @@ export function prepareTextLesson(pkg) {
   const itemSources = validateEmittedChecks("text", emitted);
   return { version: 1, input: projected.hashes, cases, expectations, fields, sequence_flags: choiceKeys.length > 1 && new Set(choiceKeys).size === 1 ? ["all_mcq_keys_use_one_position"] : [],
     instructional_context: instructional, returned_sequence: returnedSequence, sequence_review: sequenceReview,
-    response_profile: { choice: "single-best", classification: "unique-category", meaning: "This route is a narrow operation profile; other valid response rules require another interpreter." },
+    assessment_trace: assessmentTrace,
+    response_profile: { choice: cases.some(item => item.blind.response_rule === "select-n") ? "single-best and explicit select-n" : "single-best", classification: "unique-category", meaning: "This route supports declared selection counts; other response rules require another interpreter." },
     criterion_sources: { pins: CRITERION_METADATA_PIN, ...itemSources, checked: itemSources.checked + sequenceReview.criterion_sources.checked,
+      declared_policy: sequenceReview.criterion_sources.declared_policy,
       annotations: [...itemSources.annotations, ...sequenceReview.criterion_sources.annotations] },
     scope: "Declared ordered teaching, task and response/feedback context plus whole-sequence design; no verified served exposure, runtime marking or academic qualification.", qualification: false };
 }
@@ -199,17 +215,20 @@ export function summarizeTextLesson(draws, plan) {
         const decisive = blindComplete && checks.every(check => ["yes", "no"].includes(check.verdict));
         const fieldChecks = plan.fields.find(row => row.id === expected.id)?.checks;
         const fieldsValid = Boolean(fieldChecks?.length) && fieldChecks.every(check => check.verdict === "pass");
-        let selected = [], sourceKeyMatch = null;
+        let selected = [], sourceKeyMatch = null, selectionCountSatisfied = null, predictionAvailable = null;
         if (expected.key) {
           selected = checks.filter(check => check.id.startsWith("option_") && check.verdict === "yes").map(check => check.id.slice(7).charCodeAt(0) - 65);
-          if (decisive && fieldsValid) sourceKeyMatch = JSON.stringify(selected) === JSON.stringify(expected.key);
+          selectionCountSatisfied = selected.length === (expected.selection_count ?? 1);
+          predictionAvailable = decisive && fieldsValid && selectionCountSatisfied;
+          if (predictionAvailable) sourceKeyMatch = JSON.stringify([...selected].sort((a, b) => a - b)) === JSON.stringify([...expected.key].sort((a, b) => a - b));
         }
         if (expected.mapping) {
           selected = expected.mapping.map((_, e) => checks.filter(check => check.id.startsWith(`entry_${e + 1}_`) && check.verdict === "yes").map(check => check.id.split("_").at(-1).charCodeAt(0) - 65));
           if (decisive && fieldsValid) sourceKeyMatch = selected.every((categories, i) => categories.length === 1 && categories[0] === expected.mapping[i]);
         }
         return { decisive_blind_checks: decisive, complete_blind_checks: blindComplete, complete_editorial_checks: editorialComplete,
-          code_fields_valid: fieldsValid, selected, author_key_agreement: sourceKeyMatch,
+          code_fields_valid: fieldsValid, selected, selection_count_satisfied: selectionCountSatisfied,
+          prediction_available: predictionAvailable, author_key_agreement: sourceKeyMatch,
           blind_checks: checks.map(check => ({ id: check.id, verdict: check.verdict })),
           editorial_checks: editorialChecks.map(check => ({ id: check.id, verdict: check.verdict })) };
       });
@@ -225,7 +244,7 @@ export function summarizeTextLesson(draws, plan) {
     || outcome.editorial_checks.some(check => check.verdict === "no"));
   const itemsUnresolved = summary.items.some(item => !Object.keys(item.models).length || item.context_holds.length
       || Object.values(item.models).some(model => model.draws !== draws.length))
-    || models.some(outcome => !outcome.code_fields_valid || !outcome.decisive_blind_checks || !outcome.complete_editorial_checks || outcome.author_key_agreement === false || outcome.editorial_checks.some(check => check.verdict !== "yes"));
+    || models.some(outcome => !outcome.code_fields_valid || !outcome.decisive_blind_checks || !outcome.complete_editorial_checks || outcome.prediction_available === false || outcome.author_key_agreement === false || outcome.editorial_checks.some(check => check.verdict !== "yes"));
   summary.status = fieldsFailed || itemDefect || sequence.status === "needs_revision" ? "needs_revision"
     : itemsUnresolved || sequence.status !== "checks_passed_unqualified" ? "not_verified" : "checks_passed_unqualified";
   return summary;

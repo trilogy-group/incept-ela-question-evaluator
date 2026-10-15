@@ -57,13 +57,14 @@ This checks declared placement, knowledge references, source anchors and joined 
 
 If a finished packet returns `sequence_plan`, its two copies, canonical public input hash, task conditions and expected-evidence references are checked independently. Field pointers must resolve to recognized task or scoring-requirement fields for a supported transport and response profile. Author keys, feedback and sample answers cannot stand in for response requirements. These checks establish field role and consistency; the model must still judge what the task actually elicits. Returned event references enter conditional-exposure holds, and the declared return enters the separate sequence review. Legacy packets without this extension remain accepted with their context limits explicit.
 
-The preview supports passive `nodes` followed by `question_slots`: single-best choices/evidence selection, one-category classification and open responses. Other response rules need an appropriate interpreter. Outputs include:
+The preview supports passive `nodes` followed by `question_slots`: single-best choices/evidence selection, explicit `response_rule: "select-n"` with numeric `selection_count`, one-category classification and open responses. Selection counts are retained in blind review; a prediction needs exactly that many independently defensible options. This adds a transport operation, not academic qualification of multiple-selection questions. Other response rules need an appropriate interpreter. Outputs include:
 
 - `lesson.txt` and `lesson-audit.json`: the proposed sequence and its field checks.
 - `review-packet.json`, `review-a.json`, `review-b.json`: blank independent review forms with author keys withheld.
 - `solver-packet.json` and `author-fields.json`: separately held solving/editorial data and author intent.
 - `source-assets.json`: supplied asset text/hash consistency, with absent declarations undetermined.
 - `instructional-context.json` and `sequence-review-packet.json`: resolved teaching conditions, unknowns and the separate full-sequence design review; both are hash-pinned.
+- `assessment-review.json`: optional assessment policy and supplied event checks, with unresolved decisions retained.
 - `quote-diagnostics.json`: feedback spans compared with supplied text, including ambiguity and limited source scope; no quotation or item verdict.
 - `criterion-sources.json` and `manifest.json`: source limits, input/build/configuration hashes and replay settings.
 
@@ -72,6 +73,20 @@ For the original shared `lesson-context 0.1` / `question-set 0.1` reference prof
 ```sh
 node bin/evaluate.mjs --context /path/lesson-context.json --set /path/question-set.json
 ```
+
+### Assessment policy and supplied events
+
+For text and native packages, put an optional `assessment-policy/0.1` declaration at `course_context.assessment_policy`. Use the [schema](contracts/assessment-policy.schema.json); the resolver also checks references against the actual tasks, teaching events, targets and rubric fields. Run the same package command above. No additional runner or credential is needed.
+
+Declare each item's moment: acquisition, spot check, review practice, checkpoint test or mastery gate. Feedback timing, score basis, support and misconception routes are checked against that moment. Whole-sequence review receives the proposed correction design, point tables and writing requirements. Blind item solving receives neither the policy nor its author keys. A proposed policy or unresolved parameter creates a hold; no numeric teaching threshold is supplied by default. `course-declared` and `confirmed` retain the producer's decisions, without authenticating their academic authority.
+
+AEE (answer, evidence, explain) and CER (claim, evidence, reasoning) can map to the same three component roles. Their actual rubric requirements remain separate. This mapping does not establish equal difficulty, interchangeable marking or a qualified scorechecker.
+
+An optional `runtime-evidence.json` beside the package files supplies an `assessment-trace/0.1`: `session_id`, `policy_sha256`, `context_sha256`, `set_sha256` and ordered `events`. Context/set pins are SHA-256 of the exact input bytes; use exported `assessmentPolicyHash` from `src/assessment-trace.mjs` for the policy pin. Events need unique `id`, increasing integer `order` and a supported `type`. Choice `answer`/`bank-attempt` events carry `item_id` and zero-based `selected`; writing answers/fixes carry nonempty `response`. Gap events carry `gap_id`; writing marks carry component booleans. See the synthetic [trace tests](test/assessment-trace.test.mjs) for complete examples.
+
+The trace audit checks answers frozen at Finish, declared linked-pair/select-n point tables, early protected feedback, exact repeated remediation content, finite banks, streak/closure claims, component repair order, redraft limits and frame movement bounds. Without a point table, a single-best score is only the count of author-key matches. Required feedback needs a content-bearing `feedback` event; a redraft needs a subsequent mark before closure is fully checked. Raw trace bytes and review hashes are retained. Missing traces establish no runtime claim.
+
+**These are consistency checks on supplied claims.** They do not authenticate events or marks, judge a redraft's quality, prove feedback was seen, or establish an independent later success. Semantic correction quality still needs review. Acquisition escalation, automatic frame fading, cross-session scheduling, dashboards, tool authorization and real writing-score accuracy are not implemented here. Unresolved correction order and teaching settings stay explicit; research cited by a supplied proposal is not automatically verified or adopted.
 
 ### Authored reference and assessment history
 

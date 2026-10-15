@@ -1,5 +1,6 @@
 // Resolve declared teaching conditions without inventing learner exposure or quality approval.
 import { inspectSequenceReturn } from "./sequence-return.mjs";
+import { resolveAssessmentPolicy } from "./assessment-policy.mjs";
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 const own = (value, key) => object(value) && Object.hasOwn(value, key);
 const clone = value => structuredClone(value);
@@ -25,10 +26,11 @@ function choose(row, fields, lists = []) {
   return Object.fromEntries([...fields.filter(field => own(row, field)).map(field => [field, clone(row[field])]),
     ...lists.filter(field => own(row, field)).map(field => [field, clone(row[field])])]);
 }
-const taskFields = ["stem", "prompt", "question", "response_mode", "selection_rule", "surrounding_text", "ordering_rule", "tie_policy", "reuse_policy", "instruction", "statement", "centre", "link_rule"];
+const taskFields = ["stem", "prompt", "question", "response_mode", "response_rule", "selection_rule", "surrounding_text", "ordering_rule", "tie_policy", "reuse_policy", "instruction", "statement", "centre", "link_rule"];
 function taskView(item) {
   const view = object(item.view) ? item.view : {};
   const out = Object.fromEntries(taskFields.filter(field => typeof view[field] === "string").map(field => [field, view[field]]));
+  if (Number.isInteger(view.selection_count)) out.selection_count = view.selection_count;
   if (item.family === "evidence_selection" && typeof view.claim === "string") out.claim = view.claim;
   for (const field of ["options", "response_parts", "scale"]) {
     if (own(view, field) && Array.isArray(view[field])) out[field] = view[field].every(value => typeof value === "string") ? [...view[field]] : view[field].filter(object).map((row, index) => ({ id: `O${index + 1}`, ...choose(row, ["text"]) }));
@@ -246,6 +248,10 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
   const ids = new Set(positions.keys()), targets = new Set(courseData.targets.map(row => row.id)), sources = new Set(sourceMap.keys());
   const plan = resolvePlan(course.instructional_plan, { ids, targets, sources, position: positions });
   const returnedSequence = inspectSequenceReturn({ request, context, set });
+  need(!own(course, "checkpoint_policy") && !own(course, "assessment_trace") && !own(course.instructional_plan?.lesson, "assessment_policy"),
+    "unsupported_assessment_policy_location", "course_context");
+  const assessmentPolicy = resolveAssessmentPolicy(course.assessment_policy, { items: setItems,
+    eventIds: new Set((plan?.events ?? []).map(event => event.id)), targetIds: targets });
   const student = knownStudentContext(request, course), passive = passiveEvents(context);
   const pages = rows(context.native?.pages, "context/native/pages", true), pagePositions = new Map(pages.map((page, i) => [page.id, i]));
   need(pagePositions.size === pages.length, "duplicate_id", "context/native/pages");
@@ -253,6 +259,7 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
   const itemContexts = setItems.map((item, index) => {
     const declaration = plan?.items.find(row => row.item_id === item.id), phase = rows(course.lesson_plan?.phases, "course/lesson_plan/phases", true).find(row => row.id === item.alignment?.phase_ref);
     const returnedRefs = returnedSequence.declared_sequence_plan?.items.find(row => row.item_id === item.id)?.context_event_refs ?? [];
+    const policyItem = assessmentPolicy?.item_policies.find(row => row.item_id === item.id) ?? null;
     const legacyPurpose = item.assessment_purpose ?? blueprints[index]?.assessment_purpose;
     if (legacyPurpose !== undefined) member(legacyPurpose, PURPOSES, `items/${index}/assessment_purpose`);
     const purpose = declaration ? { state: "declared", purpose: declaration.purpose, scope: declaration.scope, measurement_intent: declaration.measurement_intent ?? null, source: "instructional_plan/items" }
@@ -284,6 +291,7 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
         exposure_status: plan ? "explicit supplied event declarations; observed claims are not authenticated learner events" : "passive authoring preview; response routes unknown",
         unknowns: ["actual served UI and media exposure", "learner state and calibrated readiness", ...(!plan ? ["previous conditional feedback and response history"] : [])] },
       design_context: { target_performances: courseData.targets.filter(target => itemGoals.includes(target.id)), declared_role: item.alignment?.role ?? phase?.role ?? null,
+        assessment_policy: policyItem,
         support: declaration?.support ?? { declared: item.alignment?.support ?? phase?.support ?? blueprints[index]?.support ?? null, answer_exposure: "unknown" },
         prerequisites: courseData.prerequisites, known_student_context: student, required_prior_event_refs: declaration?.prior_event_refs ?? [],
         returned_context_event_refs: returnedRefs,
@@ -293,11 +301,12 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
         explicit_answer_disclosures: disclosures, answer_exposure_policy: answerExposure, answer_exposure_conflict: withheldConflict,
         unknowns: !plan ? ["No explicit instructional plan; purposes and evidence coverage unresolved"] : [] },
       holds: [...(plan && !declaration ? ["instructional_plan_item_missing"] : []),
-        ...(returnedSequence.status === "needs_revision" ? ["returned_sequence_contract_fault"] : []), ...holds], contextual_quality: "unqualified" };
+        ...(returnedSequence.status === "needs_revision" ? ["returned_sequence_contract_fault"] : []),
+        ...(policyItem?.holds ?? []).map(hold => typeof hold === "string" ? hold : hold.reason), ...holds], contextual_quality: "unqualified" };
   });
   return { version: 1, whole_lesson: { objective: plan?.lesson.objective ?? context.lesson?.learning_question ?? course.learning_question ?? null,
       purpose: plan?.lesson ?? { purpose: null, scope: null, reason: "instructional_plan_missing" },
-      ...courseData, instructional_plan: plan, known_student_context: student,
+      ...courseData, instructional_plan: plan, assessment_policy: assessmentPolicy, known_student_context: student,
       tasks: setItems.map(item => ({ item_id: item.id, order: item.order, kind: item.kind, task: taskView(item) })),
       declared_passive_teaching: passive, source_authority: courseData.targets.map(row => plan?.goal_authority.find(authority => authority.goal_ref === row.id) ?? ({ goal_ref: row.id, kind: "unknown", note: "Supplied target; course authority not established" })),
       constraints: [...courseData.known_constraints, ...textList(request.known_constraints, "request/known_constraints", true)],

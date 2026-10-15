@@ -40,6 +40,7 @@ function responseContractFields(context, set, item) {
   const view = item.view, fields = new Set();
   if (context.contract !== "lesson-context 0.1" || !object(view)) return null;
   const scalar = (field, root = view, prefix = "/view") => { if (string(root?.[field])) fields.add(`${prefix}/${field}`); };
+  const selectionCount = () => { if (Number.isInteger(view.selection_count) && view.selection_count > 0) fields.add("/view/selection_count"); };
   const list = (field, root = view, prefix = "/view") => {
     if (strings(root?.[field])) root[field].forEach((value, index) => { if (string(value)) fields.add(`${prefix}/${field}/${index}`); });
   };
@@ -64,7 +65,7 @@ function responseContractFields(context, set, item) {
     }
     scalar("prompt"); scalar("response_mode"); list("response_parts");
     if (["single_choice", "multiple_select", "evidence_selection", "word_selection"].includes(family)) {
-      list("options"); scalar("selection_rule");
+      list("options"); scalar("selection_rule"); selectionCount();
       if (family === "evidence_selection") scalar("claim");
     }
     if (family === "classification") { rows("entries", ["text"]); rows("categories", ["label", "entity", "relation", "description"]); }
@@ -84,8 +85,13 @@ function responseContractFields(context, set, item) {
   }
   if (set.contract !== "question-set 0.1" || set.adapter_extension !== undefined || context.adapter_extension !== undefined || item.family !== undefined) return null;
   if (!["reading_mcq", "evidence_select", "classify", "open_check", "open_prompt"].includes(item.kind)) return null;
-  if (["reading_mcq", "evidence_select"].includes(item.kind)
-    && (view.response_rule !== undefined && view.response_rule !== "single-best" || Array.isArray(view.key) && view.key.length > 1)) return null;
+  if (["reading_mcq", "evidence_select"].includes(item.kind)) {
+    const rule = view.response_rule ?? "single-best", options = item.kind === "reading_mcq" ? view.options : view.candidates;
+    if (!["single-best", "select-n"].includes(rule)
+      || rule === "single-best" && (Array.isArray(view.key) && view.key.length > 1 || view.selection_count !== undefined && view.selection_count !== 1)
+      || rule === "select-n" && (!Number.isInteger(view.selection_count) || view.selection_count < 1 || !Array.isArray(options) || view.selection_count > options.length)) return null;
+    scalar("response_rule"); selectionCount();
+  }
   if (item.kind === "classify" && (view.response_rule !== undefined && view.response_rule !== "unique-category"
     || object(view.mapping) && Object.values(view.mapping).some(Array.isArray))) return null;
   // This is the same stem/prompt precedence as the text blind-solving packet.

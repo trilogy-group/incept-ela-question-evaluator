@@ -30,8 +30,17 @@ export function loadLessonPackage(directory, { coursePin } = {}) {
   const context = files["lesson-context.json"].value, set = files["question-set.json"].value;
   const issues = inputIssues(context, set);
   if (issues.length) throw new Error(`invalid finished lesson packet: ${issues.join("; ")}`);
+  let runtimeEvidence = null;
+  const runtimeFile = path.join(root, "runtime-evidence.json");
+  let runtimeStat;
+  try { runtimeStat = fs.lstatSync(runtimeFile); } catch (error) { if (error.code !== "ENOENT") throw error; }
+  if (runtimeStat) {
+    if (!runtimeStat.isFile() || runtimeStat.isSymbolicLink() || runtimeStat.size > 16 * 1024 * 1024) throw new Error("invalid runtime evidence transport");
+    const bytes = fs.readFileSync(runtimeFile); runtimeEvidence = { bytes, sha256: digest(bytes), value: JSON.parse(bytes) };
+    files["runtime-evidence.json"] = runtimeEvidence;
+  }
   return { request, source, context, set, hashes: Object.fromEntries(Object.entries(files).map(([name, file]) => [name, file.sha256])),
-    external_course_pin_verified: Boolean(coursePin) };
+    runtimeEvidence, external_course_pin_verified: Boolean(coursePin) };
 }
 
 export function auditLessonAlignment(request, set, context = null) {

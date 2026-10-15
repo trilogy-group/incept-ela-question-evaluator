@@ -104,6 +104,9 @@ export async function runTextLessonCli({ root, configFile, config }) {
   write(out, "source-assets.json", sourceAssets);
   write(out, "instructional-context.json", plan.instructional_context);
   write(out, "sequence-review-packet.json", plan.sequence_review);
+  write(out, "assessment-review.json", { policy: plan.instructional_context.whole_lesson.assessment_policy, runtime: plan.assessment_trace,
+    meaning: "Supplied policy and event consistency only; no independent academic labels or authenticated learner events." });
+  if (pkg.runtimeEvidence) fs.writeFileSync(path.join(out, "runtime-evidence.json"), pkg.runtimeEvidence.bytes, { flag: "wx", mode: 0o600 });
   write(out, "lesson.txt", textLessonReader(pkg, plan, audit));
   const review = textLessonReviewPacket(plan);
   write(out, "review-packet.json", review);
@@ -120,6 +123,7 @@ export async function runTextLessonCli({ root, configFile, config }) {
     source_assets_sha256: digest(fs.readFileSync(path.join(out, "source-assets.json"))),
     instructional_context_sha256: digest(fs.readFileSync(path.join(out, "instructional-context.json"))),
     sequence_review_packet_sha256: digest(fs.readFileSync(path.join(out, "sequence-review-packet.json"))),
+    assessment_review_sha256: digest(fs.readFileSync(path.join(out, "assessment-review.json"))),
     source_asset_observations: sourceAssets.observation_counts,
     config: { samples: config.samples, repeats: config.repeats }, judge, side_judge: sideJudge,
     scope: plan.scope, mode: active ? "development" : "offline", qualified: false, independent_gold_labels: 0,

@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scoped assessment policy 0.1",
+  "description": "Supplied assessment, practice and writing policy. Status and source references retain provenance; they do not authenticate authority, establish a universal teaching rule or qualify a marker. Reference resolution and semantic review are separate checks.",
+  "type": "object",
+  "required": ["version", "id", "provenance", "parameters", "item_rules", "gaps"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": "assessment-policy/0.1" },
+    "id": { "$ref": "#/$defs/text" },
+    "provenance": {
+      "type": "object", "required": ["status", "source_ref", "revision"], "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["proposed", "course-declared"] },
+        "source_ref": { "$ref": "#/$defs/text" },
+        "revision": { "$ref": "#/$defs/text" }
+      }
+    },
+    "parameters": {
+      "type": "array", "items": {
+        "type": "object", "required": ["id", "value", "status", "source_ref"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/text" },
+          "value": { "type": ["number", "boolean", "string", "null"] },
+          "status": { "enum": ["confirmed", "proposed", "unknown"] },
+          "source_ref": { "$ref": "#/$defs/text" }
+        },
+        "allOf": [{ "if": { "properties": { "status": { "const": "confirmed" } } }, "then": { "properties": { "value": { "not": { "type": "null" } } } } }]
+      }
+    },
+    "item_rules": {
+      "type": "array", "items": {
+        "type": "object", "required": ["item_id", "moment", "feedback", "score_basis", "support", "gap_refs", "misconception_routes"], "additionalProperties": false,
+        "properties": {
+          "item_id": { "$ref": "#/$defs/text" },
+          "moment": { "enum": ["acquisition", "spot-check", "checkpoint-test", "review-practice", "mastery-gate"] },
+          "feedback": {
+            "type": "object", "required": ["timing", "required", "elaboration"], "additionalProperties": false,
+            "properties": {
+              "timing": { "enum": ["immediate", "after-submit", "guide", "unknown"] },
+              "required": { "type": "boolean" },
+              "elaboration": { "enum": ["explanation", "correct-answer", "right-wrong", "unknown"] }
+            }
+          },
+          "score_basis": { "enum": ["first-submission", "practice-only", "unknown"] },
+          "support": {
+            "type": "object", "required": ["frame_policy", "allowed_tool_refs"], "additionalProperties": false,
+            "properties": {
+              "frame_policy": { "enum": ["none", "declared-rung", "unknown"] },
+              "allowed_tool_refs": { "$ref": "#/$defs/texts" }
+            }
+          },
+          "gap_refs": { "$ref": "#/$defs/texts" },
+          "misconception_routes": {
+            "type": "array", "items": {
+              "type": "object", "required": ["option_ref", "tag", "gap_ref", "teach_event_ref"], "additionalProperties": false,
+              "properties": {
+                "option_ref": { "type": "string", "pattern": "^/view/(options|candidates)/(0|[1-9][0-9]*)$", "description": "Reference into the original supplied item; displayed option positions do not establish correctness." },
+                "tag": { "$ref": "#/$defs/text" },
+                "gap_ref": { "$ref": "#/$defs/text" },
+                "teach_event_ref": { "$ref": "#/$defs/text" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "gaps": {
+      "type": "array", "items": {
+        "type": "object", "required": ["id", "target_refs", "category", "prerequisite_refs", "bank_item_ids", "teach_card"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/text" },
+          "target_refs": { "$ref": "#/$defs/texts" },
+          "category": { "$ref": "#/$defs/text" },
+          "prerequisite_refs": { "$ref": "#/$defs/texts" },
+          "bank_item_ids": { "$ref": "#/$defs/texts" },
+          "teach_card": {
+            "type": "object", "required": ["form", "rule", "positive", "negative", "difference"], "additionalProperties": false,
+            "properties": {
+              "form": { "enum": ["single-feature", "feature-list", "confused-pair", "unknown"] },
+              "rule": { "$ref": "#/$defs/text" },
+              "positive": { "$ref": "#/$defs/text" },
+              "negative": { "$ref": "#/$defs/text" },
+              "difference": { "$ref": "#/$defs/text" }
+            }
+          }
+        }
+      }
+    },
+    "remediation": {
+      "type": "object", "required": ["streak_parameter_ref", "bank_limit_parameter_ref", "initial_order", "wrong_resets_streak", "terminal_states", "fresh_items_required"], "additionalProperties": false,
+      "properties": {
+        "streak_parameter_ref": { "$ref": "#/$defs/text" },
+        "bank_limit_parameter_ref": { "$ref": "#/$defs/text" },
+        "initial_order": { "enum": ["teach-before-retest", "retest-before-teach", "unknown"] },
+        "wrong_resets_streak": { "type": "boolean" },
+        "terminal_states": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["closed", "flagged"] } },
+        "fresh_items_required": { "type": "boolean" }
+      }
+    },
+    "writing": {
+      "type": "object", "required": ["item_id", "components", "repair_order", "claim_failure_gap_ref", "conventions_scored", "frame"], "additionalProperties": false,
+      "properties": {
+        "item_id": { "$ref": "#/$defs/text" },
+        "components": {
+          "type": "array", "items": {
+            "type": "object", "required": ["id", "role", "requirement_ref"], "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/text" },
+              "role": { "enum": ["claim", "answer", "C", "A", "evidence", "E", "E1", "reasoning", "explain", "explanation", "R", "E2"] },
+              "requirement_ref": { "$ref": "#/$defs/text", "description": "A distinct rubric requirement field per component. Runtime role checks require /view/rubric/criteria/N/requirement; author keys, model responses and feedback are ineligible." }
+            }
+          }
+        },
+        "repair_order": { "$ref": "#/$defs/texts" },
+        "claim_failure_gap_ref": { "$ref": "#/$defs/text" },
+        "conventions_scored": { "type": "boolean" },
+        "frame": {
+          "type": "object", "required": ["mode", "rungs"], "additionalProperties": false,
+          "properties": {
+            "mode": { "enum": ["none", "ladder", "unknown"] },
+            "rungs": { "$ref": "#/$defs/texts" },
+            "max_change_parameter_ref": { "$ref": "#/$defs/text" },
+            "fade_success_parameter_ref": { "$ref": "#/$defs/text" }
+          }
+        },
+        "max_redrafts_parameter_ref": { "$ref": "#/$defs/text" }
+      }
+    },
+    "scoring": {
+      "type": "array", "items": {
+        "type": "object", "required": ["id", "kind", "item_ids", "points"], "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/$defs/text" },
+          "kind": { "enum": ["linked-pair", "select-n"] },
+          "item_ids": { "$ref": "#/$defs/texts" },
+          "points": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "number", "minimum": 0 }, "description": "Complete outcome table supplied by the policy. Linked pair keys are 00, 01, 10 and 11. Selection count keys cover every integer from zero through selection_count. Points never imply gap closure." },
+          "selection_count": { "type": "integer", "minimum": 1 }
+        },
+        "allOf": [
+          { "if": { "properties": { "kind": { "const": "linked-pair" } } }, "then": { "not": { "required": ["selection_count"] }, "properties": { "item_ids": { "minItems": 2, "maxItems": 2 }, "points": { "required": ["00", "01", "10", "11"], "minProperties": 4, "maxProperties": 4 } } } },
+          { "if": { "properties": { "kind": { "const": "select-n" } } }, "then": { "required": ["selection_count"], "properties": { "item_ids": { "minItems": 1, "maxItems": 1 }, "points": { "propertyNames": { "pattern": "^(0|[1-9][0-9]*)$" } } } } }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "text": { "type": "string", "minLength": 1, "pattern": "\\S" },
+    "texts": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/text" } }
+  }
+}

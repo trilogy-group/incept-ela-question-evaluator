@@ -9,6 +9,7 @@ import { resolveInstructionalContext } from "./instructional-context.mjs";
 import { prepareSequenceReview, learnerReviewContext, summarizeSequenceReview } from "./sequence-review.mjs";
 import { parseCliOptions } from "./cli-options.mjs";
 import { inspectSequenceReturn } from "./sequence-return.mjs";
+import { auditAssessmentTrace, attachAssessmentTrace } from "./assessment-trace.mjs";
 
 const object = value => value && typeof value === "object" && !Array.isArray(value);
 const list = value => Array.isArray(value) ? value : [];
@@ -23,6 +24,8 @@ function learnerView(item) {
   const view = item.view, task = pick(view, ["prompt", "response_mode"]);
   if (list(view.response_parts).every(text)) task.response_parts = view.response_parts;
   if (["single_choice", "multiple_select", "evidence_selection", "word_selection"].includes(item.family)) Object.assign(task, { options: strings(view.options) }, pick(view, ["claim", "selection_rule"]));
+  if (["single_choice", "multiple_select", "evidence_selection", "word_selection"].includes(item.family)
+    && Number.isInteger(view.selection_count) && view.selection_count > 0) task.selection_count = view.selection_count;
   if (item.family === "classification") {
     task.categories = list(view.categories).map(row => pick(row, ["id", "label", "entity", "relation", "description"]));
     task.entries = list(view.entries).map(row => pick(row, ["id", "text"]));
@@ -58,7 +61,9 @@ export function nativeFieldChecks(item) {
     add("options_present", list(view.options).length >= 2 && view.options.every(text));
     add("options_distinct", Array.isArray(view.options) && new Set(view.options).size === view.options.length);
     add("key_valid", list(view.key).length > 0 && new Set(view.key).size === view.key.length && view.key.every(key => Number.isInteger(key) && key >= 0 && key < list(view.options).length)
-      && (item.family !== "single_choice" || view.key.length === 1));
+      && (item.family !== "single_choice" || view.key.length === 1)
+      && (!Object.hasOwn(view, "selection_count") || Number.isInteger(view.selection_count) && view.selection_count > 0
+        && view.selection_count <= list(view.options).length && view.key.length === view.selection_count));
   } else if (item.family === "classification") {
     const entries = list(view.entries), categories = list(view.categories), destinations = new Set(categories.map(row => row?.id));
     add("entries_present", entries.length > 0 && entries.every(row => object(row) && text(row.id) && text(row.text)) && new Set(entries.map(row => row.id)).size === entries.length);
@@ -184,6 +189,12 @@ export function prepareNativeIntake(directory, output, { sourcePin, replayConfig
   }
   const returnedSequence = inspectSequenceReturn({ context, set });
   const sequenceReview = prepareSequenceReview(instructionalContext, { route: "native0.2", returnedSequence });
+  let runtimeFile = null;
+  try { fs.lstatSync(path.join(root, "runtime-evidence.json")); runtimeFile = read(root, "runtime-evidence.json"); }
+  catch (error) { if (error.code !== "ENOENT") throw error; }
+  const assessmentTrace = auditAssessmentTrace({ policy: instructionalContext.whole_lesson.assessment_policy?.policy,
+    trace: runtimeFile?.value, contextSha256: contextFile.sha256, setSha256: setFile.sha256, items: set.items });
+  attachAssessmentTrace(sequenceReview, assessmentTrace);
   const noResponseKeys = value => Array.isArray(value) ? value.map(noResponseKeys) : object(value)
     ? Object.fromEntries(Object.entries(value).filter(([field]) => !["key", "keys", "mapping", "producer", "made_by", "metadata"].includes(field)).map(([field, child]) => [field, noResponseKeys(child)])) : value;
   sequenceReview.state.proposed_marking_guides = set.items.map(item => ({ item_id: item.id,
@@ -192,6 +203,7 @@ export function prepareNativeIntake(directory, output, { sourcePin, replayConfig
   const fieldSources = validateEmittedChecks("native0.2", [...observations.flatMap((item, index) => item.checks.map(check => ({ check, family: item.family, stage: "field", purpose: instructionalContext.items[index].assessment_purpose.purpose }))),
     ...returnedSequence.checks.map(check => ({ check, stage: "sequence-field", purpose: instructionalContext.whole_lesson.purpose.purpose }))]);
   const criterionSources = { pins: CRITERION_METADATA_PIN, ...fieldSources, checked: fieldSources.checked + sequenceReview.criterion_sources.checked,
+    declared_policy: sequenceReview.criterion_sources.declared_policy,
     annotations: [...fieldSources.annotations, ...sequenceReview.criterion_sources.annotations] };
   assert(!fs.existsSync(output), "output already exists"); fs.mkdirSync(output, { recursive: true, mode: 0o700 });
   const write = (name, value) => fs.writeFileSync(path.join(output, name), Buffer.isBuffer(value) ? value : JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
@@ -200,16 +212,20 @@ export function prepareNativeIntake(directory, output, { sourcePin, replayConfig
   write("author-fields.json", { version: 1, items: authors, status: "author proposals; not gold labels" });
   write("instructional-context.json", instructionalContext);
   write("sequence-review-packet.json", sequenceReview);
+  write("assessment-review.json", { policy: instructionalContext.whole_lesson.assessment_policy, runtime: assessmentTrace,
+    meaning: "Supplied policy and event consistency; no independent academic labels or authenticated learner exposure." });
+  if (runtimeFile) write("runtime-evidence.json", runtimeFile.bytes);
   write("field-observations.json", observations);
   write("criterion-sources.json", criterionSources);
-  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json", "criterion-sources.json", "instructional-context.json", "sequence-review-packet.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
+  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json", "criterion-sources.json", "instructional-context.json", "sequence-review-packet.json", "assessment-review.json",
+    ...(runtimeFile ? ["runtime-evidence.json"] : [])].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
   const receipt = { version: 1, at: new Date().toISOString(), source, input_hashes: { context: contextFile.sha256, set: setFile.sha256 }, files: hashes,
     ...(replayConfig ? { replay_config: replayConfig } : {}),
-    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs", "criterion-metadata.mjs", "instructional-context.mjs", "sequence-review.mjs", "sequence-return.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
+    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs", "criterion-metadata.mjs", "instructional-context.mjs", "sequence-review.mjs", "sequence-return.mjs", "assessment-policy.mjs", "assessment-trace.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
     criterion_metadata: CRITERION_METADATA_PIN,
     activities: cases.length, kinds: [...new Set(cases.map(row => row.kind))], returned_sequence: returnedSequence,
-    code_checks: observations.reduce((n, row) => n + row.checks.length, returnedSequence.checks.length),
-    code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, returnedSequence.checks.filter(check => check.verdict === "fail").length),
+    code_checks: observations.reduce((n, row) => n + row.checks.length, returnedSequence.checks.length + sequenceReview.field_checks.length),
+    code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, returnedSequence.checks.filter(check => check.verdict === "fail").length + sequenceReview.field_checks.filter(check => check.verdict === "fail").length),
     context_holds: instructionalContext.held_items, sequence_review: { status: "prepared; no semantic judgment run", holds: sequenceReview.holds, qualification: false },
     external_source_pin_verified: Boolean(sourcePin), review_stage: "prepared; quality evaluation deferred", model_calls: 0, independent_gold_labels: 0, qualified: false };
   write("receipt.json", receipt); return { ...receipt, root: output };
