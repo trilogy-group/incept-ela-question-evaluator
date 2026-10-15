@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import crypto from "node:crypto";
 import { prepareNativeIntake, nativeFieldChecks, runNativeIntakeCli, verifyNativePreparation } from "../src/native-intake.mjs";
 
 function fixture() {
@@ -139,6 +140,36 @@ test("native preparation hashes full instructional design separately from a cont
     assert.equal(receipt.sequence_review.status, "prepared; no semantic judgment run"); assert.equal(receipt.qualified, false); assert.equal(receipt.model_calls, 0);
     const metadata = JSON.parse(fs.readFileSync(path.join(out, "criterion-sources.json")));
     assert(metadata.annotations.every(row => row.applicability.reason !== "assessment_purpose_missing"));
+  } finally { f.dispose(); }
+});
+test("native returned conditional context stays held and author-key evidence is rejected in the saved receipt", () => {
+  const f = fixture(); try {
+    const native = f.context.native, plan = instructionalPlan(f);
+    Object.assign(plan.events[1], { before_item_id: "N2", kind: "feedback", status: "conditional", content: "CONDITIONAL_NATIVE_CORRECTION", source_refs: ["S1"] });
+    native.course_context.instructional_plan = plan;
+    native.sequence_blueprint = f.set.items.map(item => ({ id: item.id }));
+    const payload = { course_context: native.course_context, student_context: null, sequence_blueprint: native.sequence_blueprint, source_provenance: null };
+    const sorted = value => Array.isArray(value) ? value.map(sorted) : value !== null && typeof value === "object"
+      ? Object.fromEntries(Object.keys(value).sort().map(key => [key, sorted(value[key])])) : value;
+    f.set.sequence_plan = { plan_id: plan.id, context_sha256: crypto.createHash("sha256").update(JSON.stringify(sorted(payload))).digest("hex"),
+      lesson: structuredClone(plan.lesson), goal_authority: structuredClone(plan.goal_authority),
+      items: plan.items.map(item => ({ item_id: item.item_id, purpose: item.purpose, scope: item.scope, measurement_intent: item.measurement_intent,
+        support: structuredClone(item.support), context_event_refs: item.item_id === "N2" ? ["TEACH", "LATER"] : ["TEACH"],
+        expected_evidence: item.expected_evidence.map(row => ({ expectation_id: row.id, claim: row.claim, field_refs: ["/view/prompt"] })) })),
+      goal_coverage: structuredClone(plan.sequence.goal_coverage), support_transitions: [] };
+    native.sequence_plan = structuredClone(f.set.sequence_plan); f.save();
+    const out = path.join(f.root, "conditional"), receipt = prepareNativeIntake(f.input, out);
+    assert.equal(receipt.returned_sequence.status, "checked_fields_only"); assert.equal(receipt.code_failures, 0);
+    assert(receipt.context_holds.find(row => row.item_id === "N2").reasons.includes("conditional_exposure_unresolved"));
+    assert(receipt.sequence_review.holds.some(row => row.item_id === "N2" && row.reason === "conditional_exposure_unresolved"));
+    const review = JSON.parse(fs.readFileSync(path.join(out, "review-packet.json")));
+    assert.equal(JSON.stringify(review).includes("CONDITIONAL_NATIVE_CORRECTION"), false);
+    f.set.sequence_plan.items[0].expected_evidence[0].field_refs = ["/view/key/0"];
+    native.sequence_plan = structuredClone(f.set.sequence_plan); f.save();
+    const bad = prepareNativeIntake(f.input, path.join(f.root, "key-evidence"));
+    assert.equal(bad.returned_sequence.status, "needs_revision"); assert.equal(bad.code_failures, 1);
+    assert(bad.context_holds.every(row => row.reasons.includes("returned_sequence_contract_fault")));
+    assert.equal(bad.qualified, false); assert.equal(bad.model_calls, 0);
   } finally { f.dispose(); }
 });
 test("legacy native preparations retain unknown purposes and invalid supplied plans never create output", () => {

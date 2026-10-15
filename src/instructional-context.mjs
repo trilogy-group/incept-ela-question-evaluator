@@ -1,4 +1,5 @@
 // Resolve declared teaching conditions without inventing learner exposure or quality approval.
+import { inspectSequenceReturn } from "./sequence-return.mjs";
 const object = value => value !== null && typeof value === "object" && !Array.isArray(value);
 const own = (value, key) => object(value) && Object.hasOwn(value, key);
 const clone = value => structuredClone(value);
@@ -41,17 +42,27 @@ function taskView(item) {
       ...(Array.isArray(row.options) ? { options: row.options.filter(value => typeof value === "string") } : {}) }));
   return out;
 }
-function readingText(value) {
+function readingText(value, field) {
   const out = [];
-  const walk = row => {
-    if (!object(row) && !Array.isArray(row)) return;
-    if (Array.isArray(row)) { row.forEach(walk); return; }
-    if (typeof row.line === "string") { out.push(typeof row.who === "string" ? `${row.who}: ${row.line}` : row.line); return; }
-    if (typeof row.stage === "string") { out.push(row.stage); return; }
-    for (const key of ["text", "title", "paragraph", "t"]) if (typeof row[key] === "string") out.push(row[key]);
-    for (const key of ["lines", "paragraphs"]) if (Array.isArray(row[key])) { for (const line of row[key]) typeof line === "string" ? out.push(line) : walk(line); }
-    for (const key of ["blocks", "parts"]) if (Array.isArray(row[key])) row[key].forEach(walk);
-  }; walk(value); return out;
+  const walk = (row, path, stringAllowed = false) => {
+    if (stringAllowed && typeof row === "string") { out.push(text(row, path)); return; }
+    need(object(row), "unsupported_passive_node_content", path);
+    if (own(row, "type")) need(row.type === "reading", "unsupported_passive_node", `${path}/type`);
+    // The public projection strips this explicit nonlearner wrapper; do not interpret its contents.
+    if (own(row, "metadata") && Object.keys(row).every(key => key === "metadata")) return;
+    const before = out.length;
+    if (own(row, "who")) need(row.who === null || typeof row.who === "string", "invalid_text", `${path}/who`);
+    for (const key of ["line", "stage", "text", "title", "paragraph", "t"]) if (own(row, key)) {
+      const content = text(row[key], `${path}/${key}`);
+      out.push(key === "line" && typeof row.who === "string" ? `${row.who}: ${content}` : content);
+    }
+    for (const key of ["lines", "paragraphs", "blocks", "parts"]) if (own(row, key)) {
+      const children = list(row[key], `${path}/${key}`);
+      need(children.length > 0, "unsupported_passive_node_content", `${path}/${key}`);
+      children.forEach((child, i) => walk(child, `${path}/${key}/${i}`, ["lines", "paragraphs"].includes(key)));
+    }
+    need(out.length > before, "unsupported_passive_node_content", path);
+  }; walk(value, field); return out;
 }
 function passiveEvents(context) {
   const pages = rows(context.native?.pages, "context/native/pages", true), events = [];
@@ -60,7 +71,9 @@ function passiveEvents(context) {
     const available = !page.extra || context.native?.extras?.[page.extra] === true;
     for (const [ni, node] of rows(page.nodes, `context/native/pages/${pi}/nodes`, true).entries()) {
       let content = [], type = node.type;
-      if (type === "reading") content = readingText(node.blocks ?? node);
+      const field = `context/native/pages/${pi}/nodes/${ni}`;
+      need(["reading", "instruction", "learning_question", "key_term", "definition", "worked_instruction", "worked-teaching", "recall-model"].includes(type), "unsupported_passive_node", `${field}/type`);
+      if (type === "reading") content = readingText(node, field);
       if (["instruction", "learning_question", "key_term", "definition"].includes(type)) {
         content = [node.learning_question, node.text, node.term && node.meaning ? `${node.term}: ${node.meaning}` : null,
           node.key_term?.term && node.key_term?.meaning ? `${node.key_term.term}: ${node.key_term.meaning}` : null,
@@ -70,7 +83,8 @@ function passiveEvents(context) {
       if (["worked_instruction", "worked-teaching", "recall-model"].includes(type)) {
         content = [node.line, node.quote, node.text, node.statement, ...(Array.isArray(node.steps) ? node.steps.flatMap(step => [step.stem, step.sentence, step.think]) : [])].filter(v => typeof v === "string" && v.trim());
       }
-      if (content.length) events.push({ id: `passive-${pi}-${ni}`, page_ref: pageId, page_position: pi, node_position: ni,
+      need(content.some(value => value.trim().length > 0), "unsupported_passive_node_content", field);
+      events.push({ id: `passive-${pi}-${ni}`, page_ref: pageId, page_position: pi, node_position: ni,
         kind: type, text: content.join("\n"), availability: available ? "declared_passive" : "conditional_unknown",
         source: "supplied lesson-context; not observed learner exposure" });
     }
@@ -231,12 +245,14 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
   for (const [i, item] of setItems.entries()) { need(item.order === i + 1, "item_order_invalid", `set/items/${i}/order`); positions.set(item.id, i + 1); }
   const ids = new Set(positions.keys()), targets = new Set(courseData.targets.map(row => row.id)), sources = new Set(sourceMap.keys());
   const plan = resolvePlan(course.instructional_plan, { ids, targets, sources, position: positions });
+  const returnedSequence = inspectSequenceReturn({ request, context, set });
   const student = knownStudentContext(request, course), passive = passiveEvents(context);
   const pages = rows(context.native?.pages, "context/native/pages", true), pagePositions = new Map(pages.map((page, i) => [page.id, i]));
   need(pagePositions.size === pages.length, "duplicate_id", "context/native/pages");
   const blueprints = rows(request.sequence_blueprint, "request/sequence_blueprint", true);
   const itemContexts = setItems.map((item, index) => {
     const declaration = plan?.items.find(row => row.item_id === item.id), phase = rows(course.lesson_plan?.phases, "course/lesson_plan/phases", true).find(row => row.id === item.alignment?.phase_ref);
+    const returnedRefs = returnedSequence.declared_sequence_plan?.items.find(row => row.item_id === item.id)?.context_event_refs ?? [];
     const legacyPurpose = item.assessment_purpose ?? blueprints[index]?.assessment_purpose;
     if (legacyPurpose !== undefined) member(legacyPurpose, PURPOSES, `items/${index}/assessment_purpose`);
     const purpose = declaration ? { state: "declared", purpose: declaration.purpose, scope: declaration.scope, measurement_intent: declaration.measurement_intent ?? null, source: "instructional_plan/items" }
@@ -255,7 +271,8 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
     const answerExposure = declaration?.support.answer_exposure ?? "unknown";
     const disclosures = prior.filter(event => event.disclosed_item_ids.includes(item.id));
     const withheldConflict = answerExposure === "withheld" && disclosures.some(event => event.status !== "conditional");
-    const requiredConditional = conditional.filter(event => !declaration || declaration.prior_event_refs.includes(event.id) || declaration.support.event_refs.includes(event.id) || event.disclosed_item_ids.includes(item.id));
+    const requiredConditional = conditional.filter(event => !declaration || declaration.prior_event_refs.includes(event.id) || declaration.support.event_refs.includes(event.id)
+      || returnedRefs.includes(event.id) || event.disclosed_item_ids.includes(item.id));
     const unscoredNonKnowledge = item.family === "self_report" && item.view?.scoring === "none"
       || item.family === "nonresponse" && purpose.purpose === "instruction";
     const holds = [declaration && !declaration.goal_refs.length && !unscoredNonKnowledge && "item_goals_missing", declaration && !declaration.expected_evidence.length && "expected_evidence_missing", purpose.state !== "declared" && "assessment_purpose_missing", requiredConditional.length > 0 && "conditional_exposure_unresolved", legacyConditional.length > 0 && "conditional_exposure_unresolved", withheldConflict && "declared_withheld_answer_exposure_conflict", purpose.scope && purpose.scope !== "static-design" && "individual_readiness_and_mastery_unverified"].filter(Boolean);
@@ -269,12 +286,14 @@ export function resolveInstructionalContext({ request = {}, context = {}, set = 
       design_context: { target_performances: courseData.targets.filter(target => itemGoals.includes(target.id)), declared_role: item.alignment?.role ?? phase?.role ?? null,
         support: declaration?.support ?? { declared: item.alignment?.support ?? phase?.support ?? blueprints[index]?.support ?? null, answer_exposure: "unknown" },
         prerequisites: courseData.prerequisites, known_student_context: student, required_prior_event_refs: declaration?.prior_event_refs ?? [],
+        returned_context_event_refs: returnedRefs,
         expected_evidence: declaration?.expected_evidence ?? [], prepares_for_item_ids: declaration?.prepares_for_item_ids ?? [],
         conditional_events: [...conditional, ...legacyConditional], future_teaching: future.filter(event => ["teaching", "media"].includes(event.kind)),
         prior_revealed_targets: relevantReveals.map(event => ({ event_id: event.id, status: event.status, target_refs: event.revealed_target_refs })),
         explicit_answer_disclosures: disclosures, answer_exposure_policy: answerExposure, answer_exposure_conflict: withheldConflict,
         unknowns: !plan ? ["No explicit instructional plan; purposes and evidence coverage unresolved"] : [] },
-      holds: [...(plan && !declaration ? ["instructional_plan_item_missing"] : []), ...holds], contextual_quality: "unqualified" };
+      holds: [...(plan && !declaration ? ["instructional_plan_item_missing"] : []),
+        ...(returnedSequence.status === "needs_revision" ? ["returned_sequence_contract_fault"] : []), ...holds], contextual_quality: "unqualified" };
   });
   return { version: 1, whole_lesson: { objective: plan?.lesson.objective ?? context.lesson?.learning_question ?? course.learning_question ?? null,
       purpose: plan?.lesson ?? { purpose: null, scope: null, reason: "instructional_plan_missing" },

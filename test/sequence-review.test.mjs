@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import crypto from "node:crypto";
 import { resolveInstructionalContext } from "../src/instructional-context.mjs";
 import { prepareSequenceReview, summarizeSequenceReview, runSequenceReview, learnerReviewContext } from "../src/sequence-review.mjs";
 import { prepareTextLesson, summarizeTextLesson, runLessonDraw } from "../src/text-lesson.mjs";
@@ -32,6 +33,22 @@ function allYesDraw(plan) {
   return { sequence_review: { providers: { side: { checks: plan.sequence_review.questions.map(question => ({ id: question.id, verdict: "yes" })) } } },
     results: plan.cases.map(item => ({ id: item.id, providers: { side: { blind: { checks: item.blind_questions.map(question => ({ id: question.id, verdict: "yes" })) },
       editorial: { checks: item.editorial_questions.map(question => ({ id: question.id, verdict: "yes" })) } } } })) };
+}
+function returnSequence(pkg, extraRefs = []) {
+  const sorted = value => Array.isArray(value) ? value.map(sorted) : value !== null && typeof value === "object"
+    ? Object.fromEntries(Object.keys(value).sort().map(key => [key, sorted(value[key])])) : value;
+  const payload = { course_context: pkg.request.course_context, student_context: null,
+    sequence_blueprint: pkg.request.sequence_blueprint, source_provenance: null };
+  const plan = payload.course_context.instructional_plan;
+  Object.assign(pkg.context.native, structuredClone(payload));
+  pkg.set.sequence_plan = { plan_id: plan.id, context_sha256: crypto.createHash("sha256").update(JSON.stringify(sorted(payload))).digest("hex"),
+    lesson: structuredClone(plan.lesson), goal_authority: structuredClone(plan.goal_authority),
+    items: plan.items.map((item, index) => ({ item_id: item.item_id, purpose: item.purpose, scope: item.scope,
+      measurement_intent: item.measurement_intent, support: structuredClone(item.support),
+      context_event_refs: [...new Set([...item.prior_event_refs, ...item.support.event_refs, ...(index === 1 ? extraRefs : [])])],
+      expected_evidence: item.expected_evidence.map(evidence => ({ expectation_id: evidence.id, claim: evidence.claim, field_refs: ["/view/prompt"] })) })),
+    goal_coverage: structuredClone(plan.sequence.goal_coverage), support_transitions: structuredClone(plan.sequence.support_transitions) };
+  pkg.context.native.sequence_plan = structuredClone(pkg.set.sequence_plan);
 }
 function mockProvider(calls, answer = () => 1) {
   return { name: "gemini-flash", model: "test-alias", async ask(state, questions, { sample }) {
@@ -76,6 +93,46 @@ test("one sequence defect vetoes otherwise affirmative item observations", () =>
   draw.sequence_review.providers.side.checks[1].verdict = "no";
   const summary = summarizeTextLesson([draw], plan);
   assert.equal(summary.sequence_review.status, "needs_revision"); assert.equal(summary.status, "needs_revision"); assert.equal(summary.qualified, false);
+});
+test("a returned extra conditional feedback reference holds item and sequence even when all mock verdicts agree", () => {
+  const pkg = fixture(), event = pkg.request.course_context.instructional_plan.events[1];
+  Object.assign(event, { before_item_id: "Q2", kind: "feedback", status: "conditional", content: "CONDITIONAL_CORRECTION_SENTINEL" });
+  returnSequence(pkg, ["E2"]);
+  const plan = prepareTextLesson(pkg), second = plan.cases[1];
+  assert.equal(plan.returned_sequence.status, "checked_fields_only");
+  assert(second.context_holds.includes("conditional_exposure_unresolved"));
+  assert.equal(JSON.stringify(second.blind).includes("CONDITIONAL_CORRECTION_SENTINEL"), false);
+  assert(plan.sequence_review.holds.some(row => row.item_id === "Q2" && row.reason === "conditional_exposure_unresolved"));
+  const summary = summarizeTextLesson([allYesDraw(plan)], plan);
+  assert.equal(summary.status, "not_verified"); assert.equal(summary.qualified, false);
+});
+test("a returned extra declared feedback reference is retained without inventing a conditional hold", () => {
+  const pkg = fixture(), event = pkg.request.course_context.instructional_plan.events[1];
+  Object.assign(event, { before_item_id: "Q2", kind: "feedback", status: "declared", content: "A planned correction." });
+  returnSequence(pkg, ["E2"]);
+  const plan = prepareTextLesson(pkg), second = plan.instructional_context.items[1];
+  assert.equal(plan.returned_sequence.status, "checked_fields_only");
+  assert.deepEqual(second.design_context.returned_context_event_refs, ["E1", "E2"]);
+  assert.equal(second.holds.includes("conditional_exposure_unresolved"), false);
+  assert(second.learner_context.exposure_status.includes("not authenticated"));
+});
+test("invalid returned context cannot be rescued by unanimous item and sequence models", () => {
+  for (const ref of ["E2", "UNKNOWN"]) {
+    const pkg = fixture(); returnSequence(pkg, [ref]);
+    const plan = prepareTextLesson(pkg);
+    assert.equal(plan.returned_sequence.status, "needs_revision");
+    assert(plan.cases.every(item => item.context_holds.includes("returned_sequence_contract_fault")));
+    assert.equal(JSON.stringify(plan.cases[1].blind).includes("FUTURE_TEACHING_SENTINEL"), false);
+    assert.equal(summarizeTextLesson([allYesDraw(plan)], plan).status, "needs_revision");
+  }
+});
+test("mismatched returned copies hold context without treating either copy as established exposure", () => {
+  const pkg = fixture(); returnSequence(pkg);
+  pkg.context.native.sequence_plan.items[1].context_event_refs.push("E2");
+  const plan = prepareTextLesson(pkg);
+  assert.equal(plan.returned_sequence.status, "needs_revision");
+  assert(plan.cases.every(item => item.context_holds.includes("returned_sequence_contract_fault")));
+  assert.equal(summarizeTextLesson([allYesDraw(plan)], plan).qualified, false);
 });
 test("missing, empty and duplicate whole-sequence checks cannot produce a green summary", () => {
   const plan = prepareTextLesson(fixture());

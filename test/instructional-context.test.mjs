@@ -190,3 +190,106 @@ test("practice also needs an explicit response expectation rather than an empty 
   const pkg = fixture(); plan(pkg).items[0].purpose = "practice"; plan(pkg).items[0].expected_evidence = [];
   assert(resolveInstructionalContext(pkg).items[0].holds.includes("expected_evidence_missing"));
 });
+
+test("uninterpreted passive nodes reject both explicit-plan and legacy previews", () => {
+  for (const explicit of [true, false]) for (const node of [{ type: "interactive_diagram", text: "An uninterpreted diagram caption." }, { text: "A node without a declared type." }]) {
+    const pkg = fixture(); if (!explicit) delete pkg.request.course_context.instructional_plan;
+    pkg.context.native.pages[0].nodes.push(node);
+    assert.throws(() => resolveInstructionalContext(pkg), error => error instanceof InstructionalContextError
+      && error.code === "unsupported_passive_node" && error.field === "context/native/pages/0/nodes/1/type");
+  }
+});
+
+test("an unavailable or future extra cannot hide an uninterpreted passive node", () => {
+  for (const explicit of [true, false]) for (const enabled of [undefined, false, true]) {
+    const pkg = fixture(); if (!explicit) delete pkg.request.course_context.instructional_plan;
+    pkg.context.native.pages[2].extra = "extension";
+    pkg.context.native.pages[2].nodes = [{ type: "media_transcript", text: "Exposure cannot be inferred from this node." }];
+    if (enabled !== undefined) pkg.context.native.extras = { extension: enabled };
+    assert.throws(() => resolveInstructionalContext(pkg), error => error instanceof InstructionalContextError
+      && error.code === "unsupported_passive_node" && error.field === "context/native/pages/2/nodes/0/type");
+  }
+});
+
+test("known passive types without interpretable learner content cannot disappear from a preview", () => {
+  for (const explicit of [true, false]) for (const node of [{ type: "reading", part: 1, source_ref: "S1" }, { type: "instruction", author_key: "AUTHOR_ONLY_UNINTERPRETED" }]) {
+    const pkg = fixture(); if (!explicit) delete pkg.request.course_context.instructional_plan;
+    pkg.context.native.pages[0].nodes = [node];
+    assert.throws(() => resolveInstructionalContext(pkg), error => error instanceof InstructionalContextError
+      && error.code === "unsupported_passive_node_content" && error.field === "context/native/pages/0/nodes/0");
+  }
+});
+
+test("supported passive text formats retain learner text and conditional availability without author fields", () => {
+  const pkg = fixture(), suppliedPlan = plan(pkg); delete pkg.request.course_context.instructional_plan;
+  pkg.context.native.pages[0].nodes = [
+    { type: "reading", blocks: [{ lines: [{ who: "Narrator", line: "A reading line." }, { stage: "A stage direction." }] }, { paragraphs: ["A prose paragraph."] }] },
+    { type: "instruction", text: "A learner instruction.", author_key: "AUTHOR_ONLY_PASSIVE" },
+    { type: "learning_question", learning_question: "What will we learn?" },
+    { type: "key_term", term: "verb", meaning: "An action word." },
+    { type: "definition", text: "A learner definition." },
+    { type: "worked_instruction", line: "A worked line.", quote: "A worked quote.", steps: [{ stem: "A worked prompt.", sentence: "A worked sentence.", think: "A worked thought." }], sample_answer: "AUTHOR_ONLY_PASSIVE" },
+    { type: "worked-teaching", statement: "A teaching statement." },
+    { type: "recall-model", text: "A recall model." }
+  ];
+  const result = resolveInstructionalContext(pkg), teaching = result.items[0].learner_context.ordered_teaching;
+  assert.deepEqual(teaching.map(event => event.text), ["Narrator: A reading line.\nA stage direction.\nA prose paragraph.", "A learner instruction.", "What will we learn?", "verb: An action word.", "A learner definition.", "A worked line.\nA worked quote.\nA worked prompt.\nA worked sentence.\nA worked thought.", "A teaching statement.", "A recall model."]);
+  assert.equal(JSON.stringify(result.items[0].learner_context).includes("AUTHOR_ONLY_PASSIVE"), false);
+  pkg.context.native.pages[0].extra = "optional";
+  const conditional = resolveInstructionalContext(pkg).items[0];
+  assert.equal(conditional.learner_context.ordered_teaching.length, 0);
+  assert(conditional.holds.includes("conditional_exposure_unresolved"));
+  pkg.request.course_context.instructional_plan = suppliedPlan;
+  assert.deepEqual(resolveInstructionalContext(pkg).items[0].learner_context.ordered_teaching.map(event => event.id), ["E1"]);
+});
+
+test("a readable sibling cannot hide an unsupported reading block or malformed reading field", () => {
+  const cases = [
+    [{ type: "interactive_diagram", caption: "DIAGRAM_CONTENT_SENTINEL" }, "unsupported_passive_node", "/type"],
+    [{ type: "interactive_diagram", text: "A caption does not interpret its diagram." }, "unsupported_passive_node", "/type"],
+    [{ unsupported_caption: "An uninterpreted block." }, "unsupported_passive_node_content", ""],
+    [{ lines: ["A visible line.", null] }, "unsupported_passive_node_content", "/lines/1"],
+    [{ lines: ["A visible line.", { line: 4 }] }, "invalid_text", "/lines/1/line"],
+    [{ lines: [{ line: "A visible line.", who: {} }] }, "invalid_text", "/lines/0/who"],
+    [{ lines: [{ line: "A visible line.", text: {} }] }, "invalid_text", "/lines/0/text"],
+    [{ text: "A readable part.", lines: "A malformed line list." }, "invalid_list", "/lines"],
+    [{ text: "A readable part.", paragraphs: [] }, "unsupported_passive_node_content", "/paragraphs"],
+    [{ parts: [{ text: "A readable part." }, { unknown_part: "An uninterpreted nested part." }] }, "unsupported_passive_node_content", "/parts/1"],
+    [{ lines: [" "] }, "invalid_text", "/lines/0"]
+  ];
+  for (const explicit of [true, false]) for (const available of [true, false]) for (const [block, code, suffix] of cases) {
+    const pkg = fixture(); if (!explicit) delete pkg.request.course_context.instructional_plan;
+    pkg.context.native.pages[0].extra = "reading-extra"; pkg.context.native.extras = { "reading-extra": available };
+    pkg.context.native.pages[0].nodes = [{ type: "reading", blocks: [{ lines: ["Visible sentence."] }, block] }];
+    assert.throws(() => resolveInstructionalContext(pkg), error => error instanceof InstructionalContextError
+      && error.code === code && error.field === `context/native/pages/0/nodes/0/blocks/1${suffix}`);
+  }
+});
+
+test("a malformed reading container cannot be replaced by otherwise readable root text", () => {
+  for (const explicit of [true, false]) for (const blocks of [null, {}, "Not an array."]) {
+    const pkg = fixture(); if (!explicit) delete pkg.request.course_context.instructional_plan;
+    pkg.context.native.pages[0].nodes = [{ type: "reading", text: "Readable root text.", blocks }];
+    assert.throws(() => resolveInstructionalContext(pkg), error => error instanceof InstructionalContextError
+      && error.code === "invalid_list" && error.field === "context/native/pages/0/nodes/0/blocks");
+  }
+});
+
+test("reference reading block shapes and supported nested text retain their learner text only", () => {
+  const pkg = fixture(); delete pkg.request.course_context.instructional_plan;
+  pkg.context.native.pages[0].nodes = [{ type: "reading", blocks: [
+    { kind: "title", title: "A fictional play", by: "Author metadata", teacher_key: "AUTHOR_ONLY_READING" },
+    { kind: "heading", text: "About the play" },
+    { kind: "para", text: "A short passage." },
+    { metadata: { text: "AUTHOR_ONLY_READING", note: "Nonlearner block metadata." } },
+    { kind: "archivist", lines: ["Read the passage."] },
+    { kind: "script", lines: [{ who: "Fox", line: "I crossed." }, { who: null, line: "Then I stopped." }, { stage: "[The fox waits.]" }] },
+    { parts: [{ paragraph: "A paragraph." }, { paragraphs: ["Another paragraph.", { t: "A final text part." }] }] }
+  ] }];
+  const learner = resolveInstructionalContext(pkg).items[0].learner_context;
+  assert.equal(learner.ordered_teaching[0].text, "A fictional play\nAbout the play\nA short passage.\nRead the passage.\nFox: I crossed.\nThen I stopped.\n[The fox waits.]\nA paragraph.\nAnother paragraph.\nA final text part.");
+  assert.equal(JSON.stringify(learner).includes("AUTHOR_ONLY_READING"), false);
+  assert.equal(JSON.stringify(learner).includes("Author metadata"), false);
+  pkg.context.native.pages[0].nodes = [{ type: "reading", text: "A supported root reading text." }];
+  assert.equal(resolveInstructionalContext(pkg).items[0].learner_context.ordered_teaching[0].text, "A supported root reading text.");
+});

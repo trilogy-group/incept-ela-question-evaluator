@@ -33,6 +33,70 @@ function contextPayload(request, native, fallback = true) {
     sequence_blueprint: get("sequence_blueprint"), source_provenance: get("source_provenance") ?? null };
 }
 
+// Recognize only fields consumed as task/response requirements by the route's interpreter.
+// Exact leaf paths keep a mixed object (for example a rubric with accepted answers and nudges)
+// from borrowing the role of its requirement field. This is not evidence of learner production.
+function responseContractFields(context, set, item) {
+  const view = item.view, fields = new Set();
+  if (context.contract !== "lesson-context 0.1" || !object(view)) return null;
+  const scalar = (field, root = view, prefix = "/view") => { if (string(root?.[field])) fields.add(`${prefix}/${field}`); };
+  const list = (field, root = view, prefix = "/view") => {
+    if (strings(root?.[field])) root[field].forEach((value, index) => { if (string(value)) fields.add(`${prefix}/${field}/${index}`); });
+  };
+  const rows = (field, columns) => {
+    if (Array.isArray(view[field])) view[field].forEach((row, index) => {
+      if (object(row)) columns.forEach(column => scalar(column, row, `/view/${field}/${index}`));
+    });
+  };
+  const rubric = () => {
+    if (object(view.rubric) && Array.isArray(view.rubric.criteria)) view.rubric.criteria.forEach((row, index) => {
+      if (object(row)) scalar("requirement", row, `/view/rubric/criteria/${index}`);
+    });
+  };
+  if (set.contract === "question-set native 0.2"
+    && set.adapter_extension === "native-activity-transport/0.2" && context.adapter_extension === set.adapter_extension) {
+    const family = item.family;
+    if (!["single_choice", "multiple_select", "evidence_selection", "word_selection", "classification", "written_response", "oral_response",
+      "word_web", "inline_choice", "shared_cloze", "matching", "sequence", "nonresponse", "say_back", "self_report"].includes(family)) return null;
+    if (family === "nonresponse") {
+      // An instruction without a response operation cannot supply an expected-response binding.
+      return fields;
+    }
+    scalar("prompt"); scalar("response_mode"); list("response_parts");
+    if (["single_choice", "multiple_select", "evidence_selection", "word_selection"].includes(family)) {
+      list("options"); scalar("selection_rule");
+      if (family === "evidence_selection") scalar("claim");
+    }
+    if (family === "classification") { rows("entries", ["text"]); rows("categories", ["label", "entity", "relation", "description"]); }
+    if (["written_response", "oral_response", "word_web"].includes(family)) rubric();
+    if (family === "inline_choice") {
+      scalar("surrounding_text");
+      if (Array.isArray(view.blanks)) view.blanks.forEach((row, index) => { if (object(row)) list("options", row, `/view/blanks/${index}`); });
+    }
+    if (family === "shared_cloze") { scalar("surrounding_text"); scalar("reuse_policy"); rows("bank", ["text"]); }
+    if (["matching", "sequence"].includes(family)) rows("entries", ["text"]);
+    if (family === "matching") rows("options", ["text"]);
+    if (family === "sequence") { scalar("ordering_rule"); scalar("tie_policy"); }
+    if (family === "word_web") { scalar("centre"); scalar("link_rule"); }
+    if (family === "say_back") scalar("statement");
+    if (family === "self_report") list("scale");
+    return fields;
+  }
+  if (set.contract !== "question-set 0.1" || set.adapter_extension !== undefined || context.adapter_extension !== undefined || item.family !== undefined) return null;
+  if (!["reading_mcq", "evidence_select", "classify", "open_check", "open_prompt"].includes(item.kind)) return null;
+  if (["reading_mcq", "evidence_select"].includes(item.kind)
+    && (view.response_rule !== undefined && view.response_rule !== "single-best" || Array.isArray(view.key) && view.key.length > 1)) return null;
+  if (item.kind === "classify" && (view.response_rule !== undefined && view.response_rule !== "unique-category"
+    || object(view.mapping) && Object.values(view.mapping).some(Array.isArray))) return null;
+  // This is the same stem/prompt precedence as the text blind-solving packet.
+  scalar(view.stem == null ? "prompt" : "stem");
+  if (item.kind === "reading_mcq") list("options");
+  if (item.kind === "evidence_select") { list("candidates"); scalar("selection_rule"); }
+  if (item.kind === "classify") { rows("entries", ["text"]); rows("categories", ["label", "description"]); }
+  if (["open_check", "open_prompt"].includes(item.kind)) rubric();
+  return fields;
+}
+
 export function inspectSequenceReturn({ request = {}, context = {}, set = {} } = {}) {
   const native = object(context.native) ? context.native : {}, setPresent = own(set, "sequence_plan"), contextPresent = own(native, "sequence_plan");
   if (!setPresent && !contextPresent) return { status: "absent", checks: [], declared_sequence_plan: null, qualification: false,
@@ -78,23 +142,30 @@ export function inspectSequenceReturn({ request = {}, context = {}, set = {} } =
   add("sequence_return_plan_matches", matches, { issues: problems });
 
   let fieldsResolve = object(returned) && Array.isArray(returned.items) && returned.items.length === actual.length, fieldCount = 0;
+  const fieldIssues = [], fieldIssue = (item, code, fieldRef) => {
+    fieldsResolve = false;
+    fieldIssues.push({ item_id: item?.item_id ?? null, code, ...(fieldRef === undefined ? {} : { field_ref: fieldRef }) });
+  };
   if (fieldsResolve) for (const item of returned.items) {
     const candidate = actual.find(row => row?.id === item?.item_id);
-    if (!candidate || !Array.isArray(item?.expected_evidence)) { fieldsResolve = false; continue; }
+    if (!candidate || !Array.isArray(item?.expected_evidence)) { fieldIssue(item, "expected_evidence_item_missing"); continue; }
+    const responseFields = responseContractFields(context, set, candidate);
+    if (responseFields === null) fieldIssue(item, "unsupported_response_profile");
     for (const evidence of item.expected_evidence) {
-      if (!strings(evidence?.field_refs) || !evidence.field_refs.length || !unique(evidence.field_refs)) { fieldsResolve = false; continue; }
+      if (!strings(evidence?.field_refs) || !evidence.field_refs.length || !unique(evidence.field_refs)) { fieldIssue(item, "invalid_field_reference_list"); continue; }
       for (const ref of evidence.field_refs) {
         fieldCount++;
-        if (!ref.startsWith("/view/") || !resolvePointer(candidate, ref).found) fieldsResolve = false;
+        if (!ref.startsWith("/view/") || !resolvePointer(candidate, ref).found) fieldIssue(item, "field_pointer_does_not_resolve", ref);
+        else if (responseFields !== null && !responseFields.has(ref)) fieldIssue(item, "field_is_not_response_contract", ref);
       }
     }
   }
-  add("sequence_return_evidence_fields_resolve", fieldsResolve, { checked_field_references: fieldCount,
-    meaning: "Pointers resolve to supplied response-contract fields; this does not show that a task elicits the claimed evidence." });
+  add("sequence_return_evidence_fields_resolve", fieldsResolve, { checked_field_references: fieldCount, issues: fieldIssues,
+    meaning: "Pointers resolve to recognized task or scoring requirement leaves in a supported response profile; array and object containers require narrower leaf bindings. A rubric describes expected responses, not observed learner production; this does not show that a task elicits the claimed evidence." });
   const coverageMatches = object(returned) && object(plan?.sequence) && Array.isArray(returned.goal_coverage) && Array.isArray(returned.support_transitions)
     && equal(returned.goal_coverage, plan.sequence.goal_coverage) && equal(returned.support_transitions, plan.sequence.support_transitions);
   add("sequence_return_coverage_matches", coverageMatches, { meaning: "Exact declared coverage and transition rows, not measured learning coverage or a warranted progression." });
   return { status: checks.every(check => check.verdict === "pass") ? "checked_fields_only" : "needs_revision", checks,
     declared_sequence_plan: publicReturn(returned ?? nativeReturn), qualification: false,
-    meaning: "Returned design declarations match supplied instructions and existing field pointers; semantic sufficiency and academic quality remain unqualified." };
+    meaning: "Returned design declarations match supplied instructions and supported response-contract field pointers; semantic sufficiency and academic quality remain unqualified." };
 }
