@@ -115,6 +115,20 @@ node bin/evaluate.mjs --review score --bundle .local/pilot/bundle.json --labels 
 
 The archive pilot contains 125 checks across 13 units. Reviewers supply their own alias, independence declaration, verdict and rationale. Identity/independence need external confirmation; blanks, disagreements and uncertainty stay pending. These public, correlated cases are not a fresh sealed holdout. Scoring verifies input/build/profile/label bindings and keeps absent model answers unmeasured. Model-specific preparation uses both `--review-model` and `--reported-model`.
 
+## Existing reviewer feedback
+
+With `FEEDBACK_KEY` supplied in the launch environment:
+
+```sh
+node scripts/read-feedback.mjs --out .local/feedback/NEW --checklist true
+```
+
+This separate source reader uses only allowlisted GET routes on [Course Feedback](https://feedback.inceptapi.com/). It walks report and item cursors, reads report details and visible invariant versions, and optionally reads checklist history. Output is a new private directory; credentials and signed screenshot URLs are omitted. It never opens a draft, files feedback or changes triage.
+
+Read `receipt.json` before using the capture. Exit 2 means a required read is incomplete or endpoints disagree; recovered report-detail items remain in `reconciled-items.json`. Access is limited to the key owner's visibility. Published invariants retain their course scope; draft rules, reviewer text, fix notes and statuses remain separate observations.
+
+Use existing human judgments for retrospective development cases before requesting new reviews. Reconstruct the reviewed question, preceding teaching and relevant response history; group duplicate findings and keep later rulings. “Fixed”, “verified” and a published rule do not supply an independent whole-question label. Ask academics only about unresolved decisions or a small targeted sample. Qualification still needs independent held-out evidence.
+
 ## Evidence and maintenance
 
 [Reference observations](cases/reference-review.json) contain 14 source-backed development findings and zero independent human gold labels. [Reference trial evidence](evidence/reference-pilot.json) records fresh-process variation and the documented classification fault. [Collected-example evidence](evidence/corpus-pilot.json) retains field findings and the corrected 39-case model pilot; its controls and repeated answers remain development evidence.
