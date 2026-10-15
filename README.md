@@ -1,8 +1,18 @@
 # Incept ELA question evaluator
 
+> **Questions must test the intended knowledge in lesson context; trust the evaluator only for criteria and conditions supported by independent human judgments on cases kept out of tuning.**
+
 A standalone evaluator for finished questions and lesson sequences. It checks supplied fields, prepares blind review packets and can collect explicitly authorized model observations. **No real scope is qualified to approve question quality.**
 
 Read [AGENTS.md](AGENTS.md) before changing it. Teaching knowledge and shared formats come from [incept-ela-learning-truths](https://github.com/trilogy-group/incept-ela-learning-truths). The evaluator reads finished teaching packets; generator code, prompts, drafts and selection logs stay outside this lane. Independent gold labels and sealed tests stay outside public repositories.
+
+## What earns trust
+
+- **Better questions:** demonstrate a specific repair against the source, task purpose and rubric. Correcting a misquote or missing scoring requirement does not demonstrate improved learning.
+- **Better process:** preserve complete learner context, blind solving, source versions, first-attempt results and replayable comparisons. Passing software tests demonstrates implementation behaviour.
+- **Better evaluator:** measure missed defects, false flags, abstentions and repeated-run variation against attributable human decisions on complete learner packets. Include both defects and accepted designs; keep duplicate groups and tuning examples out of the held-out set. Compare with a strong ordinary AI review given the same context before claiming superiority.
+
+Reuse existing human judgments before requesting new review. Resolve missing context and conflicting rulings; feedback status and model-produced rules are not labels. Repeated AI agreement is not correctness. The current certificate gate covers exact reviewed packets, not unseen generated questions; generalization and learning gains remain unmeasured.
 
 ## Start here
 

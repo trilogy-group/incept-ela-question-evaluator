@@ -4,6 +4,8 @@ Read README.md, criteria/criteria.json, cases/reference-review.json and the fixt
 
 The canonical repository-local orientation is [incept-ela-evaluator](.agents/skills/incept-ela-evaluator/SKILL.md).
 
+Apply the README's opening principle and [What earns trust](README.md#what-earns-trust) to every change and progress claim. Distinguish demonstrated item repairs, process reliability and measured judgment accuracy. A model's own verdicts cannot establish its qualification; a certificate for reviewed packets cannot qualify unseen questions.
+
 ## One lane
 
 Keep human-facing documentation in README.md and agent instructions in the existing skill and instruction files. Use `.local/current.json` as the pointer to private evidence; preserve earlier run receipts and source snapshots. Update existing sections instead of adding competing plans, status reports or handover documents. Prioritize the evaluator's existing-judgment casebook and qualification work.
