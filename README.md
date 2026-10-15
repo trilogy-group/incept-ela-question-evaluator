@@ -104,6 +104,8 @@ This verifies source-file hashes, checks authored answer fields and prepares a p
 
 Default execution makes zero model or academic API calls. Live review requires explicit authorization and launch credentials. Never commit credentials or raw private results.
 
+Further live generation or generator/evaluator comparison trials are on hold until the user assigns a different generator owner and an expected-label custodian outside both halves. Freeze expectations before judges run. Historical work by one agent across both halves does not establish independent validation.
+
 ```sh
 node bin/evaluate.mjs --judge jev
 node bin/evaluate.mjs --judge jev --mode development

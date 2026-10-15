@@ -16,6 +16,7 @@ Keep human-facing documentation in README.md and agent instructions in the exist
 - Never read the question-generator repository, its prompts, drafts, examples, logs or selection internals.
 - Keep evaluator implementation and development cases here. Never copy them into generator inputs or shared teaching exports. Keep independent gold labels and sealed tests outside public repositories.
 - Never open or print key, token or env files. A live adapter consumes only a launch credential; run a model only when explicitly authorized.
+- Further live generation or generator/evaluator comparison trials are on hold until the user assigns a different generator owner and an expected-label custodian outside both halves. Expected labels must be frozen before any judge runs. The user assigns these roles; an agent must not declare itself independent. Historical work by one agent across both halves is not independent validation.
 - Development observations, passing code checks, agreement between model samples and absence of detected defects do not establish academic approval.
 - Preserve source quotes, versions, conditions and counterevidence. Abstain on unsupported operations.
 
