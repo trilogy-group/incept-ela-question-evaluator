@@ -14,6 +14,8 @@ Read [AGENTS.md](AGENTS.md) before changing it. Teaching knowledge and shared fo
 
 Reuse existing human judgments before requesting new review. Resolve missing context and conflicting rulings; feedback status and model-produced rules are not labels. Repeated AI agreement is not correctness. The current certificate gate covers exact reviewed packets, not unseen generated questions; generalization and learning gains remain unmeasured.
 
+**Current context gap:** text judgments consider one item with accumulated passive teaching and selected course declarations. They do not reconstruct previous learner responses or conditional feedback. Set checks verify placements, references and limited patterns; they do not judge the complete instructional sequence's knowledge selection, coverage, support progression or content load. Native 0.2 prepares review packets and field observations without semantic judging. Criterion applicability remains undetermined where assessment purpose has not been supplied and resolved. Context saved in a file is not evidence that a judgment used it. Source matches, valid placements and supported formats cannot establish lesson fitness.
+
 ## Start here
 
 Node 18.18 or later; no installation, credential or sibling checkout is needed. Replay receipts record the actual runtime used.
@@ -149,4 +151,4 @@ This README is the human entry point. On a working checkout, `.local/current.jso
 
 The [evaluator skill](.agents/skills/incept-ela-evaluator/SKILL.md) covers orientation and optional general academic source lookup. Source retrieval never creates question labels or automatically changes criteria. Run `npm test` and `npm run check` separately before committing. The checker scans home paths and credential-shaped values; personal-name coverage requires an explicitly supplied external `--name-list` file.
 
-Next: reconstruct complete learner packets behind existing human judgments and build retrospective cases with defects and accepted designs. Request targeted academic review for unresolved decisions, then qualify a fixed model and scope against independent held-out evidence. Keep final holdouts sealed and the generator/evaluator owners separate.
+Next: reconstruct complete lesson and learner packets behind existing human judgments. Test both item defects and context-sensitive decisions: prior teaching, task purpose, support and position can change what a question demonstrates. Add semantic review of the instructional sequence before claiming lesson fitness. Request targeted academic review for unresolved decisions, then qualify a fixed model and scope against independent held-out evidence. Keep final holdouts sealed and the generator/evaluator owners separate.
