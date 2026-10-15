@@ -11,12 +11,12 @@ Review forms:      --review prepare [--review-model ID --reported-model ID]
 Reconcile reviews: --review reconcile --bundle FILE --review-a FILE --review-b FILE
 Score review:      --review score --bundle FILE --labels FILE --draws FILE,FILE
 
-Reference/text/corpus options: --config FILE --out DIR --mode qualified|development
+Reference/text/native/corpus options: --config FILE --out DIR --mode qualified|development
                     --judge none|jev --side-judge none|gemini-flash
                     --env-file FILE
 Default reference evaluation also accepts --profile jev-qualified-v1|jev-partial-v1|jev-full-experimental,
 --strict-samples true|false, --qualification FILE and --trusted-reviewers FILE.
-Text/corpus model trials require --mode development. Native intake and golden preparation make no model calls.
+Text/native/corpus model trials require --mode development. Native offline intake and golden preparation make no model calls.
 Golden assessment import: --assessment FILE --assessment-kind KIND [--assessment-relation RELATION]
 Use one primary route. Route-specific options and pins cannot be silently ignored.
 --help or -h shows this text without reading files or running an evaluation.
@@ -30,7 +30,7 @@ const sets = {
   "lesson-worker": ["lesson-worker", "lesson-packet", "expected-packet", "expected-runtime", "expected-protocol", "config", "out", "judge", "side-judge", "mode"],
   corpus: ["corpus", "catalog-sha256", "config", "out", "judge", "side-judge", "mode", "env-file"],
   "corpus-worker": ["corpus-worker", "corpus-packet", "expected-corpus-packet", "expected-runtime", "expected-protocol", "config", "out", "judge", "side-judge", "mode"],
-  native: ["native-package", "native-source-pin", "out"],
+  native: ["native-package", "native-source-pin", "out", "config", "judge", "side-judge", "mode", "env-file"],
   "golden-reference": ["golden-reference", "reference-tier", "out"],
   "golden-check": ["golden-check", "golden-pin", "assessment", "assessment-kind", "assessment-relation"],
   "review-prepare": ["review", "config", "out", "review-model", "reported-model"],
@@ -88,7 +88,7 @@ export function parseCliOptions(argv = []) {
     const mode = flags.mode ?? "qualified", profile = flags.profile ?? (mode === "qualified" ? "jev-qualified-v1" : "jev-partial-v1");
     if ((mode === "qualified") !== (profile === "jev-qualified-v1")) fail("profile does not match evaluation mode");
   }
-  if (["lesson", "lesson-worker", "corpus", "corpus-worker"].includes(route)
+  if (["lesson", "lesson-worker", "native", "corpus", "corpus-worker"].includes(route)
     && ((flags.judge ?? "none") !== "none" || (flags["side-judge"] ?? "none") !== "none") && (flags.mode ?? "qualified") !== "development")
     fail("this route requires explicit development mode for model trials");
   if (scope === "review-prepare") {

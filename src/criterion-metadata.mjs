@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 
-const CATALOG_SHA256 = "f0c2e04a46ab577ba443aeadecbd538c71315e154e143042a22e36d364f88179";
+const CATALOG_SHA256 = "8951d33f72b853c22b5f9860c708c654a24c90186a62f2767080580c721c4172";
 const SOURCE_SHA256 = "5d93d80f678ec54c54be8b6d0a166399f32d883077462f08f1268dbdd8286a46";
 const catalogUrl = new URL("../criteria/route-checks.json", import.meta.url);
 const sourceUrl = new URL("../fixtures/criterion-source-records.json", import.meta.url);
@@ -117,9 +117,11 @@ function entryFor(route, id, context, enforceContext = false) {
 }
 
 function applicability(context, entry) {
-  if (!text(context.purpose)) return { state: "undetermined", reason: "assessment_purpose_missing" };
   if ((entry.scope.kinds.length && !text(context.kind)) || (entry.scope.families.length && !text(context.family)))
     return { state: "undetermined", reason: "operation_context_missing" };
+  if (entry.classification !== "source_bounded") return { state: "applies", reason: "emitted_operation_integrity_only",
+    purpose: context.purpose ?? null, source: "Registered transport or instrumentation operation; no academic applicability or quality claim." };
+  if (!text(context.purpose)) return { state: "undetermined", reason: "assessment_purpose_missing" };
   const decision = context.applicabilityDecision;
   if (!object(decision) || !["applies", "not_applicable", "undetermined"].includes(decision.state) || !text(decision.reason))
     return { state: "undetermined", reason: "explicit_applicability_decision_missing" };

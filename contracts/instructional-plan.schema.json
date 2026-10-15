@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Public instructional plan 0.1",
+  "description": "Declared public teaching intent, event order, support and expected evidence. Authority and event status are supplied declarations, not proof of mastery, actual learner exposure or instructional quality. Reference resolution, ordering and eligibility require separate checks.",
+  "type": "object",
+  "required": ["version", "id", "lesson", "goal_authority", "events", "items", "sequence"],
+  "additionalProperties": false,
+  "properties": {
+    "version": {"const": "instructional-plan/0.1"},
+    "id": {"type": "string", "minLength": 1},
+    "lesson": {
+      "type": "object",
+      "required": ["purpose", "scope", "objective", "goal_refs"],
+      "additionalProperties": false,
+      "properties": {
+        "purpose": {"enum": ["practice", "assessment", "diagnostic", "instruction"]},
+        "scope": {"enum": ["static-design", "individualized", "mastery-claim"]},
+        "objective": {"type": "string", "minLength": 1},
+        "goal_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "purpose_note": {"type": "string", "minLength": 1}
+      }
+    },
+    "goal_authority": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["goal_ref", "kind", "source_refs", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "goal_ref": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["course-declared", "packet-proposed", "source-projected", "unknown"]},
+          "source_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "note": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "order", "before_item_id", "kind", "status", "content", "source_refs", "target_refs", "revealed_target_refs", "provenance"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "order": {"type": "integer", "minimum": 1},
+          "before_item_id": {"type": "string", "minLength": 1, "description": "A resolving item identifier, or END for an event after the final item."},
+          "kind": {"enum": ["teaching", "task", "response", "feedback", "media"]},
+          "status": {"enum": ["declared", "observed", "conditional"]},
+          "content": {"type": "string", "minLength": 1},
+          "source_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "target_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "revealed_target_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Taught or revealed knowledge targets; this does not declare disclosure of a task answer."},
+          "provenance": {"type": "string", "minLength": 1, "description": "Names the supplied reference, capture or record supporting the declared event."},
+          "disclosed_item_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "description": "Exact item identifiers whose task answers this event discloses; distinct from taught target references."}
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["item_id", "purpose", "scope", "goal_refs", "prior_event_refs", "prepares_for_item_ids", "expected_evidence", "support"],
+        "additionalProperties": false,
+        "properties": {
+          "item_id": {"type": "string", "minLength": 1},
+          "purpose": {"enum": ["practice", "assessment", "diagnostic", "instruction"]},
+          "scope": {"enum": ["static-design", "individualized", "mastery-claim"]},
+          "goal_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "prior_event_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "prepares_for_item_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "measurement_intent": {"type": "string", "minLength": 1},
+          "expected_evidence": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Explicit expectations for every item, including unscored instruction, recall and self-report. These are authoring intentions, not learner outcomes or private quality labels.",
+            "items": {
+              "type": "object",
+              "required": ["id", "goal_refs", "claim", "source_refs"],
+              "additionalProperties": false,
+              "properties": {
+                "id": {"type": "string", "minLength": 1},
+                "goal_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                "claim": {"type": "string", "minLength": 1},
+                "source_refs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+              }
+            }
+          },
+          "support": {
+            "type": "object",
+            "required": ["mode", "event_refs", "source_refs", "answer_exposure"],
+            "additionalProperties": false,
+            "properties": {
+              "mode": {"enum": ["none", "source-visible", "guided", "worked-example", "mixed"]},
+              "event_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "source_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "answer_exposure": {"enum": ["allowed", "withheld", "unknown"], "description": "The declared answer-exposure policy for this item; assessment purpose does not impose a universal withholding policy."}
+            }
+          }
+        }
+      }
+    },
+    "sequence": {
+      "type": "object",
+      "required": ["goal_coverage", "support_transitions"],
+      "additionalProperties": false,
+      "properties": {
+        "goal_coverage": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["goal_ref", "item_ids"],
+            "additionalProperties": false,
+            "properties": {
+              "goal_ref": {"type": "string", "minLength": 1},
+              "item_ids": {"type": "array", "items": {"type": "string", "minLength": 1}}
+            }
+          }
+        },
+        "support_transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from_item_id", "to_item_id", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "from_item_id": {"type": "string", "minLength": 1},
+              "to_item_id": {"type": "string", "minLength": 1},
+              "reason": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

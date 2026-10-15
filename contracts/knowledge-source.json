@@ -23,5 +23,12 @@
    "path": "schema/question-set.schema.json",
    "sha256": "585fb5923ddf060f17718639fac6e7d1d8a13f06f50bce6ae062b8f9ae0c06af"
   }
- ]
+ ],
+ "instructional_plan": {
+  "repository": "https://github.com/trilogy-group/incept-ela-learning-truths",
+  "commit": "3dec9fad4af06b853c00324d3551172e9df00f2a",
+  "path": "contract/schema/instructional-plan.schema.json",
+  "sha256": "5e00fe79e1bb3c4510cbf525b06a3d88fe2f069a7b1f874ecea8720fec04e19e",
+  "meaning": "Public teaching contract only; no evaluator implementation or labels."
+ }
 }

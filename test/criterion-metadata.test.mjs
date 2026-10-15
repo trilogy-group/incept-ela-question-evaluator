@@ -79,7 +79,8 @@ test("actual text preparations distinguish blind, editorial and field checks acr
   assert.ok(result.checked > 50);
   assert.ok(result.annotations.some(row => row.criterion_id === "rubric_covers_required_response"));
   assert.ok(result.annotations.some(row => row.criterion_id === "binding_1_faithful"));
-  assert.ok(result.annotations.every(row => row.applicability.state === "undetermined"));
+  assert.ok(result.annotations.filter(row => row.classification === "source_bounded").every(row => row.applicability.state === "undetermined"));
+  assert.ok(result.annotations.filter(row => row.classification !== "source_bounded").every(row => row.applicability.reason === "emitted_operation_integrity_only"));
   assert.equal(plan.qualification, false);
 });
 
@@ -155,7 +156,8 @@ test("held or measured records do not infer purpose, resolve counterevidence or 
   assert.match(sourceRecordMetadata(reveal.source_records[0].id).against, /never reveals/);
   const mention = metadataForCheck("native", "keywords_used_by_questions", { stage: "set", purpose: "mastery" });
   assert.equal(mention.classification, "instrumentation"); assert.equal(mention.question_quality_claim, false);
-  assert.equal(mention.applicability.state, "undetermined");
+  assert.equal(mention.applicability.state, "applies");
+  assert.equal(mention.applicability.reason, "emitted_operation_integrity_only");
 });
 
 test("portable metadata loading rejects altered files and performs no implicit source refresh", () => {

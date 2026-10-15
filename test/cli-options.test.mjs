@@ -24,6 +24,7 @@ test("public route commands, pins and development settings are compatible", () =
     [["--lesson-package", "finished", "--course-pin", pin, "--config", "config.lesson.json", "--out", "output"], "lesson", null],
     [["--lesson-package", "finished", "--mode", "development", "--judge", "jev", "--side-judge", "gemini-flash"], "lesson", null],
     [["--native-package", "finished", "--native-source-pin", pin, "--out", "output"], "native", null],
+    [["--native-package", "finished", "--config", "config.lesson.json", "--mode", "development", "--judge", "jev"], "native", null],
     [["--corpus", "collection", "--catalog-sha256", pin, "--mode", "development", "--judge", "jev", "--env-file", "launch.env"], "corpus", null],
     [["--golden-reference", "capture", "--reference-tier", "secondary", "--out", "output"], "golden-reference", null],
     [["--golden-check", "bundle", "--golden-pin", pin, "--assessment", "report.json", "--assessment-kind", "model-development", "--assessment-relation", "historical"], "golden-check", null],
@@ -63,7 +64,7 @@ test("route-irrelevant critical pins, launch settings and review inputs are reje
   for (const argv of [
     ["--course-pin", pin], ["--native-source-pin", pin], ["--catalog-sha256", pin], ["--expected-packet", pin],
     ["--lesson-package", "finished", "--profile", "jev-full-experimental"], ["--corpus", "collection", "--course-pin", pin],
-    ["--native-package", "finished", "--config", "config.json"], ["--native-package", "finished", "--judge", "none"],
+    ["--native-package", "finished", "--profile", "jev-full-experimental"],
     ["--golden-reference", "capture", "--golden-pin", pin], ["--golden-check", "bundle", "--out", "unused"],
     ["--review", "prepare", "--bundle", "unused"], ["--review", "score", "--bundle", "bundle", "--labels", "labels", "--draws", "one", "--judge", "none"],
   ]) assert.throws(() => parseCliOptions(argv), /unsupported for this route/);

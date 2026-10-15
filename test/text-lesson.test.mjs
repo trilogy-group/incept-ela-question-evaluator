@@ -186,7 +186,7 @@ test("declared procedure, prior teaching and scoped relationships enter editoria
     prior_exposure: [{ role: "worked-instruction", content: "PRIVATE_WORKED_INTERPRETATION", source_refs: ["source"],
       timing: "After the first attempt, before later application", actual_learner_event: "PRIVATE_UNVERIFIED_EVENT" }],
     knowledge_map: { revision: "fixture-v1", nodes: [{ id: "target", claim: "Declared performance" }, { id: "prerequisite", role: "access" },
-      { id: "unrelated", claim: "PRIVATE_UNRELATED_TARGET" }], edges: [{ from: "prerequisite", to: "target", relation: "soft-support; not a calibrated gate" },
+      { id: "unrelated", claim: "PRIVATE_UNRELATED_TARGET" }, { id: "another" }], edges: [{ from: "prerequisite", to: "target", relation: "soft-support; not a calibrated gate" },
       { from: "unrelated", to: "another", relation: "unrelated" }] },
     pairing_tables: [{ id: "table", pairs: [{ id: "pair", target_ref: "target", source_ref: "source", rationale: "Proposed source relationship" }] }]
   });
@@ -223,7 +223,7 @@ test("absent course policy stays missing and malformed supported fields cannot d
   ];
   for (const mutate of mutations) {
     const pkg = fixture(); mutate(pkg.request.course_context);
-    assert.throws(() => prepareTextLesson(pkg), /unsupported declared course/);
+    assert.throws(() => prepareTextLesson(pkg), /unsupported declared course|instructional context:/);
   }
 });
 
@@ -325,6 +325,8 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   assert.equal(manifest.runtime.config.sha256, digest(fs.readFileSync(path.join(standalone, "config.lesson.json"))));
   assert.ok(manifest.runtime.files.some(file => file.path === "src/text-lesson.mjs"));
   assert.equal(manifest.packet_sha256, digest(fs.readFileSync(path.join(out, "solver-packet.json"))));
+  assert.equal(manifest.instructional_context_sha256, digest(fs.readFileSync(path.join(out, "instructional-context.json"))));
+  assert.equal(manifest.sequence_review_packet_sha256, digest(fs.readFileSync(path.join(out, "sequence-review-packet.json"))));
   assert.equal(manifest.author_fields_sha256, digest(fs.readFileSync(path.join(out, "author-fields.json"))));
   assert.equal(audit.status, "structural_alignment_checked");
   assert.equal(audit.academic_approval, false);
@@ -342,6 +344,27 @@ test("a standalone lesson CLI records pinned offline evidence and rejects qualif
   assert.match(reader, /E2\. Hare/);
   assert.match(reader, /Intended mapping:/);
   assert.equal(fs.existsSync(path.join(out, "draw-1")), false);
+  assert.equal(fs.existsSync(attemptedFetch), false);
+  const workers = [];
+  for (let draw = 1; draw <= 2; draw++) {
+    const workerOut = path.join(standalone, ".local", `offline-worker-${draw}`);
+    const worker = spawnSync(process.execPath, ["--import", guard, "--", path.join(standalone, "bin", "evaluate.mjs"),
+      "--config", "config.lesson.json", "--lesson-worker", String(draw), "--lesson-packet", path.join(out, "solver-packet.json"),
+      "--expected-packet", manifest.packet_sha256, "--expected-runtime", manifest.runtime.sha256, "--expected-protocol", manifest.protocol_sha256,
+      "--mode", "development", "--judge", "none", "--side-judge", "none", "--out", workerOut],
+    { cwd: standalone, env: {}, encoding: "utf8", timeout: 30000 });
+    assert.equal(worker.status, 0, worker.stderr);
+    const report = JSON.parse(fs.readFileSync(path.join(workerOut, "report.json")));
+    const journal = fs.readFileSync(path.join(workerOut, "journal.jsonl"), "utf8").trim().split("\n").map(line => JSON.parse(line));
+    assert.equal(journal[0].stage, "sequence");
+    assert.deepEqual(report.sequence_review.providers, {});
+    assert.equal(report.results.length, 4);
+    assert.equal(report.packet_sha256, manifest.packet_sha256);
+    assert.equal(report.qualified, false);
+    workers.push(report);
+  }
+  assert.notEqual(workers[0].pid, workers[1].pid);
+  assert.notEqual(workers[0].invocation_id, workers[1].invocation_id);
   assert.equal(fs.existsSync(attemptedFetch), false);
   for (const providerArgs of [["--judge", "jev"], ["--side-judge", "gemini-flash"]]) {
     const rejected = `.local/rejected-${providerArgs[0].slice(2)}`;

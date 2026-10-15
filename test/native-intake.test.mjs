@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { prepareNativeIntake, nativeFieldChecks, runNativeIntakeCli } from "../src/native-intake.mjs";
+import { prepareNativeIntake, nativeFieldChecks, runNativeIntakeCli, verifyNativePreparation } from "../src/native-intake.mjs";
 
 function fixture() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "native-intake-")), input = path.join(root, "finished"); fs.mkdirSync(input);
@@ -86,7 +86,7 @@ test("native identity, declared alignment and source bindings cannot be detached
 test("native intake uses private outputs and cannot silently launch a judge", () => {
   const f = fixture(); try {
     assert.throws(() => runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--out", "public"] }), /private/);
-    assert.throws(() => runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--judge", "jev"] }), /unsupported/);
+    assert.throws(() => runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--judge", "jev"] }), /development mode/);
     assert.equal(runNativeIntakeCli({ root: f.root, argv: ["--native-package", f.input, "--native-source-pin", f.pin, "--out", ".local/review"] }).model_calls, 0);
   } finally { f.dispose(); }
 });
@@ -108,5 +108,62 @@ test("a selected task sequence retains source phase order without confusing it w
     assert.equal(cases[0].declared_phase_role, "broader instruction phase"); assert.equal(cases[0].declared_role, "question");
     f.context.native.course_context.lesson_plan.phases.reverse(); f.save();
     assert.throws(() => prepareNativeIntake(f.input, path.join(f.root, "bad-order")), /exposure order/);
+  } finally { f.dispose(); }
+});
+
+function instructionalPlan(f) {
+  return { version: "instructional-plan/0.1", id: "NATIVE-PLAN", lesson: { purpose: "practice", scope: "static-design", objective: "Explain the passage action.", goal_refs: ["K1"] },
+    goal_authority: [{ goal_ref: "K1", kind: "packet-proposed", source_refs: ["S1"], note: "Toy author proposal, not course approval." }],
+    events: [{ id: "TEACH", order: 1, before_item_id: "N1", kind: "teaching", status: "declared", content: "Read the source and find the action.", source_refs: ["S1"], target_refs: ["K1"], revealed_target_refs: ["K1"], provenance: "toy public instruction" },
+      { id: "LATER", order: 2, before_item_id: "END", kind: "teaching", status: "declared", content: "FUTURE_ONLY_TEACHING", source_refs: ["FUTURE"], target_refs: ["K1"], revealed_target_refs: [], provenance: "toy future instruction" }],
+    items: f.set.items.map(item => ({ item_id: item.id, purpose: "practice", scope: "static-design", measurement_intent: "DESIGN_ONLY_MEASUREMENT_INTENT", goal_refs: ["K1"], prior_event_refs: ["TEACH"], prepares_for_item_ids: [],
+      expected_evidence: [{ id: `EXPECTED-${item.order}`, goal_refs: ["K1"], claim: "DESIGN_ONLY_EVIDENCE_CLAIM", source_refs: ["S1"] }],
+      support: { mode: "source-visible", event_refs: ["TEACH"], source_refs: ["S1"], answer_exposure: "allowed" } })),
+    sequence: { goal_coverage: [{ goal_ref: "K1", item_ids: f.set.items.map(item => item.id) }], support_transitions: [] } };
+}
+test("native preparation hashes full instructional design separately from a context-aware key-blind packet", () => {
+  const f = fixture(); try {
+    f.context.native.course_context.instructional_plan = instructionalPlan(f); f.save();
+    const out = path.join(f.root, "review"), receipt = prepareNativeIntake(f.input, out);
+    const review = JSON.parse(fs.readFileSync(path.join(out, "review-packet.json"))), serialized = JSON.stringify(review);
+    assert.equal(review.items[0].assessment_purpose.purpose, "practice");
+    assert.equal(review.items[0].learner_context.ordered_teaching[0].content, "Read the source and find the action.");
+    assert.equal(review.items[2].learner_context.prior_tasks[0].order, 1);
+    assert.equal(Object.hasOwn(review.items[2].learner_context.prior_tasks[0], "item_id"), false);
+    assert.equal(review.items[0].visible_sources.length, 0);
+    for (const hidden of ["FUTURE_ONLY_TEACHING", "DESIGN_ONLY_MEASUREMENT_INTENT", "DESIGN_ONLY_EVIDENCE_CLAIM", "hidden_new_solution", '"key"']) assert.equal(serialized.includes(hidden), false);
+    const resolved = JSON.parse(fs.readFileSync(path.join(out, "instructional-context.json")));
+    assert.equal(resolved.items[0].design_context.expected_evidence[0].claim, "DESIGN_ONLY_EVIDENCE_CLAIM");
+    assert.equal(resolved.whole_lesson.instructional_plan.events[1].content, "FUTURE_ONLY_TEACHING");
+    assert.equal(typeof receipt.files["instructional-context.json"], "string"); assert.equal(typeof receipt.files["sequence-review-packet.json"], "string");
+    assert.equal(receipt.sequence_review.status, "prepared; no semantic judgment run"); assert.equal(receipt.qualified, false); assert.equal(receipt.model_calls, 0);
+    const metadata = JSON.parse(fs.readFileSync(path.join(out, "criterion-sources.json")));
+    assert(metadata.annotations.every(row => row.applicability.reason !== "assessment_purpose_missing"));
+  } finally { f.dispose(); }
+});
+test("legacy native preparations retain unknown purposes and invalid supplied plans never create output", () => {
+  const f = fixture(); try {
+    const out = path.join(f.root, "legacy"), receipt = prepareNativeIntake(f.input, out);
+    assert.equal(receipt.context_holds.length, 3);
+    const review = JSON.parse(fs.readFileSync(path.join(out, "review-packet.json")));
+    assert.equal(review.items[0].assessment_purpose.state, "undetermined");
+    f.context.native.course_context.instructional_plan = instructionalPlan(f);
+    f.context.native.course_context.instructional_plan.items[0].prior_event_refs = ["LATER"]; f.save();
+    const bad = path.join(f.root, "invalid"); assert.throws(() => prepareNativeIntake(f.input, bad), error => error.code === "future_event_as_prior"); assert.equal(fs.existsSync(bad), false);
+  } finally { f.dispose(); }
+});
+
+test("native replay cannot detach its sequence packet or receipt from prepared evidence", () => {
+  const f = fixture(); try {
+    const out = path.join(f.root, "pinned"), receipt = prepareNativeIntake(f.input, out);
+    assert.equal(verifyNativePreparation(out, receipt).files_verified, 8);
+    const sequenceFile = path.join(out, "sequence-review-packet.json"), original = fs.readFileSync(sequenceFile);
+    const altered = JSON.parse(original); altered.state.author_status = "Altered after preparation.";
+    fs.writeFileSync(sequenceFile, JSON.stringify(altered));
+    assert.throws(() => verifyNativePreparation(out, receipt), /prepared artifact hash differs/);
+    fs.writeFileSync(sequenceFile, original);
+    const receiptFile = path.join(out, "receipt.json"), changed = JSON.parse(fs.readFileSync(receiptFile));
+    changed.model_calls = 1; fs.writeFileSync(receiptFile, JSON.stringify(changed));
+    assert.throws(() => verifyNativePreparation(out, receipt), /prepared receipt hash differs/);
   } finally { f.dispose(); }
 });

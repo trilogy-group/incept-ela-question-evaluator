@@ -14,7 +14,7 @@ const arg = (key, fallback) => options.flags[key] ?? fallback;
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 if (arg("native-package")) {
   const { runNativeIntakeCli } = await import("../src/native-intake.mjs");
-  console.log(JSON.stringify(runNativeIntakeCli({ root })));
+  console.log(JSON.stringify(await runNativeIntakeCli({ root })));
   process.exit(0);
 }
 if (arg("golden-reference") || arg("golden-check")) {

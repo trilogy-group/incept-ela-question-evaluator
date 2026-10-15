@@ -5,6 +5,10 @@ import crypto from "node:crypto";
 import { resolvePointer } from "./packet.mjs";
 import { digest } from "./lesson-package.mjs";
 import { validateEmittedChecks, CRITERION_METADATA_PIN } from "./criterion-metadata.mjs";
+import { resolveInstructionalContext } from "./instructional-context.mjs";
+import { prepareSequenceReview, learnerReviewContext, summarizeSequenceReview } from "./sequence-review.mjs";
+import { parseCliOptions } from "./cli-options.mjs";
+import { inspectSequenceReturn } from "./sequence-return.mjs";
 
 const object = value => value && typeof value === "object" && !Array.isArray(value);
 const list = value => Array.isArray(value) ? value : [];
@@ -94,7 +98,7 @@ export function nativeFieldChecks(item) {
   } else add("family_field_interpreter_available", false);
   return checks;
 }
-export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
+export function prepareNativeIntake(directory, output, { sourcePin, replayConfig } = {}) {
   const root = fs.realpathSync(directory), contextFile = read(root, "lesson-context.json"), setFile = read(root, "question-set.json");
   const context = contextFile.value, set = setFile.value;
   assert(context.contract === "lesson-context 0.1" && set.contract === "question-set native 0.2"
@@ -165,34 +169,105 @@ export function prepareNativeIntake(directory, output, { sourcePin } = {}) {
       status: checks.every(row => row.verdict === "pass") ? "checked_fields_only" : "field_fault_or_unsupported_interpreter" });
   }
   assert(set.items.every((item, index) => item.order === index + 1), "activity order is not a complete sequence");
-  const criterionSources = { pins: CRITERION_METADATA_PIN, ...validateEmittedChecks("native0.2", observations.flatMap(item => item.checks.map(check => ({ check, family: item.family, stage: "field" })))) };
+  const instructionalContext = resolveInstructionalContext({ request: { course_context: course, student_context: context.native.student_context }, context, set });
+  const contextById = new Map(instructionalContext.items.map(item => [item.item_id, item]));
+  for (const [index, item] of cases.entries()) {
+    const resolved = contextById.get(set.items[index].id);
+    const { measurement_intent, ...blindPurpose } = resolved.assessment_purpose;
+    item.assessment_purpose = blindPurpose;
+    item.learner_context = learnerReviewContext(resolved);
+    if (instructionalContext.whole_lesson.instructional_plan) {
+      item.visible_sources = [];
+      item.exposure = "Explicit plan event content is the declared learner preview; whole provenance assets are withheld. Actual served exposure remains unverified.";
+    }
+    item.context_holds = resolved.holds;
+  }
+  const returnedSequence = inspectSequenceReturn({ context, set });
+  const sequenceReview = prepareSequenceReview(instructionalContext, { route: "native0.2", returnedSequence });
+  const noResponseKeys = value => Array.isArray(value) ? value.map(noResponseKeys) : object(value)
+    ? Object.fromEntries(Object.entries(value).filter(([field]) => !["key", "keys", "mapping", "producer", "made_by", "metadata"].includes(field)).map(([field, child]) => [field, noResponseKeys(child)])) : value;
+  sequenceReview.state.proposed_marking_guides = set.items.map(item => ({ item_id: item.id,
+    ...Object.fromEntries(["rubric", "sample_answer", "scoring"].filter(field => Object.hasOwn(item.view, field)).map(field => [field, noResponseKeys(item.view[field])])) }));
+  sequenceReview.state.marking_guide_status = "Unvalidated author proposals for design review; actual runtime marking accuracy is not established.";
+  const fieldSources = validateEmittedChecks("native0.2", [...observations.flatMap((item, index) => item.checks.map(check => ({ check, family: item.family, stage: "field", purpose: instructionalContext.items[index].assessment_purpose.purpose }))),
+    ...returnedSequence.checks.map(check => ({ check, stage: "sequence-field", purpose: instructionalContext.whole_lesson.purpose.purpose }))]);
+  const criterionSources = { pins: CRITERION_METADATA_PIN, ...fieldSources, checked: fieldSources.checked + sequenceReview.criterion_sources.checked,
+    annotations: [...fieldSources.annotations, ...sequenceReview.criterion_sources.annotations] };
   assert(!fs.existsSync(output), "output already exists"); fs.mkdirSync(output, { recursive: true, mode: 0o700 });
   const write = (name, value) => fs.writeFileSync(path.join(output, name), Buffer.isBuffer(value) ? value : JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
   write("lesson-context.json", contextFile.bytes); write("question-set.json", setFile.bytes);
   write("review-packet.json", { version: 1, stage: "independent_response_before_author_key", items: cases, labels: "pending", qualification: false });
   write("author-fields.json", { version: 1, items: authors, status: "author proposals; not gold labels" });
+  write("instructional-context.json", instructionalContext);
+  write("sequence-review-packet.json", sequenceReview);
   write("field-observations.json", observations);
   write("criterion-sources.json", criterionSources);
-  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json", "criterion-sources.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
+  const hashes = Object.fromEntries(["lesson-context.json", "question-set.json", "review-packet.json", "author-fields.json", "field-observations.json", "criterion-sources.json", "instructional-context.json", "sequence-review-packet.json"].map(name => [name, digest(fs.readFileSync(path.join(output, name)))]));
   const receipt = { version: 1, at: new Date().toISOString(), source, input_hashes: { context: contextFile.sha256, set: setFile.sha256 }, files: hashes,
-    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs", "criterion-metadata.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
+    ...(replayConfig ? { replay_config: replayConfig } : {}),
+    runtime_files: Object.fromEntries(["native-intake.mjs", "packet.mjs", "lesson-package.mjs", "criterion-metadata.mjs", "instructional-context.mjs", "sequence-review.mjs", "sequence-return.mjs"].map(name => [name, digest(fs.readFileSync(new URL(name, import.meta.url)))])),
     criterion_metadata: CRITERION_METADATA_PIN,
-    activities: cases.length, kinds: [...new Set(cases.map(row => row.kind))], code_checks: observations.reduce((n, row) => n + row.checks.length, 0),
-    code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, 0),
+    activities: cases.length, kinds: [...new Set(cases.map(row => row.kind))], returned_sequence: returnedSequence,
+    code_checks: observations.reduce((n, row) => n + row.checks.length, returnedSequence.checks.length),
+    code_failures: observations.reduce((n, row) => n + row.checks.filter(check => check.verdict === "fail").length, returnedSequence.checks.filter(check => check.verdict === "fail").length),
+    context_holds: instructionalContext.held_items, sequence_review: { status: "prepared; no semantic judgment run", holds: sequenceReview.holds, qualification: false },
     external_source_pin_verified: Boolean(sourcePin), review_stage: "prepared; quality evaluation deferred", model_calls: 0, independent_gold_labels: 0, qualified: false };
   write("receipt.json", receipt); return { ...receipt, root: output };
 }
 export function runNativeIntakeCli({ root, argv = process.argv.slice(2) }) {
-  const flags = {};
-  for (let i = 0; i < argv.length; i += 2) {
-    const flag = argv[i], value = argv[i + 1];
-    assert(["--native-package", "--native-source-pin", "--out"].includes(flag) && !Object.hasOwn(flags, flag) && typeof value === "string" && !value.startsWith("--"), "unsupported or incomplete flag");
-    flags[flag] = value;
+  const parsed = parseCliOptions(argv);
+  assert(parsed.route === "native", "unsupported route");
+  const flags = Object.fromEntries(Object.entries(parsed.flags).map(([key, value]) => [`--${key}`, value]));
+  const active = (flags["--judge"] ?? "none") !== "none" || (flags["--side-judge"] ?? "none") !== "none";
+  assert(active || !flags["--env-file"], "launch credentials require an active development judge");
+  let replay;
+  if (active || flags["--config"]) {
+    const configFile = path.resolve(root, flags["--config"] ?? "config.lesson.json"), bytes = fs.readFileSync(configFile), config = JSON.parse(bytes);
+    assert(config.version === 1 && config.execution === "offline-only" && ["samples", "repeats"].every(key => Number.isInteger(config[key]) && config[key] >= 1 && config[key] <= 16) && config.repeats >= 2, "invalid replay configuration");
+    replay = { configFile, config, pin: { sha256: digest(bytes), samples: config.samples, repeats: config.repeats } };
   }
   assert(text(flags["--native-package"]), "missing finished package");
   const output = path.resolve(root, flags["--out"] ?? `.local/native-intake/${crypto.randomUUID()}`);
   assert(output.startsWith(path.join(root, ".local") + path.sep), "output must be private within this checkout");
   let cursor = root;
   for (const part of path.relative(root, output).split(path.sep)) { cursor = path.join(cursor, part); assert(!fs.existsSync(cursor) || !fs.lstatSync(cursor).isSymbolicLink(), "output symlinks unsupported"); }
-  return prepareNativeIntake(path.resolve(flags["--native-package"]), output, { sourcePin: flags["--native-source-pin"] });
+  const receipt = prepareNativeIntake(path.resolve(flags["--native-package"]), output, { sourcePin: flags["--native-source-pin"], replayConfig: replay?.pin });
+  return active ? runNativeDevelopmentReview({ root, output, flags, receipt, replay }) : receipt;
+}
+
+export function verifyNativePreparation(output, receipt) {
+  const { root, ...recorded } = receipt;
+  const expectedReceiptHash = digest(JSON.stringify(recorded, null, 2) + "\n");
+  assert(read(output, "receipt.json").sha256 === expectedReceiptHash, "prepared receipt hash differs");
+  const artifacts = {};
+  for (const [name, expected] of Object.entries(recorded.files)) {
+    const file = read(output, name);
+    assert(file.sha256 === expected, "prepared artifact hash differs");
+    artifacts[name] = file.value;
+  }
+  return { receipt_sha256: expectedReceiptHash, files_verified: Object.keys(recorded.files).length, artifacts };
+}
+
+async function runNativeDevelopmentReview({ root, output: out, flags, receipt, replay }) {
+  const { runtimeSnapshot } = await import("./replay.mjs");
+  const { runFrozenLessonDraws, lessonAccounting } = await import("./text-lesson-cli.mjs");
+  const preparation = verifyNativePreparation(out, receipt);
+  const { configFile, config } = replay;
+  const sequence = preparation.artifacts["sequence-review-packet.json"], packet = { version: 1, cases: [], sequence_review: sequence };
+  const writeOut = (name, value) => fs.writeFileSync(path.join(out, name), JSON.stringify(value, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+  writeOut("solver-packet.json", packet);
+  const protocolBytes = fs.readFileSync(path.join(root, "criteria/text-lesson-probe.json"));
+  const manifest = { version: 1, route: "native0.2", mode: "development", runtime: runtimeSnapshot(root, configFile),
+    packet_sha256: digest(fs.readFileSync(path.join(out, "solver-packet.json"))), protocol_sha256: digest(protocolBytes),
+    preparation_receipt_sha256: preparation.receipt_sha256,
+    config: { samples: config.samples, repeats: config.repeats }, qualified: false, independent_gold_labels: 0,
+    scope: "Whole-sequence instructional design across supplied native activities; per-format semantic correctness and runtime marking remain unverified." };
+  writeOut("manifest.json", manifest);
+  const draws = await runFrozenLessonDraws({ root, out, configFile, config, manifest,
+    judge: flags["--judge"] ?? "none", sideJudge: flags["--side-judge"] ?? "none", envFile: flags["--env-file"] });
+  verifyNativePreparation(out, receipt);
+  const summary = summarizeSequenceReview(draws, sequence), accounting = lessonAccounting(draws);
+  if (receipt.code_failures) summary.status = "needs_revision";
+  writeOut("report.json", { ...manifest, activities: receipt.activities, summary, accounting });
+  return { out: path.relative(root, out), activities: receipt.activities, draws: draws.length, status: summary.status, accounting, qualified: false };
 }

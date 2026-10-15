@@ -14,7 +14,9 @@ Read [AGENTS.md](AGENTS.md) before changing it. Teaching knowledge and shared fo
 
 Reuse existing human judgments before requesting new review. Resolve missing context and conflicting rulings; feedback status and model-produced rules are not labels. Repeated AI agreement is not correctness. The current certificate gate covers exact reviewed packets, not unseen generated questions; generalization and learning gains remain unmeasured.
 
-**Current context gap:** text judgments consider one item with accumulated passive teaching and selected course declarations. They do not reconstruct previous learner responses or conditional feedback. Set checks verify placements, references and limited patterns; they do not judge the complete instructional sequence's knowledge selection, coverage, support progression or content load. Native 0.2 prepares review packets and field observations without semantic judging. Criterion applicability remains undetermined where assessment purpose has not been supplied and resolved. Context saved in a file is not evidence that a judgment used it. Source matches, valid placements and supported formats cannot establish lesson fitness.
+**Context is part of the review.** An optional public `instructional-plan/0.1` declares the lesson's purpose, target authority, ordered teaching, response/feedback events, support and expected response evidence. Text solving receives only the declared learner preview and prior task opportunities, without author keys, future teaching or teacher evidence claims. A separate whole-sequence review considers knowledge selection, evidence coverage, preparation, support transitions, exposure, focus/load and the limits of the claims. It runs before item reviews in each fresh-process draw. Native activities use the same sequence review; their per-format semantic correctness remains unverified.
+
+Prior teaching is not automatically answer leakage. Guided practice can reuse a model; a diagnostic can probe untaught knowledge. Explicit disclosure of a particular task answer conflicts with an explicit withheld-answer policy. Unknown conditional feedback remains unknown. Missing purposes, incomplete plans and unsupported individual/mastery claims prevent a clean development result. An all-yes model review still gives **no academic approval**.
 
 ## Start here
 
@@ -41,7 +43,7 @@ For a `native-activity-transport/0.2` directory:
 node bin/evaluate.mjs --native-package /path/finished-native --native-source-pin <source-sha256>
 ```
 
-This preserves native task types, checks source/context bindings and prepares key-blind review, separate author proposals and field observations. The blind view includes declared available sources. Actual learner exposure, semantic quality, served UI and runtime marking remain unverified. Unsupported field interpreters are explicit failures.
+This preserves native task types, checks source/context bindings and prepares key-blind review, separate author proposals, field observations and whole-sequence design review. With an explicit plan, event content defines the learner preview; citing an asset does not expose its entire text. Without one, phase sources remain declared availability. Unsupported field interpreters fail explicitly. Add `--config config.lesson.json --mode development --judge jev` and/or `--side-judge gemini-flash` for an authorized repeated sequence trial. It uses the same frozen worker as text lessons. Per-format semantic correctness, actual learner exposure, served UI and runtime marking remain unverified.
 
 ### Finished text lesson
 
@@ -51,7 +53,9 @@ The directory contains `course-request.json`, `course-source-packet.json`, `less
 node bin/evaluate.mjs --lesson-package /path/finished --config config.lesson.json --course-pin <request-sha256>
 ```
 
-This checks declared placement, knowledge references, source anchors and joined pairing rows. Supplied procedure, prior-teaching declarations and course constraints enter the separate editorial review. They do not enter independent solving or establish learner readiness.
+This checks declared placement, knowledge references, source anchors and joined pairing rows. A supplied instructional plan resolves task purpose, prior teaching and response/feedback events before review. Prior tasks are planned opportunities, not proof that a learner attempted them. Teacher goals, course constraints and expected evidence enter design review separately from blind solving. Learner descriptors do not establish readiness.
+
+If a finished packet returns `sequence_plan`, its two copies, canonical public input hash, task conditions, expected-evidence references and actual response-field pointers are checked independently. The declared return also enters the separate sequence review. Existing pointers and matching coverage rows establish contract integrity; the model must still judge what the task actually elicits. Legacy packets without this extension remain accepted with their context limits explicit.
 
 The preview supports passive `nodes` followed by `question_slots`: single-best choices/evidence selection, one-category classification and open responses. Other response rules need an appropriate interpreter. Outputs include:
 
@@ -59,6 +63,7 @@ The preview supports passive `nodes` followed by `question_slots`: single-best c
 - `review-packet.json`, `review-a.json`, `review-b.json`: blank independent review forms with author keys withheld.
 - `solver-packet.json` and `author-fields.json`: separately held solving/editorial data and author intent.
 - `source-assets.json`: supplied asset text/hash consistency, with absent declarations undetermined.
+- `instructional-context.json` and `sequence-review-packet.json`: resolved teaching conditions, unknowns and the separate full-sequence design review; both are hash-pinned.
 - `quote-diagnostics.json`: feedback spans compared with supplied text, including ambiguity and limited source scope; no quotation or item verdict.
 - `criterion-sources.json` and `manifest.json`: source limits, input/build/configuration hashes and replay settings.
 
@@ -147,8 +152,8 @@ This README is the human entry point. On a working checkout, `.local/current.jso
 
 [Reference observations](cases/reference-review.json) contain 14 source-backed development findings and zero independent human gold labels. [Reference trial evidence](evidence/reference-pilot.json) records fresh-process variation and the documented classification fault. [Collected-example evidence](evidence/corpus-pilot.json) retains field findings and the corrected 39-case model pilot; its controls and repeated answers remain development evidence.
 
-[Route metadata](criteria/route-checks.json) links emitted checks to exact frozen learning records and their scope, limits and counterevidence. Transport integrity and coverage instrumentation remain explicit. Missing assessment purpose or unresolved applicability stays undetermined; source links do not qualify a judge.
+[Route metadata](criteria/route-checks.json) links emitted checks to exact frozen learning records and their scope, limits and counterevidence. Transport integrity applies to the emitted operation without making a teaching-quality claim. Supplied purpose is passed to item metadata; purpose alone does not resolve every source rule's applicability. Missing purpose or unresolved teaching conditions remain undetermined. Source links do not qualify a judge.
 
 The [evaluator skill](.agents/skills/incept-ela-evaluator/SKILL.md) covers orientation and optional general academic source lookup. Source retrieval never creates question labels or automatically changes criteria. Run `npm test` and `npm run check` separately before committing. The checker scans home paths and credential-shaped values; personal-name coverage requires an explicitly supplied external `--name-list` file.
 
-Next: reconstruct complete lesson and learner packets behind existing human judgments. Test both item defects and context-sensitive decisions: prior teaching, task purpose, support and position can change what a question demonstrates. Add semantic review of the instructional sequence before claiming lesson fitness. Request targeted academic review for unresolved decisions, then qualify a fixed model and scope against independent held-out evidence. Keep final holdouts sealed and the generator/evaluator owners separate.
+Next: reconstruct complete lesson and learner packets behind existing human judgments, then measure these item and sequence reviews against them. The regression suite checks context transport, blind boundaries, missing-data holds, replay and verdict aggregation; it does not establish that a model judges instruction correctly. Request targeted academic review for unresolved decisions, then qualify a fixed model and scope against independent held-out evidence. Keep final holdouts sealed and the generator/evaluator owners separate.

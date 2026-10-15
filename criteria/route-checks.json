@@ -3783,6 +3783,634 @@
           "An unresolved course condition or conflicting rule remains undetermined."
         ]
       }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_knowledge_selected",
+      "id_pattern": "^sequence_knowledge_selected$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "design-the-evidence-before-the-item"
+      ],
+      "operationalization": "Selected knowledge and performances are justified by the declared course purpose, sources and target authority; proposed targets remain proposals.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_evidence_coverage",
+      "id_pattern": "^sequence_evidence_coverage$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "design-the-evidence-before-the-item",
+        "require-the-criterion-the-task-is-for",
+        "produce-it-dont-just-pick-it"
+      ],
+      "operationalization": "Actual tasks elicit the evidence claimed for lesson goals; identifiers, selections, component tasks and self-reports do not establish integrated independent performance.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_preparation",
+      "id_pattern": "^sequence_preparation$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "assume-and-test-only-what-was-taught"
+      ],
+      "operationalization": "Preparation is reviewed in ordered teaching context according to purpose; diagnostic probing and assessment of taught material are allowed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_support_progression",
+      "id_pattern": "^sequence_support_progression$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "design-the-evidence-before-the-item"
+      ],
+      "operationalization": "Support transitions fit declared measurement intent; practice may repeat or reuse a model without compulsory fading or format variety.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_exposure_consistent",
+      "id_pattern": "^sequence_exposure_consistent$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "nothing-gives-the-answer-first",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Measurement claims match prior teaching, tasks and available response/feedback events; explicit withheld task answers differ from taught target knowledge.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_focus_and_load",
+      "id_pattern": "^sequence_focus_and_load$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "a-readability-score-is-not-difficulty"
+      ],
+      "operationalization": "Sequence amount and order are justified by goals and available learner/access context; word counts and repeated formats alone do not establish burden or difficulty.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence",
+      "id": "sequence_claims_bounded",
+      "id_pattern": "^sequence_claims_bounded$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "settle-in-code-then-bind-the-judge"
+      ],
+      "operationalization": "Claims stay within static design evidence; declared learner descriptors and events are not calibrated readiness, mastery or learning gains.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_knowledge_selected",
+      "id_pattern": "^sequence_knowledge_selected$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "design-the-evidence-before-the-item"
+      ],
+      "operationalization": "Selected knowledge and performances are justified by the declared course purpose, sources and target authority; proposed targets remain proposals.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_evidence_coverage",
+      "id_pattern": "^sequence_evidence_coverage$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "design-the-evidence-before-the-item",
+        "require-the-criterion-the-task-is-for",
+        "produce-it-dont-just-pick-it"
+      ],
+      "operationalization": "Actual tasks elicit the evidence claimed for lesson goals; identifiers, selections, component tasks and self-reports do not establish integrated independent performance.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_preparation",
+      "id_pattern": "^sequence_preparation$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "assume-and-test-only-what-was-taught"
+      ],
+      "operationalization": "Preparation is reviewed in ordered teaching context according to purpose; diagnostic probing and assessment of taught material are allowed.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_support_progression",
+      "id_pattern": "^sequence_support_progression$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "design-the-evidence-before-the-item"
+      ],
+      "operationalization": "Support transitions fit declared measurement intent; practice may repeat or reuse a model without compulsory fading or format variety.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_exposure_consistent",
+      "id_pattern": "^sequence_exposure_consistent$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "nothing-gives-the-answer-first",
+        "give-the-judge-what-the-student-sees"
+      ],
+      "operationalization": "Measurement claims match prior teaching, tasks and available response/feedback events; explicit withheld task answers differ from taught target knowledge.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_focus_and_load",
+      "id_pattern": "^sequence_focus_and_load$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "a-readability-score-is-not-difficulty"
+      ],
+      "operationalization": "Sequence amount and order are justified by goals and available learner/access context; word counts and repeated formats alone do not establish burden or difficulty.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence",
+      "id": "sequence_claims_bounded",
+      "id_pattern": "^sequence_claims_bounded$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "source_bounded",
+      "question_quality_claim": true,
+      "quality_dimension": "instructional sequence design",
+      "records": [
+        "test-the-skill-it-claims",
+        "settle-in-code-then-bind-the-judge"
+      ],
+      "operationalization": "Claims stay within static design evidence; declared learner descriptors and events are not calibrated readiness, mastery or learning gains.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "A whole-lesson purpose must be explicitly declared.",
+          "Judge static instructional design against its supplied purpose and constraints.",
+          "Unknown course authority, missing exposure and individual learner claims remain unverified."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence-field",
+      "id": "sequence_return_copies_match",
+      "id_pattern": "^sequence_return_copies_match$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence-field",
+      "id": "sequence_return_plan_matches",
+      "id_pattern": "^sequence_return_plan_matches$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence-field",
+      "id": "sequence_return_evidence_fields_resolve",
+      "id_pattern": "^sequence_return_evidence_fields_resolve$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "text",
+      "stage": "sequence-field",
+      "id": "sequence_return_coverage_matches",
+      "id_pattern": "^sequence_return_coverage_matches$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence-field",
+      "id": "sequence_return_copies_match",
+      "id_pattern": "^sequence_return_copies_match$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence-field",
+      "id": "sequence_return_plan_matches",
+      "id_pattern": "^sequence_return_plan_matches$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence-field",
+      "id": "sequence_return_evidence_fields_resolve",
+      "id_pattern": "^sequence_return_evidence_fields_resolve$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
+    },
+    {
+      "route": "native0.2",
+      "stage": "sequence-field",
+      "id": "sequence_return_coverage_matches",
+      "id_pattern": "^sequence_return_coverage_matches$",
+      "scope": {
+        "kinds": [],
+        "families": []
+      },
+      "emitted_contract": {
+        "required": null,
+        "method": null
+      },
+      "classification": "transport_integrity",
+      "question_quality_claim": false,
+      "quality_dimension": "returned sequence contract integrity",
+      "records": [],
+      "operationalization": "Checks returned design copies, canonical input binding, declared conditions, existing response-field pointers or exact coverage declarations. No semantic sufficiency or learning claim.",
+      "applicability": {
+        "decision_source": "explicit declaration only; source prose is not executable policy",
+        "conditions": [
+          "Only emitted for a supplied returned sequence plan.",
+          "Operation integrity only; matching declarations do not establish instructional quality."
+        ]
+      }
     }
   ]
 }
