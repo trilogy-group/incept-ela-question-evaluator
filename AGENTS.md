@@ -4,6 +4,10 @@ Read README.md, criteria/criteria.json, cases/reference-review.json and the fixt
 
 The canonical repository-local orientation is [incept-ela-evaluator](.agents/skills/incept-ela-evaluator/SKILL.md).
 
+## One lane
+
+Keep human-facing documentation in README.md and agent instructions in the existing skill and instruction files. Use `.local/current.json` as the pointer to private evidence; preserve earlier run receipts and source snapshots. Update existing sections instead of adding competing plans, status reports or handover documents. Prioritize the evaluator's existing-judgment casebook and qualification work.
+
 ## Blind boundaries
 
 - Read only this repository, the public contract/library in incept-ela-learning-truths, and finished public lesson-context/question-set packets.

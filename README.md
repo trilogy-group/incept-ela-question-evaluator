@@ -131,10 +131,12 @@ Use existing human judgments for retrospective development cases before requesti
 
 ## Evidence and maintenance
 
+This README is the human entry point. On a working checkout, `.local/current.json` points to the latest private evidence index. Earlier run directories retain source snapshots and receipts; they are historical evidence, not separate work plans.
+
 [Reference observations](cases/reference-review.json) contain 14 source-backed development findings and zero independent human gold labels. [Reference trial evidence](evidence/reference-pilot.json) records fresh-process variation and the documented classification fault. [Collected-example evidence](evidence/corpus-pilot.json) retains field findings and the corrected 39-case model pilot; its controls and repeated answers remain development evidence.
 
 [Route metadata](criteria/route-checks.json) links emitted checks to exact frozen learning records and their scope, limits and counterevidence. Transport integrity and coverage instrumentation remain explicit. Missing assessment purpose or unresolved applicability stays undetermined; source links do not qualify a judge.
 
 The [evaluator skill](.agents/skills/incept-ela-evaluator/SKILL.md) covers orientation and optional general academic source lookup. Source retrieval never creates question labels or automatically changes criteria. Run `npm test` and `npm run check` separately before committing. The checker scans home paths and credential-shaped values; personal-name coverage requires an explicitly supplied external `--name-list` file.
 
-Next: obtain independent judgments of complete learner packets, freeze model/version-specific scopes and measure defect detection, false alarms, abstention and repeat variation. Keep final holdouts sealed and the generator/evaluator owners separate.
+Next: reconstruct complete learner packets behind existing human judgments and build retrospective cases with defects and accepted designs. Request targeted academic review for unresolved decisions, then qualify a fixed model and scope against independent held-out evidence. Keep final holdouts sealed and the generator/evaluator owners separate.
